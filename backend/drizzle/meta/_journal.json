@@ -1,0 +1,48 @@
+{
+  "version": "6",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1780139861283,
+      "tag": "0000_shocking_micromax",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781432393843,
+      "tag": "0001_cloudy_toro",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781443561538,
+      "tag": "0002_silky_squirrel_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781492353804,
+      "tag": "0003_flimsy_black_bolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782734312490,
+      "tag": "0004_repair_enrollment_updated_at_default",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1782734564036,
+      "tag": "0005_db_owned_updated_at",
+      "breakpoints": true
+    }
+  ]
+}

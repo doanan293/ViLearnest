@@ -1,0 +1,17 @@
+meta {
+  name: Get Seeded Lesson Content
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/lessons/{{seededLessonId}}
+}
+
+tests {
+  test("returns lesson content for enrolled seeded lesson", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("id", bru.getEnvVar("seededLessonId"));
+    expect(res.body.Chapter.Course).to.have.property("id", bru.getEnvVar("seededCourseId"));
+  });
+}

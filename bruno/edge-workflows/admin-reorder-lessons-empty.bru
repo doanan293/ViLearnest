@@ -1,0 +1,28 @@
+meta {
+  name: Admin Reorder Lessons Empty
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/lessons/reorder
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "items": []
+  }
+}
+
+tests {
+  test("rejects empty lesson reorder input", function() {
+    expect(res.status).to.equal(400);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.includes("No lessons provided");
+  });
+}

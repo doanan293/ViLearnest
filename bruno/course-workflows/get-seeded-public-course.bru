@@ -1,0 +1,18 @@
+meta {
+  name: Get Seeded Public Course
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{seededCourseSlug}}
+}
+
+tests {
+  test("returns the seeded published course", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("id", bru.getEnvVar("seededCourseId"));
+    expect(res.body).to.have.property("slug", bru.getEnvVar("seededCourseSlug"));
+    expect(res.body).to.have.property("chapter").that.is.an("array").with.length(1);
+  });
+}

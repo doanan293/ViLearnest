@@ -1,0 +1,16 @@
+meta {
+  name: Missing Created Course After Delete
+  type: http
+  seq: 24
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/courses/{{adminCreatedCourseId}}
+}
+
+tests {
+  test("does not find the deleted API-created course", function() {
+    expect(res.status).to.equal(404);
+    expect(res.body).to.have.property("status", "error");
+  });
+}

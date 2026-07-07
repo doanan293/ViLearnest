@@ -1,0 +1,46 @@
+meta {
+  name: Update Profile Valid
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/v1/profile/me
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Bruno Learner Updated",
+    "image": null,
+    "dateOfBirth": "1995-01-01",
+    "gender": "not-specified",
+    "phoneNumber": "+84901234567",
+    "country": "Vietnam",
+    "province": "Ho Chi Minh City",
+    "district": "District 1",
+    "ward": "Ben Nghe",
+    "addressLine": "1 Bruno Automation Street",
+    "bio": "Updated by Bruno authenticated workflow.",
+    "facebookUrl": "https://facebook.com/bruno.api",
+    "linkedinUrl": "https://linkedin.com/in/bruno-api",
+    "githubUrl": "https://github.com/bruno-api",
+    "websiteUrl": "https://example.com/bruno-api",
+    "occupation": "QA Automation Learner",
+    "organization": "ANDV LMS",
+    "education": "API Automation"
+  }
+}
+
+tests {
+  test("updates the profile", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("name", "Bruno Learner Updated");
+    expect(res.body.profile).to.have.property("phoneNumber", "+84901234567");
+    expect(res.body.profile).to.have.property("phoneVerified", false);
+  });
+}

@@ -1,0 +1,35 @@
+meta {
+  name: Presign Course Cover
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/storage/presigned
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "filename": "bruno-course-cover.png",
+    "contentType": "image/png"
+  }
+}
+
+script:post-response {
+  bru.setVar("courseCoverKey", res.body.key);
+  bru.setVar("uploadUrl", res.body.uploadUrl);
+}
+
+tests {
+  test("creates a presigned URL for the course cover", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("uploadUrl").that.is.a("string");
+    expect(res.body).to.have.property("key").that.is.a("string");
+    expect(res.body.key).to.include("bruno-");
+  });
+}

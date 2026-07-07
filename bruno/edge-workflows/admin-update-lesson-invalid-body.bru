@@ -1,0 +1,28 @@
+meta {
+  name: Admin Update Lesson Invalid Body
+  type: http
+  seq: 29
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/lessons/{{seededLessonId}}
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": ""
+  }
+}
+
+tests {
+  test("admin lesson update rejects invalid body", function() {
+    expect(res.status).to.equal(400);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.is.a("string");
+  });
+}

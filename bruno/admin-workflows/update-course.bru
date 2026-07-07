@@ -1,0 +1,36 @@
+meta {
+  name: Update Course
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/courses/{{adminCreatedCourseId}}
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "title": "Bruno API Automation Course Updated",
+    "description": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Course updated by Bruno authenticated API workflow.\"}]}]}",
+    "fileKey": "{{courseCoverKey}}",
+    "price": 0,
+    "duration": 50,
+    "level": "Beginner",
+    "category": "Testing",
+    "smallDescription": "Course updated by Bruno API automation.",
+    "slug": "{{adminCourseSlug}}",
+    "status": "Published"
+  }
+}
+
+tests {
+  test("updates the API-created course", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("status", "success");
+  });
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Upload Smoke File
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{uploadUrl}}
+  body: file
+}
+
+headers {
+  content-type: text/plain
+}
+
+body:file {
+  file: @file(fixtures/upload-smoke.txt) @contentType(text/plain)
+}
+
+tests {
+  test("uploads the smoke fixture through the presigned URL", function() {
+    expect([200, 204]).to.include(res.status);
+  });
+}

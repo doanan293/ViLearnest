@@ -1,0 +1,46 @@
+meta {
+  name: Admin Chapters Reorder Unauthorized
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/chapters/reorder
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "items": [
+      {
+        "id": "missing-chapter-id",
+        "position": 1
+      }
+    ]
+  }
+}
+
+tests {
+  test("returns 401 Unauthorized", function() {
+    expect(res.status).to.equal(401);
+  });
+
+  test("returns the standard error shape", function() {
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.is.a("string");
+  });
+
+  test("does not expose implementation details", function() {
+    const serialized = JSON.stringify(res.body).toLowerCase();
+    expect(serialized).to.not.include("stack");
+    expect(serialized).to.not.include("postgres");
+    expect(serialized).to.not.include("sql");
+    expect(serialized).to.not.include("/home/");
+    expect(serialized).to.not.include("secret");
+    expect(serialized).to.not.include("password");
+  });
+}

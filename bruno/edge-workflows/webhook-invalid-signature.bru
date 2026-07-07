@@ -1,0 +1,26 @@
+meta {
+  name: Webhook Invalid Signature
+  type: http
+  seq: 15
+}
+
+post {
+  url: {{baseUrl}}/api/v1/webhooks/stripe
+  body: text
+}
+
+headers {
+  content-type: application/json
+  stripe-signature: t=1783100000,v1=invalid
+}
+
+body:text {
+  {"type":"checkout.session.completed"}
+}
+
+tests {
+  test("rejects a Stripe webhook with an invalid signature", function() {
+    expect(res.status).to.equal(400);
+    expect(String(res.body)).to.include("Webhook Error:");
+  });
+}

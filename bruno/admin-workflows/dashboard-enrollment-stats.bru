@@ -1,0 +1,18 @@
+meta {
+  name: Dashboard Enrollment Stats
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/dashboard/enrollment-stats
+}
+
+tests {
+  test("returns 30 days of enrollment stats", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.be.an("array").with.length(30);
+    expect(res.body[0]).to.have.property("date").that.is.a("string");
+    expect(res.body[0]).to.have.property("enrollments").that.is.a("number");
+  });
+}

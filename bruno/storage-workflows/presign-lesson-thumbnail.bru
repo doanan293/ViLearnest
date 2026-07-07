@@ -1,0 +1,35 @@
+meta {
+  name: Presign Lesson Thumbnail
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/storage/presigned
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "filename": "bruno-lesson-thumbnail.png",
+    "contentType": "image/png"
+  }
+}
+
+script:post-response {
+  bru.setVar("lessonThumbnailKey", res.body.key);
+  bru.setVar("uploadUrl", res.body.uploadUrl);
+}
+
+tests {
+  test("creates a presigned URL for the lesson thumbnail", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("uploadUrl").that.is.a("string");
+    expect(res.body).to.have.property("key").that.is.a("string");
+    expect(res.body.key).to.include("bruno-");
+  });
+}

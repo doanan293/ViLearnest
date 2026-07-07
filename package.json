@@ -1,26 +1,39 @@
 {
-  "name": "andv-lms",
-  "version": "0.1.0",
+  "name": "andv-lms-monorepo",
+  "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "next": "16.0.8",
-    "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "dev": "npm run dev --workspace=@andv-lms/backend & npm run dev --workspace=@andv-lms/frontend",
+    "build": "npm run build --workspaces --if-present",
+    "db:generate": "npm run db:generate --workspace=@andv-lms/backend",
+    "db:migrate": "npm run db:migrate --workspace=@andv-lms/backend",
+    "db:import-courses": "npm run db:import-courses --workspace=@andv-lms/backend",
+    "test": "npm run test --workspaces --if-present",
+    "test:watch": "npm run test:watch --workspaces --if-present",
+    "biome:ci": "npm run biome:ci --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:fix": "npm run lint:fix --workspaces --if-present",
+    "format": "npm run format --workspaces --if-present",
+    "check": "npm run check --workspaces --if-present",
+    "check:fix": "npm run check:fix --workspaces --if-present",
+    "test:api": "cd bruno && bru run system auth-contract public-courses protected-routes admin-routes storage --env local",
+    "test:api:full": "node scripts/run-bruno-phase-b.mjs",
+    "test:api:payment": "node scripts/run-bruno-phase-c.mjs",
+    "test:api:coverage": "node scripts/run-bruno-phase-d.mjs"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.8",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@types/jest": "^30.0.0",
+    "@usebruno/cli": "3.5.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11"
+  },
+  "overrides": {
+    "postcss": "^8.5.10",
+    "uuid": "^13.0.2",
+    "esbuild": "^0.28.1"
   }
 }

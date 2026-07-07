@@ -1,0 +1,20 @@
+meta {
+  name: Desktop Check Payment Env
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/bruno-desktop/payment-env
+}
+
+headers {
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+tests {
+  test("validates payment environment for Desktop runs", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.deep.equal({ ok: true });
+  });
+}

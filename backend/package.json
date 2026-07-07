@@ -1,0 +1,49 @@
+{
+  "name": "@andv-lms/backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch --env-file=.env src/index.ts",
+    "build": "tsc --noEmit",
+    "test": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest",
+    "test:watch": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest --watch",
+    "test:coverage": "NODE_OPTIONS='--experimental-vm-modules --disable-warning=ExperimentalWarning' jest --coverage",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:import-courses": "tsx --env-file=.env src/scripts/import-courses.ts",
+    "db:seed-bruno-api": "tsx --env-file=.env src/scripts/seed-bruno-api.ts",
+    "bruno:check-storage-env": "tsx --env-file=.env src/scripts/check-bruno-storage-env.ts",
+    "bruno:check-payment-env": "tsx --env-file=.env src/scripts/check-bruno-payment-env.ts",
+    "bruno:export-payment-webhook": "tsx --env-file=.env src/scripts/export-bruno-payment-webhook.ts",
+    "bruno:export-auth-lifecycle-otp": "tsx --env-file=.env src/scripts/export-bruno-auth-lifecycle-otp.ts",
+    "biome:ci": "biome ci --no-errors-on-unmatched --files-ignore-unknown=true .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write --unsafe .",
+    "format": "biome format --write .",
+    "check": "biome check .",
+    "check:fix": "biome check --write --unsafe ."
+  },
+  "dependencies": {
+    "@arcjet/node": "^1.5.0",
+    "@aws-sdk/client-s3": "^3.1056.0",
+    "@aws-sdk/s3-request-presigner": "^3.1056.0",
+    "@fastify/cors": "^10.1.0",
+    "@fastify/swagger": "^9.0.0",
+    "@fastify/swagger-ui": "^5.0.0",
+    "better-auth": "^1.6.18",
+    "drizzle-orm": "^0.45.2",
+    "fastify": "^5.0.0",
+    "fastify-raw-body": "^5.0.0",
+    "postgres": "^3.4.4",
+    "stripe": "^22.2.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.16",
+    "@types/node": "^20.0.0",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.0.0"
+  }
+}

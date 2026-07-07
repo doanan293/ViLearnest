@@ -1,0 +1,28 @@
+meta {
+  name: User Forbidden Admin Update User Profile
+  type: http
+  seq: 27
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/users/{{seededUserId}}/profile
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Blocked Admin Profile Update"
+  }
+}
+
+tests {
+  test("normal user cannot update profiles through admin routes", function() {
+    expect(res.status).to.equal(403);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.includes("Administrator");
+  });
+}

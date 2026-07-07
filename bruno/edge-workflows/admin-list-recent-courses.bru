@@ -1,0 +1,16 @@
+meta {
+  name: Admin List Recent Courses
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/courses/recent
+}
+
+tests {
+  test("returns recent courses for admin", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.be.an("array");
+  });
+}

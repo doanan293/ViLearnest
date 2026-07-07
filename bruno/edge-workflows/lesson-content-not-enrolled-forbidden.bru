@@ -1,0 +1,17 @@
+meta {
+  name: Lesson Content Not Enrolled Forbidden
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/lessons/{{unenrolledLessonId}}
+}
+
+tests {
+  test("returns forbidden for lesson content when the user is not enrolled", function() {
+    expect(res.status).to.equal(403);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.includes("Not enrolled");
+  });
+}

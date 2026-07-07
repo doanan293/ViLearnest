@@ -1,0 +1,26 @@
+meta {
+  name: Desktop Export Payment Webhook Runtime
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/bruno-desktop/payment-webhook-runtime
+}
+
+headers {
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+script:post-response {
+  bru.setVar("paymentWebhookPayload", res.body.paymentWebhookPayload);
+  bru.setVar("paymentWebhookSignature", res.body.paymentWebhookSignature);
+}
+
+tests {
+  test("exports signed payment webhook runtime variables", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("paymentWebhookPayload").that.is.a("string");
+    expect(res.body).to.have.property("paymentWebhookSignature").that.is.a("string");
+  });
+}

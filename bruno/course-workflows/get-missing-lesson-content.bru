@@ -1,0 +1,17 @@
+meta {
+  name: Get Missing Lesson Content
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/lessons/bruno-missing-lesson
+}
+
+tests {
+  test("returns not found for a missing lesson", function() {
+    expect(res.status).to.equal(404);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.includes("Lesson not found");
+  });
+}

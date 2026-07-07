@@ -1,0 +1,23 @@
+meta {
+  name: OpenAPI JSON
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/openapi.json
+}
+
+tests {
+  test("returns 200 OK", function() {
+    expect(res.status).to.equal(200);
+  });
+
+  test("returns the OpenAPI document contract", function() {
+    expect(res.body).to.have.property("openapi");
+    expect(res.body).to.have.property("info");
+    expect(res.body.info).to.have.property("title", "ANDV LMS API");
+    expect(res.body).to.have.property("paths");
+    expect(res.body.paths).to.have.property("/health");
+  });
+}

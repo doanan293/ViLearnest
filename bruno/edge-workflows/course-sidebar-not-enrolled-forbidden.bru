@@ -1,0 +1,17 @@
+meta {
+  name: Course Sidebar Not Enrolled Forbidden
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{unenrolledCourseSlug}}/sidebar
+}
+
+tests {
+  test("returns forbidden for sidebar when the user is not enrolled", function() {
+    expect(res.status).to.equal(403);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.includes("Not enrolled");
+  });
+}
