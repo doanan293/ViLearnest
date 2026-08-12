@@ -1,0 +1,16 @@
+meta {
+  name: Payment Course Enrolled
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/{{paymentCourseId}}/is-enrolled
+}
+
+tests {
+  test("reports the payment course is enrolled after webhook", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("enrolled", true);
+  });
+}

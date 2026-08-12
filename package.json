@@ -19,16 +19,18 @@
     "lint:fix": "npm run lint:fix --workspaces --if-present",
     "format": "npm run format --workspaces --if-present",
     "check": "npm run check --workspaces --if-present",
-    "check:fix": "npm run check:fix --workspaces --if-present",
-    "test:api": "cd bruno && bru run system auth-contract public-courses protected-routes admin-routes storage --env local",
-    "test:api:full": "node scripts/run-bruno-phase-b.mjs",
-    "test:api:payment": "node scripts/run-bruno-phase-c.mjs",
-    "test:api:coverage": "node scripts/run-bruno-phase-d.mjs"
+    "test:api": "npm run db:seed-bruno-api --workspace=@andv-lms/backend && cd bruno && bru run --env local",
+    "test:api:smoke": "cd bruno && bru run 01-system 02-auth-contract 03-public-courses 04-protected-routes 05-admin-routes 06-storage --env local",
+    "test:api:workflows": "node scripts/run-bruno-workflows.mjs",
+    "test:api:payment": "node scripts/run-bruno-payment.mjs",
+    "test:api:edge": "node scripts/run-bruno-edge-lifecycle.mjs",
+    "test:api:all": "npm run db:seed-bruno-api --workspace=@andv-lms/backend && cd bruno && bru run --env local"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@usebruno/cli": "3.5.0",
     "jest": "^30.4.2",
+    "pptxgenjs": "^4.0.1",
     "ts-jest": "^29.4.11"
   },
   "overrides": {

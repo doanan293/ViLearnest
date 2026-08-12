@@ -1,0 +1,24 @@
+meta {
+  name: Sign Out Lifecycle User
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/api/auth/sign-out
+}
+
+headers {
+  origin: {{frontendUrl}}
+}
+
+script:post-response {
+  bru.setVar("authToken", "");
+}
+
+tests {
+  test("signs out the lifecycle user", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("success", true);
+  });
+}

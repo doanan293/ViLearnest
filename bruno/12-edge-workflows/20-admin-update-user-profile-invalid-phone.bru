@@ -1,0 +1,29 @@
+meta {
+  name: Admin Update User Profile Invalid Phone
+  type: http
+  seq: 20
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/users/{{seededUserId}}/profile
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Bruno Learner Managed",
+    "phoneNumber": "not-a-phone"
+  }
+}
+
+tests {
+  test("admin profile update rejects invalid phone number", function() {
+    expect(res.status).to.equal(400);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.includes("phoneNumber");
+  });
+}

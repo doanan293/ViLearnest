@@ -1,0 +1,31 @@
+meta {
+  name: Admin Update Missing Lesson
+  type: http
+  seq: 25
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/lessons/bruno-missing-lesson
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Missing Lesson Update",
+    "description": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Missing lesson update.\"}]}]}",
+    "thumbnailKey": "bruno-fixtures/missing-lesson-thumbnail.png",
+    "videoKey": "bruno-fixtures/missing-lesson-video.mp4"
+  }
+}
+
+tests {
+  test("returns not found when updating a missing lesson", function() {
+    expect(res.status).to.equal(404);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.includes("Lesson not found");
+  });
+}

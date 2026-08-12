@@ -1,0 +1,73 @@
+<mxfile host="Electron" modified="2026-07-21T11:45:00.000Z" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="hinh-2-sosanh" name="Hinh 2 - So sanh Bruno va Postman">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="600" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="SO SÁNH WORKFLOW QUẢN LÝ KIỂM THỬ: POSTMAN/INSOMNIA VS BRUNO GIT-FRIENDLY" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;fontColor=#1A202C;" vertex="1" parent="1">
+          <mxGeometry x="100" y="20" width="800" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Left Side: Postman/Insomnia Monolithic Approach -->
+        <mxCell id="c_postman" value="CÁC CÔNG CỤ TRUYỀN THỐNG (POSTMAN / INSOMNIA)" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#FFF5F5;strokeColor=#E53E3E;fontColor=#9B2C2C;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="430" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="pm_file" value="Monolithic Collection JSON File&#xa;(Ví dụ: collection.json - hàng chục ngàn dòng)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FED7D7;strokeColor=#E53E3E;fontSize=11;fontStyle=1;" vertex="1" parent="c_postman">
+          <mxGeometry x="30" y="45" width="370" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pm_step1" value="Nhiều lập trình viên cùng chỉnh sửa request trên các nhánh Git khác nhau" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53E3E;fontSize=11;" vertex="1" parent="c_postman">
+          <mxGeometry x="30" y="115" width="370" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pm_step2" value="Git Merge Conflict phức tạp khi hợp nhất tệp JSON khổng lồ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FECDD3;strokeColor=#E53E3E;fontSize=11;fontStyle=1;fontColor=#991B1B;" vertex="1" parent="c_postman">
+          <mxGeometry x="30" y="175" width="370" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pm_step3" value="Diff khó đọc trên Pull Request (nhiều metadata sinh tự động bởi công cụ)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53E3E;fontSize=11;" vertex="1" parent="c_postman">
+          <mxGeometry x="30" y="240" width="370" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pm_step4" value="Loại bỏ Scratchpad / Ép buộc Cloud Sync &amp; Đăng ký tài khoản" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E53E3E;fontSize=11;" vertex="1" parent="c_postman">
+          <mxGeometry x="30" y="305" width="370" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pm_risk" value="RỦI RO: Nguy cơ rò rỉ secret/token lên Cloud, khó audit, ma sát quy trình phát triển" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E53E3E;strokeColor=#9B2C2C;fontSize=11;fontStyle=1;fontColor=#FFFFFF;" vertex="1" parent="c_postman">
+          <mxGeometry x="30" y="375" width="370" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Right Side: Bruno Git-friendly Approach -->
+        <mxCell id="c_bruno" value="GIẢI PHÁP BRUNO GIT-FRIENDLY WORKFLOW" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#F0FFF4;strokeColor=#38A169;fontColor=#276749;" vertex="1" parent="1">
+          <mxGeometry x="530" y="70" width="430" height="480" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="br_folder" value="Thư mục Collection phân tách theo nghiệp vụ&#xa;(bruno/system, bruno/auth, bruno/admin, bruno/payment...)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C6F6D5;strokeColor=#38A169;fontSize=11;fontStyle=1;" vertex="1" parent="c_bruno">
+          <mxGeometry x="30" y="45" width="370" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="br_file" value="Bru Markup Files (.bru)&#xa;Mỗi request là 1 file văn bản thuần plain-text độc lập" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38A169;fontSize=11;fontStyle=1;" vertex="1" parent="c_bruno">
+          <mxGeometry x="30" y="115" width="370" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="br_step1" value="Diff rõ ràng từng dòng code trên Git Pull Request" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38A169;fontSize=11;" vertex="1" parent="c_bruno">
+          <mxGeometry x="30" y="180" width="370" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="br_step2" value="Giảm thiểu tối đa xung đột mã nguồn khi nhiều người làm việc song song" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38A169;fontSize=11;" vertex="1" parent="c_bruno">
+          <mxGeometry x="30" y="240" width="370" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="br_step3" value="Hoàn toàn 100% Offline, lưu trữ cục bộ dưới sự kiểm soát của dự án" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38A169;fontSize=11;" vertex="1" parent="c_bruno">
+          <mxGeometry x="30" y="305" width="370" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="br_benefit" value="LỢI ÍCH: An toàn thông tin tuyệt đối, quản lý như artifact mã nguồn, dễ audit &amp; tự động hóa CLI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#38A169;strokeColor=#276749;fontSize=11;fontStyle=1;fontColor=#FFFFFF;" vertex="1" parent="c_bruno">
+          <mxGeometry x="30" y="375" width="370" height="55" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

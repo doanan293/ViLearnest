@@ -1,0 +1,25 @@
+meta {
+  name: List Published Courses
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses
+}
+
+tests {
+  test("returns 200 OK", function() {
+    expect(res.status).to.equal(200);
+  });
+
+  test("returns an array of courses", function() {
+    expect(res.body).to.be.an("array");
+
+    if (res.body.length > 0) {
+      expect(res.body[0]).to.have.property("id");
+      expect(res.body[0]).to.have.property("title");
+      expect(res.body[0]).to.have.property("slug");
+    }
+  });
+}

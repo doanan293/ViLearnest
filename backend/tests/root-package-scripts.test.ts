@@ -8,29 +8,37 @@ describe("root package scripts", () => {
     };
 
     expect(packageJson.scripts?.["test:api"]).toBe(
-      "cd bruno && bru run system auth-contract public-courses protected-routes admin-routes storage --env local"
+      "npm run db:seed-bruno-api --workspace=@andv-lms/backend && cd bruno && bru run --env local"
     );
-    expect(packageJson.scripts?.["test:api:full"]).toBe("node scripts/run-bruno-phase-b.mjs");
-    expect(packageJson.scripts?.["test:api:payment"]).toBe("node scripts/run-bruno-phase-c.mjs");
-    expect(packageJson.scripts?.["test:api:coverage"]).toBe("node scripts/run-bruno-phase-d.mjs");
+    expect(packageJson.scripts?.["test:api:smoke"]).toBe(
+      "cd bruno && bru run 01-system 02-auth-contract 03-public-courses 04-protected-routes 05-admin-routes 06-storage --env local"
+    );
+    expect(packageJson.scripts?.["test:api:workflows"]).toBe("node scripts/run-bruno-workflows.mjs");
+    expect(packageJson.scripts?.["test:api:payment"]).toBe("node scripts/run-bruno-payment.mjs");
+    expect(packageJson.scripts?.["test:api:edge"]).toBe("node scripts/run-bruno-edge-lifecycle.mjs");
+    expect(packageJson.scripts?.["test:api:all"]).toBe(
+      "npm run db:seed-bruno-api --workspace=@andv-lms/backend && cd bruno && bru run --env local"
+    );
     expect(packageJson.scripts).not.toHaveProperty("test:api:seed");
     expect(packageJson.scripts).not.toHaveProperty("test:api:storage-env");
     expect(packageJson.scripts).not.toHaveProperty("test:api:payment-env");
   });
 
   it("keeps Bruno runner prerequisites self-contained", () => {
-    const phaseBRunner = readFileSync(join(process.cwd(), "..", "scripts", "run-bruno-phase-b.mjs"), "utf8");
-    const phaseCRunner = readFileSync(join(process.cwd(), "..", "scripts", "run-bruno-phase-c.mjs"), "utf8");
-    const phaseDRunner = readFileSync(join(process.cwd(), "..", "scripts", "run-bruno-phase-d.mjs"), "utf8");
+    const workflowsRunner = readFileSync(join(process.cwd(), "..", "scripts", "run-bruno-workflows.mjs"), "utf8");
+    const paymentRunner = readFileSync(join(process.cwd(), "..", "scripts", "run-bruno-payment.mjs"), "utf8");
+    const edgeRunner = readFileSync(join(process.cwd(), "..", "scripts", "run-bruno-edge-lifecycle.mjs"), "utf8");
 
-    for (const runner of [phaseBRunner, phaseCRunner, phaseDRunner]) {
+    for (const runner of [workflowsRunner, paymentRunner, edgeRunner]) {
       expect(runner).not.toContain("test:api:seed");
       expect(runner).not.toContain("test:api:storage-env");
       expect(runner).not.toContain("test:api:payment-env");
       expect(runner).toContain('run("npm", ["run", "db:seed-bruno-api", "--workspace=@andv-lms/backend"]);');
     }
 
-    expect(phaseBRunner).toContain('run("npm", ["run", "bruno:check-storage-env", "--workspace=@andv-lms/backend"]);');
-    expect(phaseCRunner).toContain('run("npm", ["run", "bruno:check-payment-env", "--workspace=@andv-lms/backend"]);');
+    expect(workflowsRunner).toContain(
+      'run("npm", ["run", "bruno:check-storage-env", "--workspace=@andv-lms/backend"]);'
+    );
+    expect(paymentRunner).toContain('run("npm", ["run", "bruno:check-payment-env", "--workspace=@andv-lms/backend"]);');
   });
 });

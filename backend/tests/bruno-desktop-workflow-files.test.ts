@@ -4,21 +4,21 @@ import { join } from "node:path";
 const brunoRoot = join(process.cwd(), "..", "bruno");
 
 const desktopHelperFiles = [
-  "seed.bru",
-  "check-storage-env.bru",
-  "check-payment-env.bru",
-  "export-payment-webhook-runtime.bru",
-  "export-auth-lifecycle-otp.bru",
+  join("07-user-workflows", "01-seed.bru"),
+  join("07-user-workflows", "02-check-storage-env.bru"),
+  join("11-payment-workflows", "02-check-payment-env.bru"),
+  join("11-payment-workflows", "08-export-payment-webhook-runtime.bru"),
+  join("13-auth-lifecycle-workflows", "05-export-auth-lifecycle-otp.bru"),
 ];
 
 function readDesktopHelper(file: string) {
-  return readFileSync(join(brunoRoot, "desktop-helpers", file), "utf8");
+  return readFileSync(join(brunoRoot, file), "utf8");
 }
 
 describe("bruno desktop workflow files", () => {
   it("contains every Desktop helper request file", () => {
     for (const file of desktopHelperFiles) {
-      expect(existsSync(join(brunoRoot, "desktop-helpers", file))).toBe(true);
+      expect(existsSync(join(brunoRoot, file))).toBe(true);
     }
   });
 
@@ -38,8 +38,8 @@ describe("bruno desktop workflow files", () => {
   });
 
   it("stores exported runtime variables for later Desktop requests", () => {
-    const paymentRuntime = readDesktopHelper("export-payment-webhook-runtime.bru");
-    const lifecycleOtp = readDesktopHelper("export-auth-lifecycle-otp.bru");
+    const paymentRuntime = readDesktopHelper(join("11-payment-workflows", "08-export-payment-webhook-runtime.bru"));
+    const lifecycleOtp = readDesktopHelper(join("13-auth-lifecycle-workflows", "05-export-auth-lifecycle-otp.bru"));
 
     expect(paymentRuntime).toContain('bru.setVar("paymentWebhookPayload", res.body.paymentWebhookPayload);');
     expect(paymentRuntime).toContain('bru.setVar("paymentWebhookSignature", res.body.paymentWebhookSignature);');
@@ -49,11 +49,11 @@ describe("bruno desktop workflow files", () => {
 
   it("uses Desktop runtime variables before environment fallbacks in downstream workflows", () => {
     const paymentWebhook = readFileSync(
-      join(brunoRoot, "payment-workflows", "stripe-checkout-completed-webhook.bru"),
+      join(brunoRoot, "11-payment-workflows", "09-stripe-checkout-completed-webhook.bru"),
       "utf8"
     );
     const resetPassword = readFileSync(
-      join(brunoRoot, "auth-lifecycle-workflows", "reset-password-lifecycle-user.bru"),
+      join(brunoRoot, "13-auth-lifecycle-workflows", "06-reset-password-lifecycle-user.bru"),
       "utf8"
     );
 
@@ -84,7 +84,6 @@ describe("bruno desktop workflow files", () => {
     expect(readme).toContain("## Bruno Desktop Full Run");
     expect(readme).toContain("BRUNO_DESKTOP_HELPERS_ENABLED=true");
     expect(readme).toContain("BRUNO_DESKTOP_HELPER_TOKEN=bruno-desktop-local-token");
-    expect(readme).toContain("desktop-helpers/export-payment-webhook-runtime");
-    expect(readme).toContain("desktop-helpers/export-auth-lifecycle-otp");
+    expect(readme).toContain("1-Click Collection Runner");
   });
 });

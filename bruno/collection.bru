@@ -10,3 +10,10 @@ headers {
 auth {
   mode: none
 }
+
+script:pre-request {
+  const token = bru.getVar("authToken");
+  if (token) {
+    req.setHeader("authorization", "Bearer " + token);
+  }
+}

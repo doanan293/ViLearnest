@@ -1,0 +1,10 @@
+from: markdown
+to: docx
+standalone: true
+reference-doc: ${.}/reference.docx
+filters:
+  - ${.}/filter.lua
+resource-path:
+  - ${.}/..
+  - ${.}/../images
+  - ${.}/assets

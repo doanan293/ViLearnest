@@ -1,0 +1,28 @@
+meta {
+  name: Admin Create Course Invalid Body
+  type: http
+  seq: 26
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/courses
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "title": ""
+  }
+}
+
+tests {
+  test("rejects invalid admin course creation body", function() {
+    expect(res.status).to.equal(400);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.is.a("string");
+  });
+}

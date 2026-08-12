@@ -1,0 +1,37 @@
+meta {
+  name: Admin Update Missing Course
+  type: http
+  seq: 24
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/courses/bruno-missing-course
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "title": "Missing Course Update",
+    "description": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Missing course update.\"}]}]}",
+    "fileKey": "bruno-fixtures/missing-course-cover.png",
+    "price": 0,
+    "duration": 15,
+    "level": "Beginner",
+    "category": "Testing",
+    "smallDescription": "Missing course update.",
+    "slug": "bruno-missing-course",
+    "status": "Published"
+  }
+}
+
+tests {
+  test("returns not found when updating a missing course", function() {
+    expect(res.status).to.equal(404);
+    expect(res.body).to.have.property("status", "error");
+    expect(res.body).to.have.property("message").that.includes("Course not found");
+  });
+}

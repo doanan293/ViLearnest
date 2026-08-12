@@ -1,0 +1,16 @@
+meta {
+  name: Webhook Empty Body
+  type: http
+  seq: 29
+}
+
+post {
+  url: {{baseUrl}}/api/v1/webhooks/stripe
+}
+
+tests {
+  test("rejects an empty Stripe webhook body", function() {
+    expect(res.status).to.equal(400);
+    expect(String(res.body)).to.include("Webhook Error: Empty body");
+  });
+}

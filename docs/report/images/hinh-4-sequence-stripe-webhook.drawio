@@ -1,0 +1,157 @@
+<mxfile host="Electron" modified="2026-07-21T12:56:00.000Z" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="hinh-4-sequence" name="Hinh 4 - Sequence Stripe Webhook">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="720" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="SƠ ĐỒ TRÌNH TỰ TÍCH HỢP STRIPE CHECKOUT, WEBHOOK VÀ MỞ KHÓA HỌC PHẦN" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;fontColor=#1A202C;" vertex="1" parent="1">
+          <mxGeometry x="100" y="20" width="900" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Lifeline Headers & Vertical Dashed Lines -->
+        <!-- Lifeline 1: Bruno Test Runner (x = 60, center = 125) -->
+        <mxCell id="ll1_box" value="Bruno Test Runner&#xa;(Học viên/Test)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E9D8FD;strokeColor=#805AD5;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="70" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ll1_line" value="" style="line;strokeWidth=1;strokeColor=#805AD5;dashed=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="124" y="115" width="2" height="570" as="geometry" />
+        </mxCell>
+
+        <!-- Lifeline 2: Fastify Backend (x = 280, center = 345) -->
+        <mxCell id="ll2_box" value="Fastify Backend&#xa;(REST API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C6F6D5;strokeColor=#38A169;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="70" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ll2_line" value="" style="line;strokeWidth=1;strokeColor=#38A169;dashed=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="344" y="115" width="2" height="570" as="geometry" />
+        </mxCell>
+
+        <!-- Lifeline 3: PostgreSQL DB (x = 500, center = 565) -->
+        <mxCell id="ll3_box" value="PostgreSQL DB&#xa;(Drizzle ORM)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEFCBF;strokeColor=#D69E2E;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="70" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ll3_line" value="" style="line;strokeWidth=1;strokeColor=#D69E2E;dashed=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="564" y="115" width="2" height="570" as="geometry" />
+        </mxCell>
+
+        <!-- Lifeline 4: Stripe API (x = 710, center = 775) -->
+        <mxCell id="ll4_box" value="Stripe API&#xa;(Test Gateway)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF8FF;strokeColor=#3182CE;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="710" y="70" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ll4_line" value="" style="line;strokeWidth=1;strokeColor=#3182CE;dashed=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="774" y="115" width="2" height="570" as="geometry" />
+        </mxCell>
+
+        <!-- Lifeline 5: Stripe Webhook Verifier (x = 900, center = 965) -->
+        <mxCell id="ll5_box" value="Stripe Webhook&#xa;Verifier Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FED7D7;strokeColor=#E53E3E;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="70" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ll5_line" value="" style="line;strokeWidth=1;strokeColor=#E53E3E;dashed=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="964" y="115" width="2" height="570" as="geometry" />
+        </mxCell>
+
+        <!-- Step 1: Enroll call (y = 150) -->
+        <mxCell id="m1" value="1. POST /api/v1/courses/enroll (courseId)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;fontStyle=1;strokeColor=#805AD5;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="125" y="150" as="sourcePoint" />
+            <mxPoint x="345" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 1b: Write DB (y = 195) -->
+        <mxCell id="m1_db" value="Ghi Enrollment (Trạng thái: Pending)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=10;strokeColor=#38A169;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="345" y="195" as="sourcePoint" />
+            <mxPoint x="565" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 1c: Create Session (y = 240) -->
+        <mxCell id="m1_stripe" value="Tạo Stripe Checkout Session" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=10;strokeColor=#38A169;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="345" y="240" as="sourcePoint" />
+            <mxPoint x="775" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 1d: Return Session URL (y = 285) -->
+        <mxCell id="m1_resp" value="Trả Checkout Session URL" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;fontSize=10;strokeColor=#805AD5;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="345" y="285" as="sourcePoint" />
+            <mxPoint x="125" y="285" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 2: Pre-webhook check (y = 335) -->
+        <mxCell id="m2" value="2. GET /api/v1/courses/is-enrolled -&gt; Trả { enrolled: false }" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=10;strokeColor=#805AD5;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="125" y="335" as="sourcePoint" />
+            <mxPoint x="345" y="335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 3: Webhook event emit (y = 385) -->
+        <mxCell id="m3_evt" value="3. Phát sự kiện checkout.session.completed" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=10;fontStyle=1;strokeColor=#3182CE;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="775" y="385" as="sourcePoint" />
+            <mxPoint x="965" y="385" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 4: Webhook call to Fastify (y = 435) -->
+        <mxCell id="m3_wh" value="4. POST /api/v1/webhooks/stripe (Raw Body + stripe-signature)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=10;fontStyle=1;strokeColor=#E53E3E;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="965" y="435" as="sourcePoint" />
+            <mxPoint x="345" y="435" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 4b: Verify Signature (Self Loop y = 475 to 495) -->
+        <mxCell id="m3_verify" value="Xác minh Chữ ký Webhook Secret bằng fastify-raw-body" style="html=1;verticalAlign=bottom;endArrow=open;fontSize=10;fontStyle=2;strokeColor=#38A169;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="345" y="475" as="sourcePoint" />
+            <mxPoint x="345" y="500" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="420" y="475" />
+              <mxPoint x="420" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 4c: Update DB (y = 535) -->
+        <mxCell id="m3_update" value="Cập nhật Enrollment: Pending -&gt; Active" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=10;fontStyle=1;strokeColor=#38A169;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="345" y="535" as="sourcePoint" />
+            <mxPoint x="565" y="535" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 4d: Webhook Ack (y = 575) -->
+        <mxCell id="m3_ack" value="Trả HTTP 200 { received: true }" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;fontSize=10;strokeColor=#E53E3E;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="345" y="575" as="sourcePoint" />
+            <mxPoint x="965" y="575" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 5: Post-webhook verification (y = 620) -->
+        <mxCell id="m4_check" value="5. GET /api/v1/courses/is-enrolled -&gt; Trả { enrolled: true }" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=10;fontStyle=1;strokeColor=#805AD5;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="125" y="620" as="sourcePoint" />
+            <mxPoint x="345" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 6: Get Lesson Content (y = 665) -->
+        <mxCell id="m5_content" value="6. GET /api/v1/courses/lesson/content -&gt; Trả 200 OK &amp; Video Content Data" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=10;fontStyle=1;strokeColor=#805AD5;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="125" y="665" as="sourcePoint" />
+            <mxPoint x="345" y="665" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

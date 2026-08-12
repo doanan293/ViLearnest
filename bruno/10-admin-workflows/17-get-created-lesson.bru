@@ -1,0 +1,18 @@
+meta {
+  name: Get Created Lesson
+  type: http
+  seq: 17
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/lessons/{{adminCreatedLessonId}}
+}
+
+tests {
+  test("returns the API-created lesson media keys", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("id", bru.getVar("adminCreatedLessonId"));
+    expect(res.body).to.have.property("thumbnailKey", bru.getVar("lessonThumbnailKey"));
+    expect(res.body).to.have.property("videoKey", bru.getVar("lessonVideoKey"));
+  });
+}

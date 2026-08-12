@@ -1,0 +1,32 @@
+meta {
+  name: Reorder Chapters
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/chapters/reorder
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "items": [
+      {
+        "id": "{{adminCreatedChapterId}}",
+        "position": 1
+      }
+    ]
+  }
+}
+
+tests {
+  test("reorders the API-created chapter", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("status", "success");
+  });
+}

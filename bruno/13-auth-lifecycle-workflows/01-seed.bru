@@ -1,0 +1,22 @@
+meta {
+  name: Desktop Seed Bruno API
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/bruno-desktop/seed
+}
+
+headers {
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+tests {
+  test("seeds Bruno API data for Desktop runs", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("ok", true);
+    expect(res.body).to.have.property("seededCourseId", "bruno-seeded-enrolled-course");
+    expect(res.body).to.have.property("paymentCourseId", "bruno-payment-course");
+  });
+}
