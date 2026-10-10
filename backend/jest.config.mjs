@@ -1,7 +1,7 @@
 /** @type {import("ts-jest").JestConfigWithTsJest} */
 export default {
   preset: "ts-jest/presets/default-esm",
-  setupFiles: ["./tests/jest.setup.ts"],
+  setupFiles: ["<rootDir>/tests/jest.setup.ts"],
   testEnvironment: "node",
   extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
@@ -11,13 +11,12 @@ export default {
     "^.+\\.ts$": [
       "ts-jest",
       {
-        tsconfig: "tsconfig.jest.json",
+        tsconfig: "<rootDir>/tsconfig.jest.json",
         useESM: true,
       },
     ],
   },
   testMatch: ["<rootDir>/tests/unit/**/*.test.ts"],
-  testPathIgnorePatterns: ["<rootDir>/tests/integration/"],
   testTimeout: 30000,
   maxWorkers: 1,
   collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts"],
