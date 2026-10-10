@@ -1,0 +1,28 @@
+meta {
+  name: Capture owned dashboard baseline
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/dashboard/stats
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("coursesBefore", res.body.totalCourses);
+    bru.setVar("lessonsBefore", res.body.totalLessons);
+  }
+}
+
+tests {
+  test("returns the dashboard baseline for later owned deltas", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.totalCourses).to.be.a("number");
+    expect(res.body.totalLessons).to.be.a("number");
+  });
+}

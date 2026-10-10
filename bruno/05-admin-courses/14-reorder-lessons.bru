@@ -1,0 +1,34 @@
+meta {
+  name: ADMIN-order reorder lessons
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/lessons/reorder
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "items": [
+      { "id": "{{createdLessonAId}}", "position": 2 },
+      { "id": "{{createdLessonBId}}", "position": 1 }
+    ]
+  }
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("swaps lesson sibling order", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.status).to.equal("success");
+  });
+}

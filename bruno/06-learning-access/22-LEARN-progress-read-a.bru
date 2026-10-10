@@ -1,0 +1,22 @@
+meta {
+  name: LEARN-progress-read-a
+  type: http
+  seq: 22
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{activeSlug}}/sidebar
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("reads completed progress after mutation", function() {
+    const lesson = res.body.course.chapter.flatMap((chapter) => chapter.lessons).find((entry) => entry.id === bru.getVar("activeLessonId"));
+    expect(res.status).to.equal(200);
+    expect(lesson.lessonProgess).to.have.length(1);
+    expect(lesson.lessonProgess[0].completed).to.equal(true);
+  });
+}

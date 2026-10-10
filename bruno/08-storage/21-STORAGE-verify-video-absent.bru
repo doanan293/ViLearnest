@@ -1,0 +1,31 @@
+meta {
+  name: STORAGE-delete confirm video object absence
+  type: http
+  seq: 21
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/storage/inspect
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "storage", "key": "{{videoKey}}" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("provider inspection confirms video object deletion", function() { expect(res.body.exists).to.equal(false); });
+}

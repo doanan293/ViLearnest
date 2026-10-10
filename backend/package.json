@@ -13,17 +13,13 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:import-courses": "tsx --env-file=.env src/scripts/import-courses.ts",
-    "db:seed-bruno-api": "tsx --env-file=.env src/scripts/seed-bruno-api.ts",
-    "bruno:check-storage-env": "tsx --env-file=.env src/scripts/check-bruno-storage-env.ts",
-    "bruno:check-payment-env": "tsx --env-file=.env src/scripts/check-bruno-payment-env.ts",
-    "bruno:export-payment-webhook": "tsx --env-file=.env src/scripts/export-bruno-payment-webhook.ts",
-    "bruno:export-auth-lifecycle-otp": "tsx --env-file=.env src/scripts/export-bruno-auth-lifecycle-otp.ts",
     "biome:ci": "biome ci --no-errors-on-unmatched --files-ignore-unknown=true .",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write --unsafe .",
     "format": "biome format --write .",
     "check": "biome check .",
-    "check:fix": "biome check --write --unsafe ."
+    "check:fix": "biome check --write --unsafe .",
+    "typecheck:tests": "tsc --project tsconfig.jest.json --noEmit"
   },
   "dependencies": {
     "@arcjet/node": "^1.5.0",

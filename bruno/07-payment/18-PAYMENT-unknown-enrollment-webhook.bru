@@ -1,0 +1,31 @@
+meta {
+  name: PAYMENT-invalid reject unknown enrollment event
+  type: http
+  seq: 19
+}
+
+post {
+  url: {{baseUrl}}/api/v1/webhooks/stripe
+  body: text
+}
+
+headers {
+  content-type: application/json
+}
+
+body:text {
+  {}
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("stripe-signature", bru.getVar("unknownEnrollmentWebhookSignature"));
+  req.setBody(bru.getVar("unknownEnrollmentWebhookPayload"), { raw: true });
+}
+
+tests {
+  test("rejects a signed event for an enrollment outside this run", function() { expect(res.status).to.equal(400); });
+}

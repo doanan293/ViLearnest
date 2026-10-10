@@ -278,3 +278,49 @@ Contributions are always welcome to help improve Andv LMS!
 ## 📄 License
 
 This software is distributed under the **MIT License**. Check out the `LICENSE` file for more details.
+
+
+## API business verification
+
+Bruno requests, the standalone fixture helper, runner and coverage inventory live in `bruno/`; product integration regressions live in `backend/tests/integration/`. See [Bruno setup and Native Desktop instructions](bruno/README.md).
+
+```sh
+DATABASE_URL="$TEST_DATABASE_URL" NODE_ENV=test BRUNO_DESKTOP_HELPERS_ENABLED=true BRUNO_DESKTOP_HELPER_TOKEN=bruno-desktop-local-token npm run bruno:helper
+npm run test:api:smoke
+npm run test:api:core
+npm run test:api
+npm run test:bruno:tooling
+TEST_DATABASE_URL=<isolated-test-database> npm run test:integration
+npm run test:api:coverage -- --evidence .bruno-reports/evidence.json
+```
+
+Start the API and explicitly enabled loopback helper against the same isolated test database before mutable suites. Core needs no storage/payment preflight; the complete collection requires test S3 and Stripe configuration. Interrupted runs recover through `npm run test:api:cleanup -- --run-id <uuid> --suite <suite>`. See [verification evidence and outstanding manual checks](docs/testing/bruno-verification.md).
+
+## Test ownership and browser verification
+
+The testing stack is **Jest + Playwright Test + Bruno**. Jest checks product logic, UI and PostgreSQL regressions. Playwright checks browser journeys against the real Next.js frontend and Fastify backend. Bruno checks HTTP workflows on a running API; its Jest tests check the tooling itself.
+
+Only `frontend`, `backend`, `bruno` and `docs` own code/documents at the root. Backend test support owns common LMS data builders; Bruno retains its manifest, recovery and provider cleanup. Scripts reside in `backend/scripts`, `bruno/tooling` or `docs/presentation`.
+
+```sh
+npm test
+npm run check:all
+npm run test:integration
+npm run test:bruno:integration
+npm run test:e2e:install
+npm run test:e2e
+```
+
+The three integration/browser commands require `TEST_DATABASE_URL` pointing to a migrated isolated PostgreSQL database with `test` in its name. They fail when it is missing. `npm test` needs no running server. Run database migration against that explicit isolated URL before the first integration/browser run.
+
+Playwright owns ports 5002 (API) and 3002 (frontend), builds the frontend with the matching API URL, and refuses to reuse an existing server. Chromium journeys check email login/session reload, refusal of unenrolled access, persisted progress and isolation between learners. Each browser test prepares its own UUID-scoped data through the BE CLI and cleans it in teardown. It does not depend on the Bruno helper, Stripe or S3.
+
+If a browser run is forcibly terminated, use the scope from the interrupted setup/trace to recover its DB fixtures:
+
+```sh
+node --import tsx backend/tests/support/e2e-fixtures.ts cleanup --scope <uuid>
+```
+
+`frontend/test-results` and `frontend/playwright-report` are ignored local reports. Trace files can contain credentials/cookies; do not publish them without redaction. `npm run build` builds the product; `build:bruno` checks tooling separately. `check:boundaries` rejects imports that violate ownership. See [verification report](docs/testing/test-boundaries-verification.md).
+
+Sample course preparation now defaults to `backend/sample-courses`; run `npm run sample-courses:prepare`. The course importer uses that same directory.

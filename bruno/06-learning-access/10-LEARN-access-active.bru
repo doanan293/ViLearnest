@@ -1,0 +1,21 @@
+meta {
+  name: LEARN-access-active
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{activeSlug}}/sidebar
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("serves active course content to its enrolled learner", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.course.slug).to.equal(bru.getVar("activeSlug"));
+    expect(res.body.course.chapter[0].lessons[0]).to.have.property("description");
+  });
+}

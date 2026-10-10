@@ -1,0 +1,26 @@
+meta {
+  name: ADMIN-authorization learner denied lesson reorder
+  type: http
+  seq: 42
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/lessons/reorder
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "items": [{ "id": "{{activeLessonId}}", "position": 1 }] }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("denies a valid lesson reorder to an authenticated learner", function() { expect(res.status).to.equal(403); });
+}

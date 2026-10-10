@@ -1,0 +1,19 @@
+meta {
+  name: LEARN-access-pending
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{pendingSlug}}/sidebar
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("denies course content while enrollment is pending", function() {
+    expect(res.status).to.equal(403);
+  });
+}

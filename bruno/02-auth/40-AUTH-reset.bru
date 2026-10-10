@@ -1,0 +1,34 @@
+meta {
+  name: AUTH-reset
+  type: http
+  seq: 40
+}
+
+post {
+  url: {{baseUrl}}/api/auth/email-otp/reset-password
+  body: json
+}
+
+headers {
+  content-type: application/json
+  origin: {{frontendUrl}}
+}
+
+body:json {
+  {
+    "email": "{{learnerAEmail}}",
+    "otp": "{{learnerAResetOtp}}",
+    "password": "{{lifecycleResetPassword}}"
+  }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("resets the password with the owned OTP", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("success", true);
+  });
+}

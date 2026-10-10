@@ -1,0 +1,20 @@
+meta {
+  name: LEARN-access-archived-active
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{archivedSlug}}/sidebar
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("preserves protected access for an existing active archived-course learner", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.course.slug).to.equal(bru.getVar("archivedSlug"));
+  });
+}

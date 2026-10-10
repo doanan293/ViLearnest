@@ -1,0 +1,31 @@
+meta {
+  name: PAYMENT-invalid reject wrong-owner event
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{baseUrl}}/api/v1/webhooks/stripe
+  body: text
+}
+
+headers {
+  content-type: application/json
+}
+
+body:text {
+  {}
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("stripe-signature", bru.getVar("wrongOwnerWebhookSignature"));
+  req.setBody(bru.getVar("wrongOwnerWebhookPayload"), { raw: true });
+}
+
+tests {
+  test("rejects a signed event whose customer and actor metadata disagree", function() { expect(res.status).to.equal(400); });
+}

@@ -1,0 +1,17 @@
+meta {
+  name: PAYMENT-pending deny learner content
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{pendingSlug}}/sidebar
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("pending enrollment remains blocked from course contents", function() { expect(res.status).to.equal(403); });
+}

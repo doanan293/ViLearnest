@@ -1,0 +1,26 @@
+meta {
+  name: STORAGE-upload video bytes without LMS credentials
+  type: http
+  seq: 18
+}
+
+put {
+  url: {{videoUploadUrl}}
+  body: file
+}
+
+headers {
+  content-type: video/mp4
+}
+
+body:file {
+  file: @file(fixtures/lesson-video.mp4) @contentType(video/mp4)
+}
+
+vars:pre-request {
+  actor: external
+}
+
+tests {
+  test("uploads video bytes using only the presigned URL", function() { expect([200, 204]).to.include(res.status); });
+}

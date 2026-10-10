@@ -1,8 +1,6 @@
 import type { FastifyPluginAsync } from "fastify";
-import { config } from "../../../config/index.js";
 import { adminRoutes } from "./admin.routes.js";
 import { authRoutes } from "./auth.routes.js";
-import { brunoDesktopRoutes } from "./bruno-desktop.routes.js";
 import { coursesRoutes } from "./courses.routes.js";
 import { profileRoutes } from "./profile.routes.js";
 import { storageRoutes } from "./storage.routes.js";
@@ -16,7 +14,4 @@ export const v1Routes: FastifyPluginAsync = async (fastify) => {
   await fastify.register(adminRoutes, { prefix: "/admin" });
   await fastify.register(storageRoutes, { prefix: "/storage" });
   await fastify.register(webhookRoutes, { prefix: "/webhooks" });
-  if (config.brunoDesktopHelpers.enabled) {
-    await fastify.register(brunoDesktopRoutes, { prefix: "/bruno-desktop" });
-  }
 };

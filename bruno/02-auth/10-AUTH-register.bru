@@ -1,0 +1,40 @@
+meta {
+  name: AUTH-register
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/api/auth/sign-up/email
+  body: json
+}
+
+headers {
+  content-type: application/json
+  origin: {{frontendUrl}}
+}
+
+body:json {
+  {
+    "name": "Bruno Run Learner A",
+    "email": "{{learnerAEmail}}",
+    "password": "{{learnerAPassword}}"
+  }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+script:post-response {
+  if (res.status !== 200 || !res.body.user || !res.body.user.id) throw new Error("Learner A registration failed");
+  bru.setVar("learnerAUserId", res.body.user.id);
+}
+
+tests {
+  test("registers the reserved run learner as unverified", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.user).to.have.property("email", bru.getVar("learnerAEmail"));
+    expect(res.body.user).to.have.property("emailVerified", false);
+  });
+}

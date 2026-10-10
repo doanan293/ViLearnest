@@ -1,115 +1,79 @@
-# ANDV LMS API Bruno Collection
+# Bruno business API tests
 
-This collection contains local-first smoke, workflow, and API-contract checks for the Fastify backend.
+The collection has eight independently runnable folders: system, auth, profile, public courses, admin courses, learning access, payment and storage. Each stateful folder creates its own run-owned accounts/resources, reads back business results and cleans them up.
 
-Start the backend before running any Bruno command:
+## Code boundaries
 
-```bash
-npm run dev --workspace=@andv-lms/backend
+- `bruno/tooling`: standalone helper, fixtures, provider probes, CLI runner and coverage validator.
+- `bruno/tests`: tooling unit and fixture integration tests.
+- `backend/tests/integration` and `backend/tests/support`: product integration regressions and the isolated PostgreSQL harness.
+- `backend/`: product code, product unit/integration tests and shared data builders. It has no Bruno routes, imports or helper settings.
+
+## Local prerequisites
+
+Install with `npm ci`, migrate an isolated test database and configure the local backend environment. Run the LMS backend and the helper against the same database. Export an explicit `TEST_DATABASE_URL` for integration tests; use that database as `DATABASE_URL` for both servers. Do not use a development database for these mutable suites.
+
+Start the backend, then start the separate helper:
+
+```sh
+DATABASE_URL="$TEST_DATABASE_URL" NODE_ENV=test npm run dev --workspace=@andv-lms/backend
+DATABASE_URL="$TEST_DATABASE_URL" NODE_ENV=test BRUNO_DESKTOP_HELPERS_ENABLED=true BRUNO_DESKTOP_HELPER_TOKEN=bruno-desktop-local-token npm run bruno:helper
 ```
 
-## Command Guide
+The helper reads `backend/.env` for database/provider configuration, binds only `127.0.0.1:5001`, requires explicit activation and a helper token, and refuses production activation. The product runs on port 5000. Use one helper process per run store.
 
-| Command | Purpose | Requires |
-| --- | --- | --- |
-| `npm run test:api` | Runs all 142 collection requests sequentially | Local backend, database, storage, Stripe test environment |
-| `npm run test:api:smoke` | Quick smoke and unauthenticated contract checks | Local backend |
-| `npm run test:api:workflows` | Authenticated user, admin, course-player, and real storage workflow | Local backend, database, storage environment |
-| `npm run test:api:payment` | Stripe checkout and signed webhook workflow | Local backend, database, Stripe test environment |
-| `npm run test:api:edge` | Edge, auth lifecycle, and route coverage hardening | Local backend and database |
+Core suites need the backend, database and helper. They do not preflight or contact S3/Stripe. Payment needs a real Stripe **test** secret key and webhook secret; storage needs S3-compatible test credentials/bucket configuration.
 
-## CLI Full Run
+## CLI commands
 
-Use the CLI when you want a repeatable full verification from the terminal. Start the backend first, then run:
-
-```bash
-npm run test:api
-```
-
-The CLI runners handle seed, storage checks, payment checks, signed webhook runtime export, and auth lifecycle OTP export automatically.
-
-## Bruno Desktop Full Run
-
-Use Bruno Desktop when you want to inspect and run the full API workflow interactively. Configure the backend `.env` with the same database, storage, and Stripe test values required by the CLI workflows, plus the local-only helper gate:
-
-```text
-BRUNO_DESKTOP_HELPERS_ENABLED=true
-BRUNO_DESKTOP_HELPER_TOKEN=bruno-desktop-local-token
-```
-
-Start or restart the backend after changing these values, open the Bruno collection, and select the `local` environment.
-
-### 🚀 1-Click Collection Runner (Recommended for Demos)
-
-All collection folders (`01-system` to `13-auth-lifecycle-workflows`) and stateful request files are numbered sequentially to match logical dependencies (seed -> auth -> workflows -> payment -> edge -> lifecycle).
-
-1. Select the **`local`** environment in Bruno Desktop.
-2. Right-click the root collection **`ANDV LMS API`** in the sidebar.
-3. Click **Run**.
-4. The Runner UI tab will execute all 140+ requests sequentially from top to bottom, updating pass/fail rows line by line in real time.
-
-## Smoke And Contract Checks
-
-Run:
-
-```bash
+```sh
 npm run test:api:smoke
-```
-
-This command runs the lightweight public, protected-route, admin-route, auth-contract, storage-authorization, and system checks. It does not seed data and does not require storage or Stripe provider credentials.
-
-## Authenticated And Storage Workflow
-
-Configure the backend `.env` with a working database and real S3-compatible storage values:
-
-```text
-AWS_ACCESS_KEY_ID=...
-AWS_SECRET_ACCESS_KEY=...
-AWS_ENDPOINT_URL_S3=...
-AWS_REGION=...
-NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES=...
-```
-
-Run:
-
-```bash
-npm run test:api:workflows
-```
-
-This command seeds deterministic Bruno-owned users and course data, validates storage environment, logs in through Better Auth, uploads real fixture files through presigned URLs, creates a real admin course, and deletes the API-created course and media objects at the end.
-
-## Payment Workflow
-
-Configure the backend `.env` with Stripe test-mode values:
-
-```text
-STRIPE_SECRET_KEY=...
-STRIPE_WEBHOOK_SECRET=...
-FRONTEND_URL=...
-API_BASE_URL=...
-```
-
-Run:
-
-```bash
+npm run test:api:core
+npm run test:api:auth
+npm run test:api:profile
+npm run test:api:public-courses
+npm run test:api:admin-courses
+npm run test:api:learning-access
 npm run test:api:payment
+npm run test:api:storage
+npm run test:api
+npm run test:api:all
+npm run test:api:coverage
 ```
 
-This command seeds deterministic Bruno-owned data, creates a real Stripe Checkout Session in test mode, sends a signed local webhook payload through the backend webhook route, and verifies that protected course access unlocks after webhook processing.
+Smoke is read-only: system/public checks plus an anonymous protected request. Core selects folders 01–06; all selects all eight. Legacy workflows/edge commands print a migration notice and run core. No command performs a global seed/reset. Each CLI folder gets a fresh UUID and its own Bruno process.
 
-## Coverage Hardening & Edge Cases
+Options include `--env`, `--base-url`, `--helper-url` and `--report-dir`. The runner uses pinned CLI 3.5.0. A helper token supplied through `BRUNO_DESKTOP_HELPER_TOKEN` is passed in the process environment, never command arguments. Reports in ignored `.bruno-reports/` contain only filenames, outcomes, HTTP status and counts, plus owned RunRef/cleanup metadata. Headers, bodies, error values, OTPs and signed URLs are discarded.
 
-Run:
+## Native Desktop
 
-```bash
-npm run test:api:edge
+Import `bruno/`, select `local`, and set `baseUrl` to `http://localhost:5000` and `helperUrl` to `http://127.0.0.1:5001`. Configure the helper token to match the standalone server. Run a complete folder from its setup request; folders never depend on another folder's credentials or fixtures. Run the collection for all eight folders in sequence. The same requests/assertions run in Desktop and CLI.
+
+Requests declare their actor. Collection scripts clear native cookies and select only that actor's explicit Better Auth session cookie. Setup clears runtime variables before each new folder. Helper tokens accompany only helper calls; LMS sessions do not accompany presigned uploads. Desktop execution is a separate manual verification step; CLI results do not establish Desktop runtime parity.
+
+For manual verification, run auth, profile and learning-access separately twice; then run the full collection. Check actor identities, progress isolation, valid/invalid payment access and final cleanup. Record the Desktop version and results in `docs/testing/bruno-verification.md`.
+
+## Interrupted runs and cleanup
+
+CLI always attempts scoped cleanup after process errors, assertion failures and SIGINT. A cleanup failure preserves the original failing exit status and prints a recovery command. After a forced termination or helper outage, restart the helper and use the retained RunRef from output or `.bruno-runs/<uuid>.<suite>.json`:
+
+```sh
+npm run test:api:cleanup -- --run-id <uuid> --suite <suite>
 ```
 
-This command seeds deterministic Bruno-owned data and runs route-hardening edge checks, Better Auth lifecycle coverage, invalid input coverage, not-enrolled course-player boundaries, and invalid Stripe webhook input checks.
+Desktop can run the folder's final cleanup request while its `runId` remains available, or use that CLI recovery command. Cleanup deletes only registered resources for that run. S3 failures remain in `remaining` for retry. Stripe open sessions are expired and owned customers deleted; historical Checkout Session records stay in `retained`, independently of cleanup failures. Repeated cleanup is safe. Stopping the CLI cannot cancel an already dispatched backend operation: after interruption, wait for pending API operations to finish and run the recovery command again. Auth/payment recovery rechecks exact run-owned accounts and provider resources; storage recovery retains and deletes its exact owned key ledger even when the manifest was previously marked cleaned.
 
-Route-level Bruno coverage is tracked in:
+Payment executes real test checkout initiation and synthetic signed webhook validation through the real signature verifier. It does not submit a card payment. External OAuth/browser redirects remain explicitly excluded and unverified.
 
-```text
-docs/testing/bruno-api-coverage.md
+## Tooling and integration checks
+
+```sh
+npm run test:bruno:tooling
+npm run test:bruno:integration
+npm run build:bruno
+npm run check:bruno
+TEST_DATABASE_URL=<isolated-test-database> npm run test:integration
+npm run test:api:coverage -- --evidence .bruno-reports/evidence.json
 ```
 
+The coverage inventory observes registered Fastify routes and parses actual Bruno files. It requires explicit exclusions and detects stale references and wrong methods. Without supplied execution evidence, its generated report says `not-run`. Integration tests cover atomic ordering rollback, progress authorization and concurrent payment activation using PostgreSQL.

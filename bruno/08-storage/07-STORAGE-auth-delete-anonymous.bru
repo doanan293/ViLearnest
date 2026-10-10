@@ -1,0 +1,26 @@
+meta {
+  name: STORAGE-auth rejects anonymous delete
+  type: http
+  seq: 7.5
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/storage/files
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "key": "{{textKey}}" }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("requires an LMS session before deleting a storage object", function() { expect(res.status).to.equal(401); });
+}

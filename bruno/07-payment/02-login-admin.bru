@@ -1,0 +1,36 @@
+meta {
+  name: Login payment admin for dashboard counts
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/auth/sign-in/email
+  body: json
+}
+
+headers {
+  content-type: application/json
+  origin: {{frontendUrl}}
+}
+
+body:json {
+  { "email": "{{adminEmail}}", "password": "{{adminPassword}}" }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+script:post-response {
+  if (res.status !== 200 || res.body.user.id !== bru.getVar("adminId")) throw new Error("Payment admin login failed");
+  const rawCookies = res.headers["set-cookie"];
+  const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
+  const session = cookies.find((cookie) => cookie && /(?:__Secure-)?better-auth\.session_token=/.test(cookie));
+  if (!session) throw new Error("Payment admin cookie is missing");
+  bru.setVar("session.admin", session.split(";")[0]);
+}
+
+tests {
+  test("authenticates the payment run administrator", function() { expect(res.status).to.equal(200); });
+}

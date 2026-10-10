@@ -1,0 +1,36 @@
+meta {
+  name: PROFILE-admin
+  type: http
+  seq: 37
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/users/{{learnerBId}}/profile
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "  Admin Updated Learner B  ",
+    "bio": "  Updated by this run admin  "
+  }
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("allows admin to update only the selected learner profile", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("learnerBId"));
+    expect(res.body.name).to.equal("Admin Updated Learner B");
+    expect(res.body.email).to.equal(bru.getVar("learnerBEmail"));
+    expect(res.body.role).to.equal("user");
+    expect(res.body.profile.bio).to.equal("Updated by this run admin");
+  });
+}

@@ -1,0 +1,19 @@
+meta {
+  name: PROFILE-admin-learner-list
+  type: http
+  seq: 33
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/users
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("forbids learners from listing administrator user records", function() {
+    expect(res.status).to.equal(403);
+  });
+}

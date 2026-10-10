@@ -1,0 +1,21 @@
+meta {
+  name: LEARN-isolation
+  type: http
+  seq: 23
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{activeSlug}}/sidebar
+}
+
+vars:pre-request {
+  actor: learnerB
+}
+
+tests {
+  test("does not expose learner A progress to learner B", function() {
+    const lesson = res.body.course.chapter.flatMap((chapter) => chapter.lessons).find((entry) => entry.id === bru.getVar("activeLessonId"));
+    expect(res.status).to.equal(200);
+    expect(lesson.lessonProgess).to.have.length(0);
+  });
+}

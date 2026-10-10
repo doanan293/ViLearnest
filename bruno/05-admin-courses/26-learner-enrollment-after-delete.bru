@@ -1,0 +1,20 @@
+meta {
+  name: ADMIN-cascade enrollment removed
+  type: http
+  seq: 26
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/enrolled
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("course deletion removes the learner enrollment", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.some((enrollment) => enrollment.courseId === bru.getVar("activeCourseId"))).to.equal(false);
+  });
+}

@@ -1,0 +1,26 @@
+meta {
+  name: ADMIN-authorization learner denied lesson create
+  type: http
+  seq: 38
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/chapters/{{activeChapterId}}/lessons
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "name": "Forbidden lesson" }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("denies valid lesson creation to an authenticated learner", function() { expect(res.status).to.equal(403); });
+}

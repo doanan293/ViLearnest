@@ -1,0 +1,23 @@
+meta {
+  name: PROFILE-self-read
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/api/v1/profile/me
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("reads the persisted profile values", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.name).to.equal("Bruno Profile A");
+    expect(res.body.profile.dateOfBirth).to.contain("1990-05-21");
+    expect(res.body.profile.phoneNumber).to.equal("+84 901 234 567");
+    expect(res.body.profile.websiteUrl).to.equal("https://example.com/profile-a");
+  });
+}

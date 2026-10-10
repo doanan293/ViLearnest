@@ -1,0 +1,37 @@
+meta {
+  name: STORAGE-upload verify video bytes
+  type: http
+  seq: 19
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/storage/inspect
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "storage", "key": "{{videoKey}}" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("confirms video object length, type and SHA-256", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.exists).to.equal(true);
+    expect(res.body.contentType).to.equal("video/mp4");
+    expect(res.body.bytes).to.equal(1608412);
+    expect(res.body.sha256).to.equal("712e80c464ec44b593dadedf423e53b3b37e5ca8c170a05894b63616adf1c009");
+  });
+}

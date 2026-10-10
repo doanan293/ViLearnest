@@ -1,0 +1,36 @@
+meta {
+  name: PAYMENT-invalid build wrong-course event
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/payment/event
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "payment", "variant": "wrong-course" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+script:post-response {
+  bru.setVar("wrongCourseWebhookPayload", res.body.payload);
+  bru.setVar("wrongCourseWebhookSignature", res.body.signature);
+}
+
+tests {
+  test("builds a course mismatch tied to this run's enrollment", function() { expect(res.status).to.equal(200); });
+}

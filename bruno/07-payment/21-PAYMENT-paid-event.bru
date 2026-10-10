@@ -1,0 +1,36 @@
+meta {
+  name: PAYMENT-paid build signed event
+  type: http
+  seq: 22
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/payment/event
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "payment", "variant": "paid" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+script:post-response {
+  bru.setVar("paymentWebhookPayload", res.body.payload);
+  bru.setVar("paymentWebhookSignature", res.body.signature);
+}
+
+tests {
+  test("builds a signed paid event from the pending fixture", function() { expect(res.status).to.equal(200); });
+}

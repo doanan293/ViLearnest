@@ -1,0 +1,26 @@
+meta {
+  name: ADMIN-authorization learner denied lesson update
+  type: http
+  seq: 40
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/lessons/{{activeLessonId}}
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "name": "Forbidden lesson update" }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("denies valid lesson update to an authenticated learner", function() { expect(res.status).to.equal(403); });
+}

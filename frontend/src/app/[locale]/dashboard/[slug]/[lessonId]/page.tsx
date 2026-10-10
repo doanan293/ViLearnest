@@ -1,7 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { getLessonContent } from "@/features/courses";
 import { lessonContentQueryOptions } from "@/features/courses/hooks/use-course-player-query";
-import { hydrateQueryClient, QueryHydrationBoundary } from "@/lib/query-hydration";
+import { QueryHydrationBoundary } from "@/lib/query-hydration";
 import { CourseContent } from "./_components/CourseContent";
 
 type Params = Promise<{ lessonId: string }>;
@@ -12,9 +12,10 @@ export default async function LessonContenPage({ params }: { params: Params }) {
 }
 
 async function LessonContentLoader({ lessonId }: { lessonId: string }) {
-	const queryClient = await hydrateQueryClient(new QueryClient(), [
+	const queryClient = new QueryClient();
+	await queryClient.fetchQuery(
 		lessonContentQueryOptions(lessonId, () => getLessonContent(lessonId)),
-	]);
+	);
 
 	return (
 		<QueryHydrationBoundary queryClient={queryClient}>

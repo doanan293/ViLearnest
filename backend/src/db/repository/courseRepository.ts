@@ -1,9 +1,25 @@
 import crypto from "node:crypto";
-import { and, asc, desc, eq, gte, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, sql } from "drizzle-orm";
+import { BadRequestError, ForbiddenError, NotFoundError } from "../../lib/errors.js";
 import type { db as dbInstance } from "../index.js";
 import * as schema from "../schema.js";
 
 type Database = typeof dbInstance;
+
+export type PublicCourse = Pick<
+  typeof schema.course.$inferSelect,
+  "id" | "title" | "description" | "fileKey" | "price" | "duration" | "level" | "category" | "smallDescription" | "slug"
+> & {
+  chapter: Array<
+    Pick<typeof schema.chapter.$inferSelect, "id" | "title" | "position"> & {
+      lessons: Array<Pick<typeof schema.lesson.$inferSelect, "id" | "title" | "position">>;
+    }
+  >;
+};
+
+export type LessonAccess = { id: string; courseId: string };
+export type ReorderItem = { id: string; position: number };
+export type ActivationInput = { enrollmentId: string; userId: string; courseId: string; amountMinor: number };
 
 export class CourseRepository {
   constructor(private readonly db: Database) {}
@@ -33,14 +49,28 @@ export class CourseRepository {
     });
   }
 
-  findCourseBySlug(slug: string) {
+  findPublicCourseBySlug(slug: string): Promise<PublicCourse | undefined> {
     return this.db.query.course.findFirst({
-      where: eq(schema.course.slug, slug),
+      where: and(eq(schema.course.slug, slug), eq(schema.course.status, "Published")),
+      columns: {
+        id: true,
+        title: true,
+        description: true,
+        fileKey: true,
+        price: true,
+        duration: true,
+        level: true,
+        category: true,
+        smallDescription: true,
+        slug: true,
+      },
       with: {
         chapter: {
+          columns: { id: true, title: true, position: true },
           orderBy: [asc(schema.chapter.position)],
           with: {
             lessons: {
+              columns: { id: true, title: true, position: true },
               orderBy: [asc(schema.lesson.position)],
             },
           },
@@ -106,6 +136,16 @@ export class CourseRepository {
     return this.db.query.lesson.findFirst({
       where: eq(schema.lesson.id, id),
     });
+  }
+
+  findLessonAccess(lessonId: string): Promise<LessonAccess | undefined> {
+    return this.db.query.lesson
+      .findFirst({
+        where: eq(schema.lesson.id, lessonId),
+        columns: { id: true },
+        with: { Chapter: { columns: { courseId: true } } },
+      })
+      .then((lesson) => (lesson ? { id: lesson.id, courseId: lesson.Chapter.courseId } : undefined));
   }
 
   findEnrollment(userId: string, courseId: string) {
@@ -181,8 +221,37 @@ export class CourseRepository {
     return this.db.delete(schema.chapter).where(eq(schema.chapter.id, id));
   }
 
-  updateChapterPosition(id: string, position: number) {
-    return this.db.update(schema.chapter).set({ position }).where(eq(schema.chapter.id, id));
+  async reorderChapters(items: ReorderItem[]): Promise<void> {
+    await this.db.transaction(async (tx) => {
+      this.validateReorderItems(items);
+      const selected = await tx
+        .select({ id: schema.chapter.id, courseId: schema.chapter.courseId })
+        .from(schema.chapter)
+        .where(
+          inArray(
+            schema.chapter.id,
+            items.map(({ id }) => id)
+          )
+        );
+      if (selected.length !== items.length) throw new NotFoundError("Chapter not found");
+      const courseIds = [...new Set(selected.map(({ courseId }) => courseId))];
+      if (courseIds.length !== 1) throw new BadRequestError("Chapters must belong to the same course");
+      const [courseRow] = await tx
+        .select({ id: schema.course.id })
+        .from(schema.course)
+        .where(eq(schema.course.id, courseIds[0]!))
+        .for("update");
+      if (!courseRow) throw new NotFoundError("Course not found");
+      const siblings = await tx
+        .select({ id: schema.chapter.id, position: schema.chapter.position })
+        .from(schema.chapter)
+        .where(eq(schema.chapter.courseId, courseRow.id))
+        .for("update");
+      this.validateFinalPositions(items, siblings);
+      for (const item of items) {
+        await tx.update(schema.chapter).set({ position: item.position }).where(eq(schema.chapter.id, item.id));
+      }
+    });
   }
 
   async getNextLessonPosition(chapterId: string) {
@@ -205,8 +274,59 @@ export class CourseRepository {
     return this.db.delete(schema.lesson).where(eq(schema.lesson.id, id));
   }
 
-  updateLessonPosition(id: string, position: number) {
-    return this.db.update(schema.lesson).set({ position }).where(eq(schema.lesson.id, id));
+  async reorderLessons(items: ReorderItem[]): Promise<void> {
+    await this.db.transaction(async (tx) => {
+      this.validateReorderItems(items);
+      const selected = await tx
+        .select({ id: schema.lesson.id, chapterId: schema.lesson.chapterId })
+        .from(schema.lesson)
+        .where(
+          inArray(
+            schema.lesson.id,
+            items.map(({ id }) => id)
+          )
+        );
+      if (selected.length !== items.length) throw new NotFoundError("Lesson not found");
+      const chapterIds = [...new Set(selected.map(({ chapterId }) => chapterId))];
+      if (chapterIds.length !== 1) throw new BadRequestError("Lessons must belong to the same chapter");
+      const [chapterRow] = await tx
+        .select({ id: schema.chapter.id })
+        .from(schema.chapter)
+        .where(eq(schema.chapter.id, chapterIds[0]!))
+        .for("update");
+      if (!chapterRow) throw new NotFoundError("Chapter not found");
+      const siblings = await tx
+        .select({ id: schema.lesson.id, position: schema.lesson.position })
+        .from(schema.lesson)
+        .where(eq(schema.lesson.chapterId, chapterRow.id))
+        .for("update");
+      this.validateFinalPositions(items, siblings);
+      for (const item of items) {
+        await tx.update(schema.lesson).set({ position: item.position }).where(eq(schema.lesson.id, item.id));
+      }
+    });
+  }
+
+  private validateReorderItems(items: ReorderItem[]) {
+    if (!items.length) throw new BadRequestError("At least one item is required");
+    const ids = new Set<string>();
+    for (const item of items) {
+      if (!item.id || ids.has(item.id)) throw new BadRequestError("IDs must be unique");
+      if (!Number.isInteger(item.position) || item.position < 1) {
+        throw new BadRequestError("Positions must be positive integers");
+      }
+      ids.add(item.id);
+    }
+  }
+
+  private validateFinalPositions(items: ReorderItem[], siblings: Array<{ id: string; position: number }>) {
+    const requested = new Map(items.map(({ id, position }) => [id, position]));
+    const positions = new Set<number>();
+    for (const sibling of siblings) {
+      const position = requested.get(sibling.id) ?? sibling.position;
+      if (positions.has(position)) throw new BadRequestError("Final sibling positions must be unique");
+      positions.add(position);
+    }
   }
 
   upsertLessonProgress(userId: string, lessonId: string) {
@@ -254,11 +374,40 @@ export class CourseRepository {
     });
   }
 
-  activateEnrollment(enrollmentId: string, userId: string, amount: number) {
-    return this.db
-      .update(schema.enrollment)
-      .set({ userId, amount, status: "Active" })
-      .where(eq(schema.enrollment.id, enrollmentId));
+  async activateEnrollment(input: ActivationInput): Promise<"activated" | "already-active"> {
+    if (!Number.isSafeInteger(input.amountMinor) || input.amountMinor < 0) {
+      throw new BadRequestError("Checkout amount is invalid");
+    }
+
+    return this.db.transaction(async (tx) => {
+      const [enrollment] = await tx
+        .select()
+        .from(schema.enrollment)
+        .where(eq(schema.enrollment.id, input.enrollmentId))
+        .for("update");
+      if (!enrollment) throw new NotFoundError("Enrollment not found");
+      if (enrollment.userId !== input.userId) throw new ForbiddenError("Enrollment belongs to another user");
+      if (enrollment.courseId !== input.courseId)
+        throw new BadRequestError("Enrollment does not match the checkout course");
+
+      if (enrollment.status === "Active") {
+        if (enrollment.amount !== input.amountMinor)
+          throw new BadRequestError("Checkout amount does not match the active enrollment");
+        return "already-active";
+      }
+      if (enrollment.status !== "Pending") throw new BadRequestError("Enrollment cannot be activated");
+
+      const expectedMinor = enrollment.amount * 100;
+      if (!Number.isSafeInteger(expectedMinor) || input.amountMinor !== expectedMinor) {
+        throw new BadRequestError("Checkout amount does not match the pending enrollment");
+      }
+
+      await tx
+        .update(schema.enrollment)
+        .set({ amount: input.amountMinor, status: "Active" })
+        .where(eq(schema.enrollment.id, input.enrollmentId));
+      return "activated";
+    });
   }
 
   async getDashboardStats() {

@@ -1,0 +1,26 @@
+meta {
+  name: PUBLIC-detail
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{publishedSlug}}
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("returns public course metadata and safe curriculum fields", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("publishedCourseId"));
+    expect(res.body.chapter[0].lessons[0]).to.have.property("id").that.is.a("string");
+    expect(res.body.chapter[0].lessons[0]).to.have.property("title").that.is.a("string");
+    expect(res.body.chapter[0].lessons[0]).not.to.have.property("description");
+    expect(res.body.chapter[0].lessons[0]).not.to.have.property("videoKey");
+    expect(res.body.chapter[0].lessons[0]).not.to.have.property("thumbnailKey");
+    expect(res.body.chapter[0].lessons[0]).not.to.have.property("lessonProgess");
+  });
+}

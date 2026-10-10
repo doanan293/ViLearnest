@@ -1,0 +1,30 @@
+meta {
+  name: LEARN-progress-denied-pending
+  type: http
+  seq: 30
+}
+
+post {
+  url: {{baseUrl}}/api/v1/courses/lesson/complete
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "lessonId": "{{pendingLessonId}}"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("rejects progress updates before payment activates enrollment", function() {
+    expect(res.status).to.equal(403);
+  });
+}

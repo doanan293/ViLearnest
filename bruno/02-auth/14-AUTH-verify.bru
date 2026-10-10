@@ -1,0 +1,35 @@
+meta {
+  name: AUTH-verify
+  type: http
+  seq: 15
+}
+
+post {
+  url: {{baseUrl}}/api/auth/email-otp/verify-email
+  body: json
+}
+
+headers {
+  content-type: application/json
+  origin: {{frontendUrl}}
+}
+
+body:json {
+  {
+    "email": "{{learnerAEmail}}",
+    "otp": "{{learnerAVerificationOtp}}"
+  }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("verifies learner A and enables the account", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.status).to.equal(true);
+    expect(res.body.user).to.have.property("id", bru.getVar("learnerAUserId"));
+    expect(res.body.user).to.have.property("emailVerified", true);
+  });
+}

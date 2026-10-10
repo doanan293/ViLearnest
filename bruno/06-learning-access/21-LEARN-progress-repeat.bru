@@ -1,0 +1,30 @@
+meta {
+  name: LEARN-progress-repeat
+  type: http
+  seq: 21
+}
+
+post {
+  url: {{baseUrl}}/api/v1/courses/lesson/complete
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "lessonId": "{{activeLessonId}}"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("repeated completion remains successful and idempotent", function() {
+    expect(res.status).to.equal(200);
+  });
+}

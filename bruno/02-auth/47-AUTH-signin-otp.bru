@@ -1,0 +1,39 @@
+meta {
+  name: 47-AUTH-signin-otp
+  type: http
+  seq: 47
+}
+
+post {
+  url: {{baseUrl}}/api/auth/sign-in/email-otp
+  body: json
+}
+
+headers {
+  content-type: application/json
+  origin: {{frontendUrl}}
+}
+
+body:json {
+  { "email": "{{learnerAEmail}}", "otp": "{{learnerASigninOtp}}" }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+script:post-response {
+  if (res.status !== 200 || res.body.user.id !== bru.getVar("learnerAUserId")) throw new Error("Reset password login returned an unexpected account");
+  const rawCookies = res.headers["set-cookie"];
+  const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
+  const session = cookies.find((cookie) => cookie && /(?:__Secure-)?better-auth\.session_token=/.test(cookie));
+  if (!session) throw new Error("Better Auth learner session cookie is missing after password reset");
+  bru.setVar("session.learnerA", session.split(";")[0]);
+}
+
+tests {
+  test("47-AUTH-signin-otp", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.user.id).to.equal(bru.getVar("learnerAUserId"));
+  });
+}

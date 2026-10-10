@@ -1,0 +1,36 @@
+meta {
+  name: PAYMENT-pending register Stripe customer and session
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/payment/track
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "payment", "sessionId": "{{checkoutSessionId}}" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("tracks only the Stripe session and customer that match this run", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.sessionId).to.equal(bru.getVar("checkoutSessionId"));
+    bru.setVar("stripeSessionId", res.body.sessionId);
+    bru.setVar("stripeCustomerId", res.body.customerId);
+  });
+}

@@ -1,0 +1,21 @@
+meta {
+  name: ADMIN-stats owned deletion delta
+  type: http
+  seq: 21.5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/dashboard/stats
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("owned course deletion restores the baseline dashboard totals", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.totalCourses).to.equal(Number(bru.getVar("coursesBefore")));
+    expect(res.body.totalLessons).to.equal(Number(bru.getVar("lessonsBefore")));
+  });
+}

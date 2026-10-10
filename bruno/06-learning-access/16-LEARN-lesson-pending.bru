@@ -1,0 +1,19 @@
+meta {
+  name: 16-LEARN-lesson-pending
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/lessons/{{pendingLessonId}}
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("16-LEARN-lesson-pending", function() {
+    expect(res.status).to.equal(403);
+  });
+}

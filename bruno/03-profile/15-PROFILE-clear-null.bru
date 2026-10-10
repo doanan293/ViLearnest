@@ -1,0 +1,34 @@
+meta {
+  name: PROFILE-clear-null
+  type: http
+  seq: 15
+}
+
+put {
+  url: {{baseUrl}}/api/v1/profile/me
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Bruno Profile A",
+    "phoneNumber": null,
+    "websiteUrl": null
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("clears optional profile fields with null", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.profile.phoneNumber).to.equal(null);
+    expect(res.body.profile.websiteUrl).to.equal(null);
+  });
+}

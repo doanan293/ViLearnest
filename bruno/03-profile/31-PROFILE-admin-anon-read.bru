@@ -1,0 +1,19 @@
+meta {
+  name: PROFILE-admin-anon-read
+  type: http
+  seq: 31
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/users/{{learnerBId}}/profile
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("requires a session to read administrator user profiles", function() {
+    expect(res.status).to.equal(401);
+  });
+}

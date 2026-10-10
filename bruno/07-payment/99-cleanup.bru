@@ -1,0 +1,35 @@
+meta {
+  name: Cleanup payment run and Stripe test resources
+  type: http
+  seq: 99
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/cleanup
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "payment" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("expires open checkout sessions, removes customers and reports retained session history", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.remaining).to.deep.equal([]);
+    expect(res.body.retained).to.deep.equal([bru.getVar("stripeSessionId")]);
+  });
+}

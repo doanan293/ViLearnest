@@ -1,0 +1,41 @@
+meta {
+  name: Cleanup auth fixtures
+  type: http
+  seq: 99
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/cleanup
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  {
+    "runId": "{{runId}}",
+    "suite": "auth"
+  }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+script:post-response {
+  if (res.status !== 200) throw new Error("Auth fixture cleanup failed: " + res.status);
+}
+
+tests {
+  test("cleans only this auth run", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.remaining).to.deep.equal([]);
+  });
+}

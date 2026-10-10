@@ -1,0 +1,36 @@
+meta {
+  name: STORAGE-upload presign image object
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/api/v1/storage/presigned
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "filename": "{{runId}}-course-cover.png", "contentType": "image/png" }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("imageKey", res.body.key);
+    bru.setVar("imageUploadUrl", res.body.uploadUrl);
+  }
+}
+
+tests {
+  test("returns a namespaced image upload URL", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.key).to.include(bru.getVar("runId"));
+  });
+}

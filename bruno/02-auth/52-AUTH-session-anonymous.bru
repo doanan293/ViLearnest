@@ -1,0 +1,19 @@
+meta {
+  name: AUTH-session-anonymous
+  type: http
+  seq: 52
+}
+
+get {
+  url: {{baseUrl}}/api/v1/auth/session
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("requires authentication for the LMS session endpoint", function() {
+    expect(res.status).to.equal(401);
+  });
+}

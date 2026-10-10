@@ -1,0 +1,26 @@
+meta {
+  name: STORAGE-auth rejects anonymous presign
+  type: http
+  seq: 2.5
+}
+
+post {
+  url: {{baseUrl}}/api/v1/storage/presigned
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "filename": "{{runId}}-anonymous.txt", "contentType": "text/plain" }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("requires an LMS session before issuing a presigned upload URL", function() { expect(res.status).to.equal(401); });
+}

@@ -1,0 +1,19 @@
+meta {
+  name: ADMIN-cascade delete progress-bearing chapter
+  type: http
+  seq: 23
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/admin/chapters/{{activeChapterId}}
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("deletes the owned chapter that has lesson progress", function() {
+    expect(res.status).to.equal(200);
+  });
+}

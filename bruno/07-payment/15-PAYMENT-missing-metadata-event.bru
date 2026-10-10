@@ -1,0 +1,36 @@
+meta {
+  name: PAYMENT-invalid build missing-metadata event
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/payment/event
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "payment", "variant": "missing-metadata" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+script:post-response {
+  bru.setVar("missingMetadataWebhookPayload", res.body.payload);
+  bru.setVar("missingMetadataWebhookSignature", res.body.signature);
+}
+
+tests {
+  test("builds the missing-metadata variant from this run", function() { expect(res.status).to.equal(200); });
+}

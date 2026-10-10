@@ -1,0 +1,19 @@
+meta {
+  name: PROFILE-admin-learner-read
+  type: http
+  seq: 34
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/users/{{learnerBId}}/profile
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("forbids learners from reading another user's admin profile", function() {
+    expect(res.status).to.equal(403);
+  });
+}

@@ -44,7 +44,7 @@ interface PreparedChapter {
 }
 
 const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const ROOT_DIR = path.resolve(CURRENT_DIR, "../../..");
+const ROOT_DIR = path.resolve(CURRENT_DIR, "../..");
 const SAMPLE_COURSES_DIR = path.join(ROOT_DIR, "sample-courses");
 
 const CHAPTERS_MAPPING: Record<string, { title: string; startPosition: number }[]> = {

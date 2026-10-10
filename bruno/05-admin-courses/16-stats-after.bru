@@ -1,0 +1,21 @@
+meta {
+  name: ADMIN-stats owned course and lessons delta
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/dashboard/stats
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("dashboard totals increase by this run's course and lessons", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.totalCourses).to.equal(Number(bru.getVar("coursesBefore")) + 1);
+    expect(res.body.totalLessons).to.equal(Number(bru.getVar("lessonsBefore")) + 2);
+  });
+}

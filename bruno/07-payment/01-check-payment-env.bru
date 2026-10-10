@@ -1,0 +1,25 @@
+meta {
+  name: Check Stripe test environment
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{helperUrl}}/api/v1/bruno-desktop/payment-env
+}
+
+headers {
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("requires Stripe test credentials and a webhook secret", function() { expect(res.status).to.equal(200); });
+}

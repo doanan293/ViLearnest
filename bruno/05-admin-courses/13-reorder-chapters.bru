@@ -1,0 +1,34 @@
+meta {
+  name: ADMIN-order reorder chapters
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/chapters/reorder
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "items": [
+      { "id": "{{createdChapterAId}}", "position": 2 },
+      { "id": "{{createdChapterBId}}", "position": 1 }
+    ]
+  }
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("swaps chapter sibling order", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.status).to.equal("success");
+  });
+}

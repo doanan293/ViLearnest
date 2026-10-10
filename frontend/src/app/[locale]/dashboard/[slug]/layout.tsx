@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { CourseSidebar, getCourseSidebarData } from "@/features/courses";
 import { courseSidebarQueryOptions } from "@/features/courses/hooks/use-course-player-query";
-import { hydrateQueryClient, QueryHydrationBoundary } from "@/lib/query-hydration";
+import { QueryHydrationBoundary } from "@/lib/query-hydration";
 
 interface iAppProps {
 	params: Promise<{ slug: string }>;
@@ -13,9 +13,8 @@ export default async function CourseLayout({ children, params }: iAppProps) {
 	const { slug } = await params;
 
 	//server-side security check and lightweight data fetching
-	const queryClient = await hydrateQueryClient(new QueryClient(), [
-		courseSidebarQueryOptions(slug, () => getCourseSidebarData(slug)),
-	]);
+	const queryClient = new QueryClient();
+	await queryClient.fetchQuery(courseSidebarQueryOptions(slug, () => getCourseSidebarData(slug)));
 
 	return (
 		<QueryHydrationBoundary queryClient={queryClient}>

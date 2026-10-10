@@ -1,0 +1,30 @@
+meta {
+  name: PROFILE-admin-learner-write
+  type: http
+  seq: 35
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/users/{{learnerBId}}/profile
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Learner Must Not Update"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("forbids learners from updating another user's admin profile", function() {
+    expect(res.status).to.equal(403);
+  });
+}

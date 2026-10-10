@@ -1,0 +1,31 @@
+meta {
+  name: PROFILE-invalid-phone
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{baseUrl}}/api/v1/profile/me
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Should Not Persist",
+    "phoneNumber": "not-a-phone"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("rejects an invalid phone number", function() {
+    expect(res.status).to.equal(400);
+  });
+}

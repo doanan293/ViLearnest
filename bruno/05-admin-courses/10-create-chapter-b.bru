@@ -1,0 +1,33 @@
+meta {
+  name: ADMIN-order create chapter B
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/courses/{{createdCourseId}}/chapters
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "name": "Owned Chapter B" }
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+script:post-response {
+  if (res.status === 200) bru.setVar("createdChapterBId", res.body.chapter.id);
+}
+
+tests {
+  test("creates a second chapter in the same course", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.chapter.position).to.equal(2);
+  });
+}

@@ -1,0 +1,26 @@
+meta {
+  name: ADMIN-crud find created course
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/courses
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+script:post-response {
+  const course = res.body.find((item) => item.slug === "bruno-admin-" + bru.getVar("runId"));
+  if (!course) throw new Error("Owned admin course was not returned");
+  bru.setVar("createdCourseId", course.id);
+}
+
+tests {
+  test("finds the API-created course by its unique run slug", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.some((item) => item.id === bru.getVar("createdCourseId"))).to.equal(true);
+  });
+}

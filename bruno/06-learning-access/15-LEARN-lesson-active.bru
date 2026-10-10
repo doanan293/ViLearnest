@@ -1,0 +1,21 @@
+meta {
+  name: 15-LEARN-lesson-active
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/lessons/{{activeLessonId}}
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("15-LEARN-lesson-active", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("activeLessonId"));
+    expect(res.body.videoKey).to.be.a("string");
+  });
+}

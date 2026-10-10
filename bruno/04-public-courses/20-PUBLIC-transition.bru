@@ -1,0 +1,39 @@
+meta {
+  name: PUBLIC-transition
+  type: http
+  seq: 20
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/courses/{{draftCourseId}}
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "title": "Bruno Draft Fixture",
+    "description": "{\"type\":\"doc\",\"content\":[]}",
+    "fileKey": "bruno-fixtures/public-transition.png",
+    "price": 0,
+    "duration": 30,
+    "level": "Beginner",
+    "category": "Testing",
+    "smallDescription": "Public transition fixture",
+    "slug": "{{draftSlug}}",
+    "status": "Published"
+  }
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("publishes a draft through the administrator course route", function() {
+    expect(res.status).to.equal(200);
+  });
+}

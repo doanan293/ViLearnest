@@ -1,0 +1,22 @@
+meta {
+  name: ADMIN-cascade chapter sibling survives
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/courses/{{createdCourseId}}
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("preserves the sibling chapter and its lessons", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.chapter).to.have.length(1);
+    expect(res.body.chapter[0].id).to.equal(bru.getVar("createdChapterAId"));
+    expect(res.body.chapter[0].lessons).to.have.length(2);
+  });
+}

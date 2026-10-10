@@ -1,0 +1,20 @@
+meta {
+  name: PAYMENT-invalid verify failures preserve pending state
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/{{pendingCourseId}}/is-enrolled
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("failed confirmations and signed events leave access locked", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.enrolled).to.equal(false);
+  });
+}

@@ -1,0 +1,19 @@
+meta {
+  name: LEARN-access-archived-public
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{archivedSlug}}
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("keeps archived courses out of the public catalog", function() {
+    expect(res.status).to.equal(404);
+  });
+}

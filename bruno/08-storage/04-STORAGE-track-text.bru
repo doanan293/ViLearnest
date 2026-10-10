@@ -1,0 +1,38 @@
+meta {
+  name: STORAGE-upload register text key before upload
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/storage/track
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  {
+    "runId": "{{runId}}",
+    "suite": "storage",
+    "key": "{{textKey}}"
+  }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("records the key for recovery before upload starts", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.tracked).to.equal(true);
+  });
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Require session: DELETE /api/v1/admin/chapters/:chapterId
+  type: http
+  seq: 80
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/admin/chapters/{{activeChapterId}}
+}
+
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("rejects an anonymous request before business mutations", function() {
+    expect(res.status).to.equal(401);
+  });
+}

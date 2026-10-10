@@ -1,0 +1,26 @@
+meta {
+  name: STORAGE-validation rejects empty delete key
+  type: http
+  seq: 7.7
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/storage/files
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "key": "" }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("rejects an empty object key without calling storage", function() { expect(res.status).to.equal(400); });
+}

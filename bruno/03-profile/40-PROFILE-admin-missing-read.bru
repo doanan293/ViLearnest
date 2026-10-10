@@ -1,0 +1,19 @@
+meta {
+  name: PROFILE-admin-missing-read
+  type: http
+  seq: 42
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/users/bruno-missing-profile-user/profile
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("returns 404 for a missing administrator profile", function() {
+    expect(res.status).to.equal(404);
+  });
+}

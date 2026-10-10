@@ -1,0 +1,29 @@
+meta {
+  name: Require session: POST /api/v1/courses/enroll
+  type: http
+  seq: 80
+}
+
+post {
+  url: {{baseUrl}}/api/v1/courses/enroll
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "courseId": "{{pendingCourseId}}" }
+}
+
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("rejects an anonymous request before business mutations", function() {
+    expect(res.status).to.equal(401);
+  });
+}

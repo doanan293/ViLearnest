@@ -1,0 +1,19 @@
+meta {
+  name: AUTH-session-replay
+  type: http
+  seq: 51
+}
+
+get {
+  url: {{baseUrl}}/api/v1/auth/session
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("rejects the exact session credential after sign-out", function() {
+    expect(res.status).to.equal(401);
+  });
+}

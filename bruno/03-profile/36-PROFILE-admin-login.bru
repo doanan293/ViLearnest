@@ -1,0 +1,43 @@
+meta {
+  name: Login profile admin
+  type: http
+  seq: 36
+}
+
+post {
+  url: {{baseUrl}}/api/auth/sign-in/email
+  body: json
+}
+
+headers {
+  content-type: application/json
+  origin: {{frontendUrl}}
+}
+
+body:json {
+  {
+    "email": "{{adminEmail}}",
+    "password": "{{adminPassword}}"
+  }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+script:post-response {
+  if (res.status !== 200 || res.body.user.id !== bru.getVar("adminId")) throw new Error("Profile admin login failed");
+  const rawCookies = res.headers["set-cookie"];
+  const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
+  const session = cookies.find((cookie) => cookie && /(?:__Secure-)?better-auth\.session_token=/.test(cookie));
+  if (!session) throw new Error("Admin session cookie is missing");
+  bru.setVar("session.admin", session.split(";")[0]);
+}
+
+tests {
+  test("logs in the profile run administrator", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.user).to.have.property("id", bru.getVar("adminId"));
+    expect(res.body.user).to.have.property("role", "admin");
+  });
+}

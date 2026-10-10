@@ -1,0 +1,41 @@
+meta {
+  name: STORAGE-upload verify text bytes
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/storage/inspect
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  {
+    "runId": "{{runId}}",
+    "suite": "storage",
+    "key": "{{textKey}}"
+  }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("confirms text object length, type and SHA-256", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.exists).to.equal(true);
+    expect(res.body.contentType).to.equal("text/plain");
+    expect(res.body.bytes).to.equal(28);
+    expect(res.body.sha256).to.equal("25fdc9fd36fdda3aa7a5072108d925460a483acaa5a49949af6f027f9c5b3c39");
+  });
+}

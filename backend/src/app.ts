@@ -2,7 +2,7 @@ import cors from "@fastify/cors";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import { fromNodeHeaders } from "better-auth/node";
-import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
+import Fastify, { type FastifyInstance, type FastifyServerOptions, type onRouteHookHandler } from "fastify";
 import fastifyRawBody from "fastify-raw-body";
 import { auth } from "./auth.js";
 import { config } from "./config/index.js";
@@ -11,8 +11,13 @@ import services from "./plugins/services.js";
 import { routes } from "./routes/index.js";
 import { aj } from "./utils/arcjet.js";
 
-export async function build(opts: FastifyServerOptions = {}): Promise<FastifyInstance> {
+export async function build(
+  opts: FastifyServerOptions = {},
+  hooks: { onRoute?: onRouteHookHandler } = {}
+): Promise<FastifyInstance> {
   const app = Fastify(opts);
+
+  if (hooks.onRoute) app.addHook("onRoute", hooks.onRoute);
 
   app.setErrorHandler(globalErrorHandler);
   app.setNotFoundHandler(notFoundHandler);

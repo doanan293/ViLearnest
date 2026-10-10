@@ -21,3 +21,7 @@ tests {
     expect(res.body.paths).to.have.property("/health");
   });
 }
+
+vars:pre-request {
+  actor: anonymous
+}

@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import type Stripe from "stripe";
 import { config } from "../config/index.js";
-import type { CourseRepository } from "../db/repository/courseRepository.js";
+import type { ActivationInput, CourseRepository, ReorderItem } from "../db/repository/courseRepository.js";
 import { BadRequestError, ForbiddenError, NotFoundError } from "../lib/errors.js";
 
 interface SessionUser {
@@ -41,7 +41,7 @@ export class CourseService {
   }
 
   async getCourseBySlug(slug: string) {
-    const course = await this.courses.findCourseBySlug(slug);
+    const course = await this.courses.findPublicCourseBySlug(slug);
     if (!course) {
       throw new NotFoundError("Course not found");
     }
@@ -159,10 +159,11 @@ export class CourseService {
     }
 
     const metadataUserId = session.metadata?.userId;
+    const courseId = session.metadata?.courseId;
     const enrollmentId = session.metadata?.enrollmentId;
     const customerId = session.customer;
 
-    if (!metadataUserId || !enrollmentId || typeof customerId !== "string") {
+    if (!metadataUserId || !courseId || !enrollmentId || typeof customerId !== "string") {
       throw new BadRequestError("Stripe checkout session metadata is invalid");
     }
 
@@ -179,11 +180,32 @@ export class CourseService {
       throw new ForbiddenError("Stripe customer does not belong to this user");
     }
 
-    await this.courses.activateEnrollment(enrollmentId, user.id, session.amount_total ?? 0);
+    const activation = this.checkoutActivation({
+      enrollmentId,
+      userId: user.id,
+      courseId,
+      amountMinor: session.amount_total,
+    });
+    await this.courses.activateEnrollment(activation);
     return { status: "success" as const, message: "Enrollment activated successfully" };
   }
 
+  private checkoutActivation(input: Omit<ActivationInput, "amountMinor"> & { amountMinor: number | null }) {
+    if (input.amountMinor === null) throw new BadRequestError("Stripe checkout amount is missing");
+    return input as ActivationInput;
+  }
+
   async markComplete(lessonId: string, userId: string) {
+    const lesson = await this.courses.findLessonAccess(lessonId);
+    if (!lesson) {
+      throw new NotFoundError("Lesson not found");
+    }
+
+    const enrollment = await this.courses.findEnrollment(userId, lesson.courseId);
+    if (enrollment?.status !== "Active") {
+      throw new ForbiddenError("Not enrolled in this course");
+    }
+
     await this.courses.upsertLessonProgress(userId, lessonId);
     return { status: "success" as const, message: "Progress updated" };
   }
@@ -267,11 +289,8 @@ export class CourseService {
     return { status: "success" as const, message: "Chapter deleted successfully" };
   }
 
-  async reorderChapters(chapters: { id: string; position: number }[]) {
-    if (!chapters.length) {
-      throw new BadRequestError("No chapters provided");
-    }
-    await Promise.all(chapters.map((chapter) => this.courses.updateChapterPosition(chapter.id, chapter.position)));
+  async reorderChapters(chapters: ReorderItem[]) {
+    await this.courses.reorderChapters(chapters);
     return { status: "success" as const, message: "Chapters reordered successfully" };
   }
 
@@ -322,11 +341,8 @@ export class CourseService {
     return { status: "success" as const, message: "Lesson deleted successfully" };
   }
 
-  async reorderLessons(lessons: { id: string; position: number }[]) {
-    if (!lessons.length) {
-      throw new BadRequestError("No lessons provided");
-    }
-    await Promise.all(lessons.map((lesson) => this.courses.updateLessonPosition(lesson.id, lesson.position)));
+  async reorderLessons(lessons: ReorderItem[]) {
+    await this.courses.reorderLessons(lessons);
     return { status: "success" as const, message: "Lessons reordered successfully" };
   }
 
@@ -365,11 +381,14 @@ export class CourseService {
   }
 
   async handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+    if (session.payment_status !== "paid") return;
+
     const courseId = session.metadata?.courseId;
     const enrollmentId = session.metadata?.enrollmentId;
+    const metadataUserId = session.metadata?.userId;
     const customerId = session.customer;
 
-    if (!courseId || !enrollmentId || typeof customerId !== "string") {
+    if (!courseId || !enrollmentId || !metadataUserId || typeof customerId !== "string") {
       throw new BadRequestError("Stripe checkout session metadata is invalid");
     }
 
@@ -378,6 +397,15 @@ export class CourseService {
       throw new NotFoundError("User not found matching stripe customer");
     }
 
-    await this.courses.activateEnrollment(enrollmentId, user.id, session.amount_total ?? 0);
+    if (metadataUserId !== user.id)
+      throw new ForbiddenError("Stripe checkout session metadata does not match its customer");
+    await this.courses.activateEnrollment(
+      this.checkoutActivation({
+        enrollmentId,
+        userId: user.id,
+        courseId,
+        amountMinor: session.amount_total,
+      })
+    );
   }
 }

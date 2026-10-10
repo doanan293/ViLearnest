@@ -1,0 +1,28 @@
+meta {
+  name: 06-AUTH-email-validation
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/auth/email-exists
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "email": [] }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("06-AUTH-email-validation", function() {
+    expect(res.status).to.equal(400);
+  });
+}

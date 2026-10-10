@@ -1,0 +1,37 @@
+meta {
+  name: Cleanup learning access fixtures
+  type: http
+  seq: 99
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/cleanup
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  {
+    "runId": "{{runId}}",
+    "suite": "learning-access"
+  }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("cleans only this learning access run", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.remaining).to.deep.equal([]);
+  });
+}

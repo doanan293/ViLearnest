@@ -1,0 +1,2238 @@
+[
+  {
+    "route": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/chapters/:chapterId"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/19-delete-chapter",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/19-delete-chapter.bru"
+        ],
+        "purpose": "19 delete chapter"
+      },
+      {
+        "id": "05-admin-courses/23-delete-fixture-chapter",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/23-delete-fixture-chapter.bru"
+        ],
+        "purpose": "23 delete fixture chapter"
+      },
+      {
+        "id": "05-admin-courses/36-LEARN-denied-delete-chapter",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/36-LEARN-denied-delete-chapter.bru"
+        ],
+        "purpose": "36 LEARN denied delete chapter"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-delete-admin-chapters-chapterId",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-delete-admin-chapters-chapterId.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/courses/:id"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/21-delete-created-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/21-delete-created-course.bru"
+        ],
+        "purpose": "21 delete created course"
+      },
+      {
+        "id": "05-admin-courses/25-delete-fixture-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/25-delete-fixture-course.bru"
+        ],
+        "purpose": "25 delete fixture course"
+      },
+      {
+        "id": "05-admin-courses/34-LEARN-denied-delete-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/34-LEARN-denied-delete-course.bru"
+        ],
+        "purpose": "34 LEARN denied delete course"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-delete-admin-courses-id",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-delete-admin-courses-id.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/lessons/:lessonId"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/41-LEARN-denied-delete-lesson",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/41-LEARN-denied-delete-lesson.bru"
+        ],
+        "purpose": "41 LEARN denied delete lesson"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-delete-admin-lessons-lessonId",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-delete-admin-lessons-lessonId.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "DELETE",
+      "path": "/api/v1/storage/files"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "08-storage/07-STORAGE-auth-delete-anonymous",
+        "layer": "bruno",
+        "files": [
+          "08-storage/07-STORAGE-auth-delete-anonymous.bru"
+        ],
+        "purpose": "07 STORAGE auth delete anonymous"
+      },
+      {
+        "id": "08-storage/07-STORAGE-delete-text",
+        "layer": "bruno",
+        "files": [
+          "08-storage/07-STORAGE-delete-text.bru"
+        ],
+        "purpose": "07 STORAGE delete text"
+      },
+      {
+        "id": "08-storage/08-STORAGE-validation-empty-delete-key",
+        "layer": "bruno",
+        "files": [
+          "08-storage/08-STORAGE-validation-empty-delete-key.bru"
+        ],
+        "purpose": "08 STORAGE validation empty delete key"
+      },
+      {
+        "id": "08-storage/14-STORAGE-delete-image",
+        "layer": "bruno",
+        "files": [
+          "08-storage/14-STORAGE-delete-image.bru"
+        ],
+        "purpose": "14 STORAGE delete image"
+      },
+      {
+        "id": "08-storage/20-STORAGE-delete-video",
+        "layer": "bruno",
+        "files": [
+          "08-storage/20-STORAGE-delete-video.bru"
+        ],
+        "purpose": "20 STORAGE delete video"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/auth/*"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "Better Auth dispatch adapter; concrete application-used operations are inventoried separately"
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/auth/session"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "02-auth/52-AUTH-direct-session-anonymous",
+        "layer": "bruno",
+        "files": [
+          "02-auth/52-AUTH-direct-session-anonymous.bru"
+        ],
+        "purpose": "52 AUTH direct session anonymous"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/admin/courses"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/04-find-created-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/04-find-created-course.bru"
+        ],
+        "purpose": "04 find created course"
+      },
+      {
+        "id": "05-admin-courses/30-LEARN-denied-list",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/30-LEARN-denied-list.bru"
+        ],
+        "purpose": "30 LEARN denied list"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-get-admin-courses",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-get-admin-courses.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/admin/courses/:id"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/05-read-created-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/05-read-created-course.bru"
+        ],
+        "purpose": "05 read created course"
+      },
+      {
+        "id": "05-admin-courses/08-read-updated-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/08-read-updated-course.bru"
+        ],
+        "purpose": "08 read updated course"
+      },
+      {
+        "id": "05-admin-courses/15-read-order",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/15-read-order.bru"
+        ],
+        "purpose": "15 read order"
+      },
+      {
+        "id": "05-admin-courses/20-read-after-chapter-delete",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/20-read-after-chapter-delete.bru"
+        ],
+        "purpose": "20 read after chapter delete"
+      },
+      {
+        "id": "05-admin-courses/22-read-deleted-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/22-read-deleted-course.bru"
+        ],
+        "purpose": "22 read deleted course"
+      },
+      {
+        "id": "05-admin-courses/31-LEARN-denied-read",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/31-LEARN-denied-read.bru"
+        ],
+        "purpose": "31 LEARN denied read"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-get-admin-courses-id",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-get-admin-courses-id.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/admin/courses/recent"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/17-recent-membership",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/17-recent-membership.bru"
+        ],
+        "purpose": "17 recent membership"
+      },
+      {
+        "id": "05-admin-courses/29-LEARN-denied-recent",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/29-LEARN-denied-recent.bru"
+        ],
+        "purpose": "29 LEARN denied recent"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-get-admin-courses-recent",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-get-admin-courses-recent.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/admin/dashboard/enrollment-stats"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/28-LEARN-denied-enrollment-stats",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/28-LEARN-denied-enrollment-stats.bru"
+        ],
+        "purpose": "28 LEARN denied enrollment stats"
+      },
+      {
+        "id": "07-payment/03-enrollment-stats-before",
+        "layer": "bruno",
+        "files": [
+          "07-payment/03-enrollment-stats-before.bru"
+        ],
+        "purpose": "03 enrollment stats before"
+      },
+      {
+        "id": "07-payment/30-enrollment-stats-after",
+        "layer": "bruno",
+        "files": [
+          "07-payment/30-enrollment-stats-after.bru"
+        ],
+        "purpose": "30 enrollment stats after"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-get-admin-dashboard-enrollment-stats",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-get-admin-dashboard-enrollment-stats.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/admin/dashboard/stats"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/02-stats-before",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/02-stats-before.bru"
+        ],
+        "purpose": "02 stats before"
+      },
+      {
+        "id": "05-admin-courses/16-stats-after",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/16-stats-after.bru"
+        ],
+        "purpose": "16 stats after"
+      },
+      {
+        "id": "05-admin-courses/21-stats-after-delete",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/21-stats-after-delete.bru"
+        ],
+        "purpose": "21 stats after delete"
+      },
+      {
+        "id": "05-admin-courses/27-LEARN-denied-dashboard-stats",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/27-LEARN-denied-dashboard-stats.bru"
+        ],
+        "purpose": "27 LEARN denied dashboard stats"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-get-admin-dashboard-stats",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-get-admin-dashboard-stats.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/admin/lessons/:id"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/24-read-deleted-lesson",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/24-read-deleted-lesson.bru"
+        ],
+        "purpose": "24 read deleted lesson"
+      },
+      {
+        "id": "05-admin-courses/39-LEARN-denied-read-lesson",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/39-LEARN-denied-read-lesson.bru"
+        ],
+        "purpose": "39 LEARN denied read lesson"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-get-admin-lessons-id",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-get-admin-lessons-id.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/admin/users"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "03-profile/30-PROFILE-admin-anon-list",
+        "layer": "bruno",
+        "files": [
+          "03-profile/30-PROFILE-admin-anon-list.bru"
+        ],
+        "purpose": "30 PROFILE admin anon list"
+      },
+      {
+        "id": "03-profile/33-PROFILE-admin-learner-list",
+        "layer": "bruno",
+        "files": [
+          "03-profile/33-PROFILE-admin-learner-list.bru"
+        ],
+        "purpose": "33 PROFILE admin learner list"
+      },
+      {
+        "id": "03-profile/38-PROFILE-admin-list",
+        "layer": "bruno",
+        "files": [
+          "03-profile/38-PROFILE-admin-list.bru"
+        ],
+        "purpose": "38 PROFILE admin list"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/admin/users/:userId/profile"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "03-profile/31-PROFILE-admin-anon-read",
+        "layer": "bruno",
+        "files": [
+          "03-profile/31-PROFILE-admin-anon-read.bru"
+        ],
+        "purpose": "31 PROFILE admin anon read"
+      },
+      {
+        "id": "03-profile/34-PROFILE-admin-learner-read",
+        "layer": "bruno",
+        "files": [
+          "03-profile/34-PROFILE-admin-learner-read.bru"
+        ],
+        "purpose": "34 PROFILE admin learner read"
+      },
+      {
+        "id": "03-profile/39-PROFILE-admin-isolation-read-a",
+        "layer": "bruno",
+        "files": [
+          "03-profile/39-PROFILE-admin-isolation-read-a.bru"
+        ],
+        "purpose": "39 PROFILE admin isolation read a"
+      },
+      {
+        "id": "03-profile/39-PROFILE-admin-protected-fields",
+        "layer": "bruno",
+        "files": [
+          "03-profile/39-PROFILE-admin-protected-fields.bru"
+        ],
+        "purpose": "39 PROFILE admin protected fields"
+      },
+      {
+        "id": "03-profile/40-PROFILE-admin-missing-read",
+        "layer": "bruno",
+        "files": [
+          "03-profile/40-PROFILE-admin-missing-read.bru"
+        ],
+        "purpose": "40 PROFILE admin missing read"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/auth/session"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "02-auth/22-AUTH-session",
+        "layer": "bruno",
+        "files": [
+          "02-auth/22-AUTH-session.bru"
+        ],
+        "purpose": "22 AUTH session"
+      },
+      {
+        "id": "02-auth/51-AUTH-session-replay",
+        "layer": "bruno",
+        "files": [
+          "02-auth/51-AUTH-session-replay.bru"
+        ],
+        "purpose": "51 AUTH session replay"
+      },
+      {
+        "id": "02-auth/52-AUTH-session-anonymous",
+        "layer": "bruno",
+        "files": [
+          "02-auth/52-AUTH-session-anonymous.bru"
+        ],
+        "purpose": "52 AUTH session anonymous"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/courses"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "01-system/public-courses",
+        "layer": "bruno",
+        "files": [
+          "01-system/public-courses.bru"
+        ],
+        "purpose": "public courses"
+      },
+      {
+        "id": "04-public-courses/10-PUBLIC-visibility",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/10-PUBLIC-visibility.bru"
+        ],
+        "purpose": "10 PUBLIC visibility"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/courses/:courseId/is-enrolled"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "07-payment/05-PAYMENT-pending-state",
+        "layer": "bruno",
+        "files": [
+          "07-payment/05-PAYMENT-pending-state.bru"
+        ],
+        "purpose": "05 PAYMENT pending state"
+      },
+      {
+        "id": "07-payment/20-PAYMENT-pending-preserved",
+        "layer": "bruno",
+        "files": [
+          "07-payment/20-PAYMENT-pending-preserved.bru"
+        ],
+        "purpose": "20 PAYMENT pending preserved"
+      },
+      {
+        "id": "07-payment/24-PAYMENT-enrolled-a",
+        "layer": "bruno",
+        "files": [
+          "07-payment/24-PAYMENT-enrolled-a.bru"
+        ],
+        "purpose": "24 PAYMENT enrolled a"
+      },
+      {
+        "id": "07-payment/27-PAYMENT-enrolled-isolation",
+        "layer": "bruno",
+        "files": [
+          "07-payment/27-PAYMENT-enrolled-isolation.bru"
+        ],
+        "purpose": "27 PAYMENT enrolled isolation"
+      },
+      {
+        "id": "07-payment/80-AUTH-anonymous-get-courses-courseId-is-enrolled",
+        "layer": "bruno",
+        "files": [
+          "07-payment/80-AUTH-anonymous-get-courses-courseId-is-enrolled.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/courses/by-slug/:slug"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "04-public-courses/11-PUBLIC-detail",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/11-PUBLIC-detail.bru"
+        ],
+        "purpose": "11 PUBLIC detail"
+      },
+      {
+        "id": "04-public-courses/12-PUBLIC-hidden-draft",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/12-PUBLIC-hidden-draft.bru"
+        ],
+        "purpose": "12 PUBLIC hidden draft"
+      },
+      {
+        "id": "04-public-courses/13-PUBLIC-hidden-archived",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/13-PUBLIC-hidden-archived.bru"
+        ],
+        "purpose": "13 PUBLIC hidden archived"
+      },
+      {
+        "id": "04-public-courses/21-PUBLIC-transition-visible",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/21-PUBLIC-transition-visible.bru"
+        ],
+        "purpose": "21 PUBLIC transition visible"
+      },
+      {
+        "id": "04-public-courses/23-PUBLIC-transition-hidden",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/23-PUBLIC-transition-hidden.bru"
+        ],
+        "purpose": "23 PUBLIC transition hidden"
+      },
+      {
+        "id": "06-learning-access/14-LEARN-access-archived-public",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/14-LEARN-access-archived-public.bru"
+        ],
+        "purpose": "14 LEARN access archived public"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/courses/by-slug/:slug/sidebar"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "06-learning-access/10-LEARN-access-active",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/10-LEARN-access-active.bru"
+        ],
+        "purpose": "10 LEARN access active"
+      },
+      {
+        "id": "06-learning-access/11-LEARN-access-pending",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/11-LEARN-access-pending.bru"
+        ],
+        "purpose": "11 LEARN access pending"
+      },
+      {
+        "id": "06-learning-access/13-LEARN-access-archived-active",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/13-LEARN-access-archived-active.bru"
+        ],
+        "purpose": "13 LEARN access archived active"
+      },
+      {
+        "id": "06-learning-access/22-LEARN-progress-read-a",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/22-LEARN-progress-read-a.bru"
+        ],
+        "purpose": "22 LEARN progress read a"
+      },
+      {
+        "id": "06-learning-access/23-LEARN-isolation",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/23-LEARN-isolation.bru"
+        ],
+        "purpose": "23 LEARN isolation"
+      },
+      {
+        "id": "07-payment/06-PAYMENT-pending-content-denied",
+        "layer": "bruno",
+        "files": [
+          "07-payment/06-PAYMENT-pending-content-denied.bru"
+        ],
+        "purpose": "06 PAYMENT pending content denied"
+      },
+      {
+        "id": "06-learning-access/80-AUTH-anonymous-get-courses-by-slug-slug-sidebar",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/80-AUTH-anonymous-get-courses-by-slug-slug-sidebar.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/courses/enrolled"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/26-learner-enrollment-after-delete",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/26-learner-enrollment-after-delete.bru"
+        ],
+        "purpose": "26 learner enrollment after delete"
+      },
+      {
+        "id": "06-learning-access/18-LEARN-enrolled-membership",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/18-LEARN-enrolled-membership.bru"
+        ],
+        "purpose": "18 LEARN enrolled membership"
+      },
+      {
+        "id": "07-payment/25-PAYMENT-enrolled-list-a",
+        "layer": "bruno",
+        "files": [
+          "07-payment/25-PAYMENT-enrolled-list-a.bru"
+        ],
+        "purpose": "25 PAYMENT enrolled list a"
+      },
+      {
+        "id": "07-payment/28-PAYMENT-enrolled-list-b",
+        "layer": "bruno",
+        "files": [
+          "07-payment/28-PAYMENT-enrolled-list-b.bru"
+        ],
+        "purpose": "28 PAYMENT enrolled list b"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-get-courses-enrolled",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-get-courses-enrolled.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/courses/lessons/:lessonId"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "06-learning-access/12-LEARN-access-unenrolled",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/12-LEARN-access-unenrolled.bru"
+        ],
+        "purpose": "12 LEARN access unenrolled"
+      },
+      {
+        "id": "06-learning-access/15-LEARN-lesson-active",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/15-LEARN-lesson-active.bru"
+        ],
+        "purpose": "15 LEARN lesson active"
+      },
+      {
+        "id": "06-learning-access/16-LEARN-lesson-pending",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/16-LEARN-lesson-pending.bru"
+        ],
+        "purpose": "16 LEARN lesson pending"
+      },
+      {
+        "id": "06-learning-access/17-LEARN-lesson-missing",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/17-LEARN-lesson-missing.bru"
+        ],
+        "purpose": "17 LEARN lesson missing"
+      },
+      {
+        "id": "06-learning-access/80-AUTH-anonymous-get-courses-lessons-lessonId",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/80-AUTH-anonymous-get-courses-lessons-lessonId.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/health"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "01-system/health",
+        "layer": "bruno",
+        "files": [
+          "01-system/health.bru"
+        ],
+        "purpose": "health"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/v1/profile/me"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "03-profile/11-PROFILE-self-read",
+        "layer": "bruno",
+        "files": [
+          "03-profile/11-PROFILE-self-read.bru"
+        ],
+        "purpose": "11 PROFILE self read"
+      },
+      {
+        "id": "03-profile/14-PROFILE-invalid-preserves-state",
+        "layer": "bruno",
+        "files": [
+          "03-profile/14-PROFILE-invalid-preserves-state.bru"
+        ],
+        "purpose": "14 PROFILE invalid preserves state"
+      },
+      {
+        "id": "03-profile/16-PROFILE-null-readback",
+        "layer": "bruno",
+        "files": [
+          "03-profile/16-PROFILE-null-readback.bru"
+        ],
+        "purpose": "16 PROFILE null readback"
+      },
+      {
+        "id": "03-profile/18-PROFILE-self-target-preserves-state",
+        "layer": "bruno",
+        "files": [
+          "03-profile/18-PROFILE-self-target-preserves-state.bru"
+        ],
+        "purpose": "18 PROFILE self target preserves state"
+      },
+      {
+        "id": "03-profile/21-PROFILE-isolation-read-b",
+        "layer": "bruno",
+        "files": [
+          "03-profile/21-PROFILE-isolation-read-b.bru"
+        ],
+        "purpose": "21 PROFILE isolation read b"
+      },
+      {
+        "id": "03-profile/80-AUTH-anonymous-get-profile-me",
+        "layer": "bruno",
+        "files": [
+          "03-profile/80-AUTH-anonymous-get-profile-me.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/docs"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Generated Swagger documentation route"
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/docs/json"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Generated Swagger documentation route"
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/docs/static/*"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Generated Swagger documentation route"
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/docs/static/index.html"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Generated Swagger documentation route"
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/docs/static/swagger-initializer.js"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Generated Swagger documentation route"
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/docs/yaml"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Generated Swagger documentation route"
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/openapi.json"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "01-system/openapi-json",
+        "layer": "bruno",
+        "files": [
+          "01-system/openapi-json.bru"
+        ],
+        "purpose": "openapi json"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/auth/*"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/auth/session"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/admin/courses"
+    },
+    "access": "admin",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/admin/courses/:id"
+    },
+    "access": "admin",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/admin/courses/recent"
+    },
+    "access": "admin",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/admin/dashboard/enrollment-stats"
+    },
+    "access": "admin",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/admin/dashboard/stats"
+    },
+    "access": "admin",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/admin/lessons/:id"
+    },
+    "access": "admin",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/admin/users"
+    },
+    "access": "admin",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/admin/users/:userId/profile"
+    },
+    "access": "admin",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/auth/session"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/courses"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/courses/:courseId/is-enrolled"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/courses/by-slug/:slug"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/courses/by-slug/:slug/sidebar"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/courses/enrolled"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/courses/lessons/:lessonId"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/health"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/api/v1/profile/me"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/docs"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/docs/json"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/docs/static/*"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/docs/static/index.html"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/docs/static/swagger-initializer.js"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/docs/yaml"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "HEAD",
+      "path": "/openapi.json"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "Fastify automatically creates this HEAD handler for its GET operation"
+  },
+  {
+    "route": {
+      "method": "OPTIONS",
+      "path": "*"
+    },
+    "access": "session",
+    "scenarios": [],
+    "exclusion": "CORS preflight handled by framework"
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/*"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "Better Auth dispatch adapter; concrete application-used operations are inventoried separately"
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/admin/chapters/:chapterId/lessons"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/11-create-lesson-a",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/11-create-lesson-a.bru"
+        ],
+        "purpose": "11 create lesson a"
+      },
+      {
+        "id": "05-admin-courses/12-create-lesson-b",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/12-create-lesson-b.bru"
+        ],
+        "purpose": "12 create lesson b"
+      },
+      {
+        "id": "05-admin-courses/38-LEARN-denied-create-lesson",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/38-LEARN-denied-create-lesson.bru"
+        ],
+        "purpose": "38 LEARN denied create lesson"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-post-admin-chapters-chapterId-lessons",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-post-admin-chapters-chapterId-lessons.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/admin/chapters/reorder"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/13-reorder-chapters",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/13-reorder-chapters.bru"
+        ],
+        "purpose": "13 reorder chapters"
+      },
+      {
+        "id": "05-admin-courses/37-LEARN-denied-reorder-chapters",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/37-LEARN-denied-reorder-chapters.bru"
+        ],
+        "purpose": "37 LEARN denied reorder chapters"
+      },
+      {
+        "id": "backend/post-api-v1-admin-chapters-reorder",
+        "layer": "backend",
+        "files": [
+          "backend/tests/integration/course-ordering.test.ts"
+        ],
+        "purpose": "Atomic reorder validation and rollback"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-post-admin-chapters-reorder",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-post-admin-chapters-reorder.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/admin/courses"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/03-create-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/03-create-course.bru"
+        ],
+        "purpose": "03 create course"
+      },
+      {
+        "id": "05-admin-courses/32-LEARN-denied-create",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/32-LEARN-denied-create.bru"
+        ],
+        "purpose": "32 LEARN denied create"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-post-admin-courses",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-post-admin-courses.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/admin/courses/:courseId/chapters"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/09-create-chapter-a",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/09-create-chapter-a.bru"
+        ],
+        "purpose": "09 create chapter a"
+      },
+      {
+        "id": "05-admin-courses/10-create-chapter-b",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/10-create-chapter-b.bru"
+        ],
+        "purpose": "10 create chapter b"
+      },
+      {
+        "id": "05-admin-courses/35-LEARN-denied-create-chapter",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/35-LEARN-denied-create-chapter.bru"
+        ],
+        "purpose": "35 LEARN denied create chapter"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-post-admin-courses-courseId-chapters",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-post-admin-courses-courseId-chapters.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/admin/lessons/reorder"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/14-reorder-lessons",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/14-reorder-lessons.bru"
+        ],
+        "purpose": "14 reorder lessons"
+      },
+      {
+        "id": "05-admin-courses/42-LEARN-denied-reorder-lessons",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/42-LEARN-denied-reorder-lessons.bru"
+        ],
+        "purpose": "42 LEARN denied reorder lessons"
+      },
+      {
+        "id": "backend/post-api-v1-admin-lessons-reorder",
+        "layer": "backend",
+        "files": [
+          "backend/tests/integration/course-ordering.test.ts"
+        ],
+        "purpose": "Cross-parent rejection and consistent positions"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-post-admin-lessons-reorder",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-post-admin-lessons-reorder.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/auth/email-exists"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "02-auth/05-AUTH-email-available",
+        "layer": "bruno",
+        "files": [
+          "02-auth/05-AUTH-email-available.bru"
+        ],
+        "purpose": "05 AUTH email available"
+      },
+      {
+        "id": "02-auth/06-AUTH-email-validation",
+        "layer": "bruno",
+        "files": [
+          "02-auth/06-AUTH-email-validation.bru"
+        ],
+        "purpose": "06 AUTH email validation"
+      },
+      {
+        "id": "02-auth/17-AUTH-email-existing",
+        "layer": "bruno",
+        "files": [
+          "02-auth/17-AUTH-email-existing.bru"
+        ],
+        "purpose": "17 AUTH email existing"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/courses/checkout/confirm"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "07-payment/19-PAYMENT-confirm-unpaid",
+        "layer": "bruno",
+        "files": [
+          "07-payment/19-PAYMENT-confirm-unpaid.bru"
+        ],
+        "purpose": "19 PAYMENT confirm unpaid"
+      },
+      {
+        "id": "backend/post-api-v1-courses-checkout-confirm",
+        "layer": "backend",
+        "files": [
+          "backend/tests/integration/checkout-confirmation.test.ts"
+        ],
+        "purpose": "Paid confirmation and ownership/customer/current-user failures with concurrent replay"
+      },
+      {
+        "id": "07-payment/80-AUTH-anonymous-post-courses-checkout-confirm",
+        "layer": "bruno",
+        "files": [
+          "07-payment/80-AUTH-anonymous-post-courses-checkout-confirm.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/courses/enroll"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "07-payment/07-PAYMENT-start-checkout",
+        "layer": "bruno",
+        "files": [
+          "07-payment/07-PAYMENT-start-checkout.bru"
+        ],
+        "purpose": "07 PAYMENT start checkout"
+      },
+      {
+        "id": "07-payment/29-PAYMENT-repeat-active-enroll",
+        "layer": "bruno",
+        "files": [
+          "07-payment/29-PAYMENT-repeat-active-enroll.bru"
+        ],
+        "purpose": "29 PAYMENT repeat active enroll"
+      },
+      {
+        "id": "07-payment/80-AUTH-anonymous-post-courses-enroll",
+        "layer": "bruno",
+        "files": [
+          "07-payment/80-AUTH-anonymous-post-courses-enroll.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/courses/lesson/complete"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "06-learning-access/20-LEARN-progress-complete",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/20-LEARN-progress-complete.bru"
+        ],
+        "purpose": "20 LEARN progress complete"
+      },
+      {
+        "id": "06-learning-access/21-LEARN-progress-repeat",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/21-LEARN-progress-repeat.bru"
+        ],
+        "purpose": "21 LEARN progress repeat"
+      },
+      {
+        "id": "06-learning-access/30-LEARN-progress-denied-pending",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/30-LEARN-progress-denied-pending.bru"
+        ],
+        "purpose": "30 LEARN progress denied pending"
+      },
+      {
+        "id": "06-learning-access/31-LEARN-progress-denied-unenrolled",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/31-LEARN-progress-denied-unenrolled.bru"
+        ],
+        "purpose": "31 LEARN progress denied unenrolled"
+      },
+      {
+        "id": "06-learning-access/32-LEARN-progress-missing",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/32-LEARN-progress-missing.bru"
+        ],
+        "purpose": "32 LEARN progress missing"
+      },
+      {
+        "id": "06-learning-access/80-AUTH-anonymous-post-courses-lesson-complete",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/80-AUTH-anonymous-post-courses-lesson-complete.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/storage/presigned"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "08-storage/02-STORAGE-auth-presign-anonymous",
+        "layer": "bruno",
+        "files": [
+          "08-storage/02-STORAGE-auth-presign-anonymous.bru"
+        ],
+        "purpose": "02 STORAGE auth presign anonymous"
+      },
+      {
+        "id": "08-storage/03-STORAGE-presign-text",
+        "layer": "bruno",
+        "files": [
+          "08-storage/03-STORAGE-presign-text.bru"
+        ],
+        "purpose": "03 STORAGE presign text"
+      },
+      {
+        "id": "08-storage/10-STORAGE-presign-image",
+        "layer": "bruno",
+        "files": [
+          "08-storage/10-STORAGE-presign-image.bru"
+        ],
+        "purpose": "10 STORAGE presign image"
+      },
+      {
+        "id": "08-storage/16-STORAGE-presign-video",
+        "layer": "bruno",
+        "files": [
+          "08-storage/16-STORAGE-presign-video.bru"
+        ],
+        "purpose": "16 STORAGE presign video"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/v1/webhooks/stripe"
+    },
+    "access": "signature",
+    "scenarios": [
+      {
+        "id": "07-payment/10-PAYMENT-unpaid-webhook",
+        "layer": "bruno",
+        "files": [
+          "07-payment/10-PAYMENT-unpaid-webhook.bru"
+        ],
+        "purpose": "10 PAYMENT unpaid webhook"
+      },
+      {
+        "id": "07-payment/12-PAYMENT-wrong-owner-webhook",
+        "layer": "bruno",
+        "files": [
+          "07-payment/12-PAYMENT-wrong-owner-webhook.bru"
+        ],
+        "purpose": "12 PAYMENT wrong owner webhook"
+      },
+      {
+        "id": "07-payment/14-PAYMENT-wrong-course-webhook",
+        "layer": "bruno",
+        "files": [
+          "07-payment/14-PAYMENT-wrong-course-webhook.bru"
+        ],
+        "purpose": "14 PAYMENT wrong course webhook"
+      },
+      {
+        "id": "07-payment/16-PAYMENT-missing-metadata-webhook",
+        "layer": "bruno",
+        "files": [
+          "07-payment/16-PAYMENT-missing-metadata-webhook.bru"
+        ],
+        "purpose": "16 PAYMENT missing metadata webhook"
+      },
+      {
+        "id": "07-payment/18-PAYMENT-unknown-enrollment-webhook",
+        "layer": "bruno",
+        "files": [
+          "07-payment/18-PAYMENT-unknown-enrollment-webhook.bru"
+        ],
+        "purpose": "18 PAYMENT unknown enrollment webhook"
+      },
+      {
+        "id": "07-payment/22-PAYMENT-paid-webhook",
+        "layer": "bruno",
+        "files": [
+          "07-payment/22-PAYMENT-paid-webhook.bru"
+        ],
+        "purpose": "22 PAYMENT paid webhook"
+      },
+      {
+        "id": "07-payment/23-PAYMENT-replay",
+        "layer": "bruno",
+        "files": [
+          "07-payment/23-PAYMENT-replay.bru"
+        ],
+        "purpose": "23 PAYMENT replay"
+      },
+      {
+        "id": "backend/post-api-v1-webhooks-stripe",
+        "layer": "backend",
+        "files": [
+          "backend/tests/integration/checkout-confirmation.test.ts"
+        ],
+        "purpose": "Signed amount/ownership failures and concurrent idempotent activation"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "PUT",
+      "path": "/api/v1/admin/courses/:id"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "04-public-courses/20-PUBLIC-transition",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/20-PUBLIC-transition.bru"
+        ],
+        "purpose": "20 PUBLIC transition"
+      },
+      {
+        "id": "04-public-courses/22-PUBLIC-transition-unpublish",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/22-PUBLIC-transition-unpublish.bru"
+        ],
+        "purpose": "22 PUBLIC transition unpublish"
+      },
+      {
+        "id": "05-admin-courses/07-update-course",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/07-update-course.bru"
+        ],
+        "purpose": "07 update course"
+      },
+      {
+        "id": "05-admin-courses/33-LEARN-denied-update",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/33-LEARN-denied-update.bru"
+        ],
+        "purpose": "33 LEARN denied update"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-put-admin-courses-id",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-put-admin-courses-id.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "PUT",
+      "path": "/api/v1/admin/lessons/:lessonId"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "05-admin-courses/40-LEARN-denied-update-lesson",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/40-LEARN-denied-update-lesson.bru"
+        ],
+        "purpose": "40 LEARN denied update lesson"
+      },
+      {
+        "id": "05-admin-courses/80-AUTH-anonymous-put-admin-lessons-lessonId",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/80-AUTH-anonymous-put-admin-lessons-lessonId.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "PUT",
+      "path": "/api/v1/admin/users/:userId/profile"
+    },
+    "access": "admin",
+    "scenarios": [
+      {
+        "id": "03-profile/32-PROFILE-admin-anon-write",
+        "layer": "bruno",
+        "files": [
+          "03-profile/32-PROFILE-admin-anon-write.bru"
+        ],
+        "purpose": "32 PROFILE admin anon write"
+      },
+      {
+        "id": "03-profile/35-PROFILE-admin-learner-write",
+        "layer": "bruno",
+        "files": [
+          "03-profile/35-PROFILE-admin-learner-write.bru"
+        ],
+        "purpose": "35 PROFILE admin learner write"
+      },
+      {
+        "id": "03-profile/37-PROFILE-admin",
+        "layer": "bruno",
+        "files": [
+          "03-profile/37-PROFILE-admin.bru"
+        ],
+        "purpose": "37 PROFILE admin"
+      },
+      {
+        "id": "03-profile/38-PROFILE-admin-injection",
+        "layer": "bruno",
+        "files": [
+          "03-profile/38-PROFILE-admin-injection.bru"
+        ],
+        "purpose": "38 PROFILE admin injection"
+      },
+      {
+        "id": "03-profile/41-PROFILE-admin-missing-write",
+        "layer": "bruno",
+        "files": [
+          "03-profile/41-PROFILE-admin-missing-write.bru"
+        ],
+        "purpose": "41 PROFILE admin missing write"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "PUT",
+      "path": "/api/v1/profile/me"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "03-profile/10-PROFILE-self-update",
+        "layer": "bruno",
+        "files": [
+          "03-profile/10-PROFILE-self-update.bru"
+        ],
+        "purpose": "10 PROFILE self update"
+      },
+      {
+        "id": "03-profile/12-PROFILE-invalid-phone",
+        "layer": "bruno",
+        "files": [
+          "03-profile/12-PROFILE-invalid-phone.bru"
+        ],
+        "purpose": "12 PROFILE invalid phone"
+      },
+      {
+        "id": "03-profile/13-PROFILE-invalid-date",
+        "layer": "bruno",
+        "files": [
+          "03-profile/13-PROFILE-invalid-date.bru"
+        ],
+        "purpose": "13 PROFILE invalid date"
+      },
+      {
+        "id": "03-profile/15-PROFILE-clear-null",
+        "layer": "bruno",
+        "files": [
+          "03-profile/15-PROFILE-clear-null.bru"
+        ],
+        "purpose": "15 PROFILE clear null"
+      },
+      {
+        "id": "03-profile/17-PROFILE-self-target-rejected",
+        "layer": "bruno",
+        "files": [
+          "03-profile/17-PROFILE-self-target-rejected.bru"
+        ],
+        "purpose": "17 PROFILE self target rejected"
+      },
+      {
+        "id": "03-profile/80-AUTH-anonymous-put-profile-me",
+        "layer": "bruno",
+        "files": [
+          "03-profile/80-AUTH-anonymous-put-profile-me.bru"
+        ],
+        "purpose": "Valid request without a session returns 401 before business logic"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/sign-up/email"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "02-auth/10-AUTH-register",
+        "layer": "bruno",
+        "files": [
+          "02-auth/10-AUTH-register.bru"
+        ],
+        "purpose": "10 AUTH register"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/email-otp/send-verification-otp"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "02-auth/12-AUTH-send-verification-otp",
+        "layer": "bruno",
+        "files": [
+          "02-auth/12-AUTH-send-verification-otp.bru"
+        ],
+        "purpose": "12 AUTH send verification otp"
+      },
+      {
+        "id": "02-auth/44-AUTH-request-signin-otp",
+        "layer": "bruno",
+        "files": [
+          "02-auth/44-AUTH-request-signin-otp.bru"
+        ],
+        "purpose": "44 AUTH request signin otp"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/email-otp/verify-email"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "02-auth/13-AUTH-wrong-verification-otp",
+        "layer": "bruno",
+        "files": [
+          "02-auth/13-AUTH-wrong-verification-otp.bru"
+        ],
+        "purpose": "13 AUTH wrong verification otp"
+      },
+      {
+        "id": "02-auth/14-AUTH-verify",
+        "layer": "bruno",
+        "files": [
+          "02-auth/14-AUTH-verify.bru"
+        ],
+        "purpose": "14 AUTH verify"
+      },
+      {
+        "id": "02-auth/15-AUTH-consumed-verification-otp",
+        "layer": "bruno",
+        "files": [
+          "02-auth/15-AUTH-consumed-verification-otp.bru"
+        ],
+        "purpose": "15 AUTH consumed verification otp"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/sign-in/email"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "02-auth/20-AUTH-wrong-password",
+        "layer": "bruno",
+        "files": [
+          "02-auth/20-AUTH-wrong-password.bru"
+        ],
+        "purpose": "20 AUTH wrong password"
+      },
+      {
+        "id": "02-auth/21-AUTH-login",
+        "layer": "bruno",
+        "files": [
+          "02-auth/21-AUTH-login.bru"
+        ],
+        "purpose": "21 AUTH login"
+      },
+      {
+        "id": "02-auth/42-AUTH-old-password",
+        "layer": "bruno",
+        "files": [
+          "02-auth/42-AUTH-old-password.bru"
+        ],
+        "purpose": "42 AUTH old password"
+      },
+      {
+        "id": "02-auth/43-AUTH-new-password",
+        "layer": "bruno",
+        "files": [
+          "02-auth/43-AUTH-new-password.bru"
+        ],
+        "purpose": "43 AUTH new password"
+      },
+      {
+        "id": "03-profile/01-login-learner-a",
+        "layer": "bruno",
+        "files": [
+          "03-profile/01-login-learner-a.bru"
+        ],
+        "purpose": "01 login learner a"
+      },
+      {
+        "id": "03-profile/20-PROFILE-isolation-login-b",
+        "layer": "bruno",
+        "files": [
+          "03-profile/20-PROFILE-isolation-login-b.bru"
+        ],
+        "purpose": "20 PROFILE isolation login b"
+      },
+      {
+        "id": "03-profile/36-PROFILE-admin-login",
+        "layer": "bruno",
+        "files": [
+          "03-profile/36-PROFILE-admin-login.bru"
+        ],
+        "purpose": "36 PROFILE admin login"
+      },
+      {
+        "id": "04-public-courses/01-login-admin",
+        "layer": "bruno",
+        "files": [
+          "04-public-courses/01-login-admin.bru"
+        ],
+        "purpose": "01 login admin"
+      },
+      {
+        "id": "05-admin-courses/01-login-admin",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/01-login-admin.bru"
+        ],
+        "purpose": "01 login admin"
+      },
+      {
+        "id": "05-admin-courses/18-login-learner",
+        "layer": "bruno",
+        "files": [
+          "05-admin-courses/18-login-learner.bru"
+        ],
+        "purpose": "18 login learner"
+      },
+      {
+        "id": "06-learning-access/01-login-learner-a",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/01-login-learner-a.bru"
+        ],
+        "purpose": "01 login learner a"
+      },
+      {
+        "id": "06-learning-access/02-login-learner-b",
+        "layer": "bruno",
+        "files": [
+          "06-learning-access/02-login-learner-b.bru"
+        ],
+        "purpose": "02 login learner b"
+      },
+      {
+        "id": "07-payment/02-login-admin",
+        "layer": "bruno",
+        "files": [
+          "07-payment/02-login-admin.bru"
+        ],
+        "purpose": "02 login admin"
+      },
+      {
+        "id": "07-payment/04-login-learner-a",
+        "layer": "bruno",
+        "files": [
+          "07-payment/04-login-learner-a.bru"
+        ],
+        "purpose": "04 login learner a"
+      },
+      {
+        "id": "07-payment/26-login-learner-b",
+        "layer": "bruno",
+        "files": [
+          "07-payment/26-login-learner-b.bru"
+        ],
+        "purpose": "26 login learner b"
+      },
+      {
+        "id": "08-storage/02-login-learner",
+        "layer": "bruno",
+        "files": [
+          "08-storage/02-login-learner.bru"
+        ],
+        "purpose": "02 login learner"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/auth/get-session"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "02-auth/23-AUTH-client-session",
+        "layer": "bruno",
+        "files": [
+          "02-auth/23-AUTH-client-session.bru"
+        ],
+        "purpose": "23 AUTH client session"
+      },
+      {
+        "id": "02-auth/54-AUTH-client-session-anonymous",
+        "layer": "bruno",
+        "files": [
+          "02-auth/54-AUTH-client-session-anonymous.bru"
+        ],
+        "purpose": "54 AUTH client session anonymous"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/email-otp/request-password-reset"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "02-auth/30-AUTH-request-reset",
+        "layer": "bruno",
+        "files": [
+          "02-auth/30-AUTH-request-reset.bru"
+        ],
+        "purpose": "30 AUTH request reset"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/email-otp/reset-password"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "02-auth/40-AUTH-reset",
+        "layer": "bruno",
+        "files": [
+          "02-auth/40-AUTH-reset.bru"
+        ],
+        "purpose": "40 AUTH reset"
+      },
+      {
+        "id": "02-auth/41-AUTH-reset-replay",
+        "layer": "bruno",
+        "files": [
+          "02-auth/41-AUTH-reset-replay.bru"
+        ],
+        "purpose": "41 AUTH reset replay"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/sign-in/email-otp"
+    },
+    "access": "public",
+    "scenarios": [
+      {
+        "id": "02-auth/46-AUTH-signin-otp-wrong",
+        "layer": "bruno",
+        "files": [
+          "02-auth/46-AUTH-signin-otp-wrong.bru"
+        ],
+        "purpose": "46 AUTH signin otp wrong"
+      },
+      {
+        "id": "02-auth/47-AUTH-signin-otp",
+        "layer": "bruno",
+        "files": [
+          "02-auth/47-AUTH-signin-otp.bru"
+        ],
+        "purpose": "47 AUTH signin otp"
+      },
+      {
+        "id": "02-auth/48-AUTH-signin-otp-replay",
+        "layer": "bruno",
+        "files": [
+          "02-auth/48-AUTH-signin-otp-replay.bru"
+        ],
+        "purpose": "48 AUTH signin otp replay"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/sign-out"
+    },
+    "access": "session",
+    "scenarios": [
+      {
+        "id": "02-auth/50-AUTH-logout",
+        "layer": "bruno",
+        "files": [
+          "02-auth/50-AUTH-logout.bru"
+        ],
+        "purpose": "50 AUTH logout"
+      }
+    ]
+  },
+  {
+    "route": {
+      "method": "POST",
+      "path": "/api/auth/sign-in/social"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "OAuth redirect/provider flow requires external provider credentials and browser validation; separately unverified"
+  },
+  {
+    "route": {
+      "method": "GET",
+      "path": "/api/auth/callback/:provider"
+    },
+    "access": "public",
+    "scenarios": [],
+    "exclusion": "OAuth redirect/provider flow requires external provider credentials and browser validation; separately unverified"
+  }
+]

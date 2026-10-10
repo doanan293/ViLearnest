@@ -1,0 +1,21 @@
+meta {
+  name: PROFILE-admin-isolation-read-a
+  type: http
+  seq: 39
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/users/{{learnerAId}}/profile
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("keeps learner A unchanged when admin updates learner B", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("learnerAId"));
+    expect(res.body.name).to.equal("Self Target Remained Caller");
+  });
+}

@@ -1,0 +1,40 @@
+meta {
+  name: Require session: PUT /api/v1/admin/courses/:id
+  type: http
+  seq: 80
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/courses/{{publishedCourseId}}
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "title": "Forbidden learner update",
+    "description": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\"}]}",
+    "fileKey": "forbidden.png",
+    "price": 0,
+    "duration": 10,
+    "level": "Beginner",
+    "category": "Testing",
+    "smallDescription": "Forbidden",
+    "slug": "bruno-admin-{{runId}}",
+    "status": "Published"
+  }
+}
+
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("rejects an anonymous request before business mutations", function() {
+    expect(res.status).to.equal(401);
+  });
+}

@@ -1,0 +1,42 @@
+meta {
+  name: Login learning learner B
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/auth/sign-in/email
+  body: json
+}
+
+headers {
+  content-type: application/json
+  origin: {{frontendUrl}}
+}
+
+body:json {
+  {
+    "email": "{{learnerBEmail}}",
+    "password": "{{learnerBPassword}}"
+  }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+script:post-response {
+  if (res.status !== 200 || res.body.user.id !== bru.getVar("learnerBId")) throw new Error("Learning learner B login failed");
+  const rawCookies = res.headers["set-cookie"];
+  const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
+  const session = cookies.find((cookie) => cookie && /(?:__Secure-)?better-auth\.session_token=/.test(cookie));
+  if (!session) throw new Error("Learner B session cookie is missing");
+  bru.setVar("session.learnerB", session.split(";")[0]);
+}
+
+tests {
+  test("logs in the independent learning learner B", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.user.id).to.equal(bru.getVar("learnerBId"));
+  });
+}

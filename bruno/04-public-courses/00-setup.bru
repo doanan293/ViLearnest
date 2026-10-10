@@ -1,0 +1,58 @@
+meta {
+  name: Setup public course fixtures
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/setup
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  {
+    "runId": "{{runId}}",
+    "suite": "public-courses"
+  }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  bru.deleteAllVars();
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+  const provided = bru.getEnvVar("runId");
+  const generated = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(character) {
+    const random = Math.floor(Math.random() * 16);
+    return (character === "x" ? random : (random & 3) | 8).toString(16);
+  });
+  bru.setVar("runId", provided || generated);
+  bru.setVar("suite", "public-courses");
+}
+
+script:post-response {
+  if (res.status !== 200) throw new Error("Public course fixture setup failed");
+  bru.setVar("fixtures", res.body);
+  bru.setVar("publishedCourseId", res.body.ids.publishedCourse);
+  bru.setVar("publishedSlug", res.body.ids.publishedSlug);
+  bru.setVar("draftCourseId", res.body.ids.draftCourse);
+  bru.setVar("draftSlug", res.body.ids.draftSlug);
+  bru.setVar("archivedSlug", res.body.ids.archivedSlug);
+  bru.setVar("adminId", res.body.actors.admin.id);
+  bru.setVar("adminEmail", res.body.actors.admin.email);
+  bru.setVar("adminPassword", res.body.actors.admin.password);
+}
+
+tests {
+  test("sets up isolated public course states", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.ref.suite).to.equal("public-courses");
+  });
+}

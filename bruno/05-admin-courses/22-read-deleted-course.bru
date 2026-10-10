@@ -1,0 +1,19 @@
+meta {
+  name: ADMIN-cascade deleted course is missing
+  type: http
+  seq: 22
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/courses/{{createdCourseId}}
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("returns not found for the deleted course", function() {
+    expect(res.status).to.equal(404);
+  });
+}

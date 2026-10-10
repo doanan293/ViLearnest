@@ -1,0 +1,30 @@
+meta {
+  name: LEARN-progress-denied-unenrolled
+  type: http
+  seq: 31
+}
+
+post {
+  url: {{baseUrl}}/api/v1/courses/lesson/complete
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "lessonId": "{{unenrolledLessonId}}"
+  }
+}
+
+vars:pre-request {
+  actor: learnerB
+}
+
+tests {
+  test("rejects progress updates without enrollment", function() {
+    expect(res.status).to.equal(403);
+  });
+}

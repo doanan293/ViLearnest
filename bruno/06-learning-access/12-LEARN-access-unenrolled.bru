@@ -1,0 +1,19 @@
+meta {
+  name: LEARN-access-unenrolled
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/lessons/{{unenrolledLessonId}}
+}
+
+vars:pre-request {
+  actor: learnerB
+}
+
+tests {
+  test("denies lesson content without active enrollment", function() {
+    expect(res.status).to.equal(403);
+  });
+}

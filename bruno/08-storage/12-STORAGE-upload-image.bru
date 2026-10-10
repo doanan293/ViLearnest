@@ -1,0 +1,26 @@
+meta {
+  name: STORAGE-upload image bytes without LMS credentials
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{imageUploadUrl}}
+  body: file
+}
+
+headers {
+  content-type: image/png
+}
+
+body:file {
+  file: @file(fixtures/course-cover.png) @contentType(image/png)
+}
+
+vars:pre-request {
+  actor: external
+}
+
+tests {
+  test("uploads image bytes using only the presigned URL", function() { expect([200, 204]).to.include(res.status); });
+}

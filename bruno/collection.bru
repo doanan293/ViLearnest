@@ -12,8 +12,31 @@ auth {
 }
 
 script:pre-request {
-  const token = bru.getVar("authToken");
-  if (token) {
-    req.setHeader("authorization", "Bearer " + token);
+  const helperToken = bru.getProcessEnv("BRUNO_DESKTOP_HELPER_TOKEN");
+  if (helperToken) {
+    bru.setEnvVar("brunoDesktopHelperToken", helperToken);
+    if (req.getUrl().startsWith(bru.getEnvVar("helperUrl") + "/api/v1/bruno-desktop/")) {
+      req.setHeader("x-bruno-helper-token", helperToken);
+    }
+  }
+  const actor = bru.getRequestVar("actor");
+  if (actor) {
+    const actors = ["anonymous", "admin", "learnerA", "learnerB", "external"];
+    if (!actors.includes(actor)) {
+      throw new Error("Unsupported Bruno actor: " + actor);
+    }
+
+    req.deleteHeader("authorization");
+    await bru.cookies.jar().clear();
+
+    if (["admin", "learnerA", "learnerB"].includes(actor)) {
+      const session = bru.getVar("session." + actor);
+      if (!session) {
+        throw new Error("session." + actor + " is required");
+      }
+      req.setHeader("cookie", session);
+    } else {
+      req.deleteHeader("cookie");
+    }
   }
 }

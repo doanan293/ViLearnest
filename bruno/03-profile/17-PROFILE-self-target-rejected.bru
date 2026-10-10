@@ -1,0 +1,33 @@
+meta {
+  name: PROFILE-self-target-rejected
+  type: http
+  seq: 17
+}
+
+put {
+  url: {{baseUrl}}/api/v1/profile/me
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Self Target Remained Caller",
+    "userId": "{{learnerBId}}"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("ignores caller-selected IDs and updates only the session user", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("learnerAId"));
+    expect(res.body.name).to.equal("Self Target Remained Caller");
+  });
+}

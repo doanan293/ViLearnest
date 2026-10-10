@@ -1,0 +1,34 @@
+meta {
+  name: STORAGE-delete confirm text object absence
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/storage/inspect
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "storage", "key": "{{textKey}}" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("provider inspection confirms text object deletion", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.deep.equal({ exists: false });
+  });
+}

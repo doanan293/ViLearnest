@@ -1,0 +1,20 @@
+meta {
+  name: PUBLIC-transition-visible
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{draftSlug}}
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("makes a newly published course publicly visible", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("draftCourseId"));
+  });
+}

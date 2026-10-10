@@ -1,5 +1,4 @@
 import { parseArcjetMode } from "./arcjet.js";
-import { getBrunoDesktopHelpersConfig } from "./brunoDesktop.js";
 
 export const config = {
   port: Number(process.env.PORT) || 5000,
@@ -12,5 +11,4 @@ export const config = {
   s3BucketName: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES || process.env.AWS_BUCKET_NAME || "mock-bucket",
   awsRegion: process.env.AWS_REGION || "us-east-1",
   awsEndpointUrlS3: process.env.AWS_ENDPOINT_URL_S3,
-  brunoDesktopHelpers: getBrunoDesktopHelpersConfig(),
 };

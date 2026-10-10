@@ -1,0 +1,29 @@
+meta {
+  name: Require session: PUT /api/v1/admin/lessons/:lessonId
+  type: http
+  seq: 80
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/lessons/{{activeLessonId}}
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "name": "Forbidden lesson update" }
+}
+
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("rejects an anonymous request before business mutations", function() {
+    expect(res.status).to.equal(401);
+  });
+}

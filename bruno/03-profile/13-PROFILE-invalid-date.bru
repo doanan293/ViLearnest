@@ -1,0 +1,31 @@
+meta {
+  name: PROFILE-invalid-date
+  type: http
+  seq: 13
+}
+
+put {
+  url: {{baseUrl}}/api/v1/profile/me
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Should Not Persist Either",
+    "dateOfBirth": "2999-01-01"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("rejects a future birth date", function() {
+    expect(res.status).to.equal(400);
+  });
+}

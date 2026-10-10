@@ -1,0 +1,28 @@
+meta {
+  name: STORAGE-delete text object
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/storage/files
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "key": "{{textKey}}" }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("deletes the text object through the authenticated storage API", function() {
+    expect(res.status).to.equal(200);
+  });
+}

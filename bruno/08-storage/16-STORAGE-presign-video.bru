@@ -1,0 +1,36 @@
+meta {
+  name: STORAGE-upload presign video object
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{baseUrl}}/api/v1/storage/presigned
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "filename": "{{runId}}-lesson-video.mp4", "contentType": "video/mp4" }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("videoKey", res.body.key);
+    bru.setVar("videoUploadUrl", res.body.uploadUrl);
+  }
+}
+
+tests {
+  test("returns a namespaced video upload URL", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.key).to.include(bru.getVar("runId"));
+  });
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Capture enrollment stats before payment
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/dashboard/enrollment-stats
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("activeEnrollmentsBefore", res.body.reduce((total, day) => total + day.enrollments, 0));
+  }
+}
+
+tests {
+  test("captures an owned baseline for active enrollments", function() {
+    expect(res.status).to.equal(200);
+    expect(bru.getVar("activeEnrollmentsBefore")).to.be.a("number");
+  });
+}

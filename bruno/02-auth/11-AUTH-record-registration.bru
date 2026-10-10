@@ -1,0 +1,36 @@
+meta {
+  name: AUTH-record-registration
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/actors/registered
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  {
+    "runId": "{{runId}}",
+    "suite": "auth",
+    "actor": "learnerA",
+    "userId": "{{learnerAUserId}}"
+  }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+tests {
+  test("records only the registered run learner", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("id", bru.getVar("learnerAUserId"));
+    expect(res.body).to.have.property("email", bru.getVar("learnerAEmail"));
+  });
+}

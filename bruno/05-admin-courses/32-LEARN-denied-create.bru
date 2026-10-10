@@ -1,0 +1,37 @@
+meta {
+  name: ADMIN-authorization learner denied course create
+  type: http
+  seq: 32
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/courses
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "title": "Forbidden learner course",
+    "description": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\"}]}",
+    "fileKey": "forbidden.png",
+    "price": 0,
+    "duration": 10,
+    "level": "Beginner",
+    "category": "Testing",
+    "smallDescription": "Forbidden",
+    "slug": "bruno-forbidden-{{runId}}",
+    "status": "Draft"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("denies valid course creation payload to an authenticated learner", function() { expect(res.status).to.equal(403); });
+}

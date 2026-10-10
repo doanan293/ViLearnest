@@ -231,7 +231,13 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
     {
       schema: {
         body: reorderBodySchema,
-        response: { 200: successMessageSchema, 401: errorResponseSchema },
+        response: {
+          200: successMessageSchema,
+          400: errorResponseSchema,
+          401: errorResponseSchema,
+          403: errorResponseSchema,
+          404: errorResponseSchema,
+        },
       },
     },
     async (request) => controller.reorderChapters(request)
@@ -276,7 +282,13 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
     {
       schema: {
         body: lessonBodySchema,
-        response: { 200: successMessageSchema, 401: errorResponseSchema },
+        response: {
+          200: successMessageSchema,
+          400: errorResponseSchema,
+          401: errorResponseSchema,
+          403: errorResponseSchema,
+          404: errorResponseSchema,
+        },
       },
     },
     async (request) => controller.updateLesson(request)
@@ -297,7 +309,13 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
     {
       schema: {
         body: reorderBodySchema,
-        response: { 200: successMessageSchema, 401: errorResponseSchema },
+        response: {
+          200: successMessageSchema,
+          400: errorResponseSchema,
+          401: errorResponseSchema,
+          403: errorResponseSchema,
+          404: errorResponseSchema,
+        },
       },
     },
     async (request) => controller.reorderLessons(request)

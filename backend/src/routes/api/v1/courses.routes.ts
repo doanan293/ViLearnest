@@ -159,6 +159,7 @@ export const coursesRoutes: FastifyPluginAsync = async (fastify) => {
           400: errorResponseSchema,
           401: errorResponseSchema,
           403: errorResponseSchema,
+          404: errorResponseSchema,
         },
       },
     },
@@ -170,7 +171,12 @@ export const coursesRoutes: FastifyPluginAsync = async (fastify) => {
     {
       schema: {
         body: markCompleteBodySchema,
-        response: { 200: successMessageSchema, 401: errorResponseSchema },
+        response: {
+          200: successMessageSchema,
+          401: errorResponseSchema,
+          403: errorResponseSchema,
+          404: errorResponseSchema,
+        },
       },
     },
     async (request) => controller.markComplete(request)

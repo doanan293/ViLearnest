@@ -1,0 +1,37 @@
+meta {
+  name: 45-AUTH-read-signin-otp
+  type: http
+  seq: 45
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/otp
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "auth", "actor": "learnerA", "type": "sign-in" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("learnerASigninOtp", res.body.otp);
+    bru.setVar("wrongSigninOtp", res.body.otp === "000000" ? "111111" : "000000");
+  }
+}
+
+tests {
+  test("45-AUTH-read-signin-otp", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.email).to.equal(bru.getVar("learnerAEmail"));
+  });
+}

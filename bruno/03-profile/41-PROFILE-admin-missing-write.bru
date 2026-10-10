@@ -1,0 +1,30 @@
+meta {
+  name: PROFILE-admin-missing-write
+  type: http
+  seq: 43
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/users/bruno-missing-profile-user/profile
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "Missing User"
+  }
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("returns 404 when an admin updates a missing user", function() {
+    expect(res.status).to.equal(404);
+  });
+}

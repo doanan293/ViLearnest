@@ -1,0 +1,19 @@
+meta {
+  name: PUBLIC-transition-hidden
+  type: http
+  seq: 23
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{draftSlug}}
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("hides a course again after it returns to draft", function() {
+    expect(res.status).to.equal(404);
+  });
+}

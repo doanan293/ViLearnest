@@ -1,0 +1,28 @@
+meta {
+  name: STORAGE-upload text bytes without LMS credentials
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{textUploadUrl}}
+  body: file
+}
+
+headers {
+  content-type: text/plain
+}
+
+body:file {
+  file: @file(fixtures/upload-smoke.txt) @contentType(text/plain)
+}
+
+vars:pre-request {
+  actor: external
+}
+
+tests {
+  test("uploads text bytes using only the presigned URL", function() {
+    expect([200, 204]).to.include(res.status);
+  });
+}

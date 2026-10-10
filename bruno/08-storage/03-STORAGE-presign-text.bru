@@ -1,0 +1,40 @@
+meta {
+  name: STORAGE-upload presign text object
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/storage/presigned
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "filename": "{{runId}}-upload-smoke.txt",
+    "contentType": "text/plain"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("textKey", res.body.key);
+    bru.setVar("textUploadUrl", res.body.uploadUrl);
+  }
+}
+
+tests {
+  test("returns a namespaced text upload URL", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.key).to.include(bru.getVar("runId"));
+    expect(res.body.uploadUrl).to.include("http");
+  });
+}

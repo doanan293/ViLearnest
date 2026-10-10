@@ -17,3 +17,7 @@ tests {
     expect(res.body).to.deep.equal({ status: "ok" });
   });
 }
+
+vars:pre-request {
+  actor: anonymous
+}

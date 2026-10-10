@@ -1,0 +1,31 @@
+meta {
+  name: LEARN-progress-complete
+  type: http
+  seq: 20
+}
+
+post {
+  url: {{baseUrl}}/api/v1/courses/lesson/complete
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "lessonId": "{{activeLessonId}}"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("marks a lesson complete for its active learner", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("message", "Progress updated");
+  });
+}

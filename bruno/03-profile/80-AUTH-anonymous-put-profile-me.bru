@@ -1,0 +1,35 @@
+meta {
+  name: Require session: PUT /api/v1/profile/me
+  type: http
+  seq: 80
+}
+
+put {
+  url: {{baseUrl}}/api/v1/profile/me
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "  Bruno Profile A  ",
+    "dateOfBirth": "1990-05-21",
+    "phoneNumber": "+84 901 234 567",
+    "websiteUrl": "example.com/profile-a",
+    "bio": "  Profile persistence check  "
+  }
+}
+
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("rejects an anonymous request before business mutations", function() {
+    expect(res.status).to.equal(401);
+  });
+}

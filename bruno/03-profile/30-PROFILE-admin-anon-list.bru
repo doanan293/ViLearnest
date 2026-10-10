@@ -1,0 +1,19 @@
+meta {
+  name: PROFILE-admin-anon-list
+  type: http
+  seq: 30
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/users
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("requires a session to list administrator user records", function() {
+    expect(res.status).to.equal(401);
+  });
+}

@@ -1,0 +1,32 @@
+meta {
+  name: AUTH-send-verification-otp
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/api/auth/email-otp/send-verification-otp
+  body: json
+}
+
+headers {
+  content-type: application/json
+  origin: {{frontendUrl}}
+}
+
+body:json {
+  {
+    "email": "{{learnerAEmail}}",
+    "type": "email-verification"
+  }
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("requests an email verification code for the newly registered user", function() {
+    expect(res.status).to.equal(200);
+  });
+}

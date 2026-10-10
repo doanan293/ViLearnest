@@ -6,5 +6,6 @@
 		"jsx": "react-jsx",
 		"verbatimModuleSyntax": false
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tests/**/*.ts", "tests/**/*.tsx"]
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tests/**/*.ts", "tests/**/*.tsx"],
+	"exclude": ["node_modules", "tests/e2e", "playwright.config.ts"]
 }

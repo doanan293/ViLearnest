@@ -1,0 +1,19 @@
+meta {
+  name: 17-LEARN-lesson-missing
+  type: http
+  seq: 17
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/lessons/missing-lesson
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("17-LEARN-lesson-missing", function() {
+    expect(res.status).to.equal(404);
+  });
+}

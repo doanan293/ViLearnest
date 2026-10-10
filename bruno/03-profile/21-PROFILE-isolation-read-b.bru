@@ -1,0 +1,22 @@
+meta {
+  name: PROFILE-isolation
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{baseUrl}}/api/v1/profile/me
+}
+
+vars:pre-request {
+  actor: learnerB
+}
+
+tests {
+  test("leaves learner B unchanged when learner A updates their own profile", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("learnerBId"));
+    expect(res.body.name).to.equal("Bruno learnerB");
+    expect(res.body.profile.phoneNumber).to.equal(null);
+  });
+}

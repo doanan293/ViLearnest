@@ -1,0 +1,39 @@
+meta {
+  name: PUBLIC-transition-unpublish
+  type: http
+  seq: 22
+}
+
+put {
+  url: {{baseUrl}}/api/v1/admin/courses/{{draftCourseId}}
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "title": "Bruno Draft Fixture",
+    "description": "{\"type\":\"doc\",\"content\":[]}",
+    "fileKey": "bruno-fixtures/public-transition.png",
+    "price": 0,
+    "duration": 30,
+    "level": "Beginner",
+    "category": "Testing",
+    "smallDescription": "Public transition fixture",
+    "slug": "{{draftSlug}}",
+    "status": "Draft"
+  }
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("unpublishes the test course without deleting it", function() {
+    expect(res.status).to.equal(200);
+  });
+}

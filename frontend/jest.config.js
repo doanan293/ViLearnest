@@ -2,6 +2,7 @@
 const config = {
 	testEnvironment: "jsdom",
 	roots: ["<rootDir>/tests"],
+	testPathIgnorePatterns: ["<rootDir>/tests/e2e/"],
 	testMatch: ["**/*.{spec,test}.{ts,tsx}"],
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/src/$1",

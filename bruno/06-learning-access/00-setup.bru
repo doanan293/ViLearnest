@@ -1,0 +1,64 @@
+meta {
+  name: Setup learning access fixtures
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/setup
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  {
+    "runId": "{{runId}}",
+    "suite": "learning-access"
+  }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  bru.deleteAllVars();
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+  const provided = bru.getEnvVar("runId");
+  const generated = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(character) {
+    const random = Math.floor(Math.random() * 16);
+    return (character === "x" ? random : (random & 3) | 8).toString(16);
+  });
+  bru.setVar("runId", provided || generated);
+  bru.setVar("suite", "learning-access");
+}
+
+script:post-response {
+  if (res.status !== 200) throw new Error("Learning access fixture setup failed");
+  bru.setVar("fixtures", res.body);
+  bru.setVar("learnerAId", res.body.actors.learnerA.id);
+  bru.setVar("learnerAEmail", res.body.actors.learnerA.email);
+  bru.setVar("learnerAPassword", res.body.actors.learnerA.password);
+  bru.setVar("learnerBId", res.body.actors.learnerB.id);
+  bru.setVar("learnerBEmail", res.body.actors.learnerB.email);
+  bru.setVar("learnerBPassword", res.body.actors.learnerB.password);
+  bru.setVar("activeSlug", res.body.ids.activeSlug);
+  bru.setVar("activeLessonId", res.body.ids.activeLesson);
+  bru.setVar("pendingSlug", res.body.ids.pendingSlug);
+  bru.setVar("pendingLessonId", res.body.ids.pendingLesson);
+  bru.setVar("unenrolledSlug", res.body.ids.unenrolledSlug);
+  bru.setVar("unenrolledLessonId", res.body.ids.unenrolledLesson);
+  bru.setVar("archivedSlug", res.body.ids.archivedSlug);
+  bru.setVar("archivedLessonId", res.body.ids.activeLesson);
+}
+
+tests {
+  test("sets up run-scoped access and progress fixtures", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.ref.suite).to.equal("learning-access");
+  });
+}

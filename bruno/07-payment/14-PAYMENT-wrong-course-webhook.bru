@@ -1,0 +1,31 @@
+meta {
+  name: PAYMENT-invalid reject wrong-course event
+  type: http
+  seq: 15
+}
+
+post {
+  url: {{baseUrl}}/api/v1/webhooks/stripe
+  body: text
+}
+
+headers {
+  content-type: application/json
+}
+
+body:text {
+  {}
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("stripe-signature", bru.getVar("wrongCourseWebhookSignature"));
+  req.setBody(bru.getVar("wrongCourseWebhookPayload"), { raw: true });
+}
+
+tests {
+  test("rejects a signed event with a different course ID", function() { expect(res.status).to.equal(400); });
+}

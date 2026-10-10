@@ -1,0 +1,20 @@
+meta {
+  name: Require session: GET /api/v1/courses/by-slug/:slug/sidebar
+  type: http
+  seq: 80
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{pendingSlug}}/sidebar
+}
+
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("rejects an anonymous request before business mutations", function() {
+    expect(res.status).to.equal(401);
+  });
+}

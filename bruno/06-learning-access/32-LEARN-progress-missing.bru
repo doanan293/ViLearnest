@@ -1,0 +1,30 @@
+meta {
+  name: LEARN-progress-missing
+  type: http
+  seq: 32
+}
+
+post {
+  url: {{baseUrl}}/api/v1/courses/lesson/complete
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "lessonId": "bruno-missing-lesson"
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("returns not found for a nonexistent lesson completion", function() {
+    expect(res.status).to.equal(404);
+  });
+}

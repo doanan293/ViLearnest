@@ -1,0 +1,33 @@
+meta {
+  name: ADMIN-order create lesson B
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/api/v1/admin/chapters/{{createdChapterAId}}/lessons
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "name": "Owned Lesson B" }
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+script:post-response {
+  if (res.status === 200) bru.setVar("createdLessonBId", res.body.lesson.id);
+}
+
+tests {
+  test("creates a second sibling lesson", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.lesson.position).to.equal(2);
+  });
+}

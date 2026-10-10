@@ -1,0 +1,13 @@
+{
+  "extends": "../backend/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "../.bruno-build",
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": [
+    "tooling/**/*.ts",
+    "../backend/tests/support/**/*.ts"
+  ]
+}

@@ -1,0 +1,36 @@
+meta {
+  name: PAYMENT-invalid build unknown-enrollment event
+  type: http
+  seq: 18
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/payment/event
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "payment", "variant": "unknown-enrollment" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+script:post-response {
+  bru.setVar("unknownEnrollmentWebhookPayload", res.body.payload);
+  bru.setVar("unknownEnrollmentWebhookSignature", res.body.signature);
+}
+
+tests {
+  test("builds an unknown enrollment ID without accepting caller identifiers", function() { expect(res.status).to.equal(200); });
+}

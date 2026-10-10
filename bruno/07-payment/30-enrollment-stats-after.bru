@@ -1,0 +1,21 @@
+meta {
+  name: PAYMENT-stats verify one owned enrollment increment
+  type: http
+  seq: 31
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/dashboard/enrollment-stats
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("records one active enrollment for the paid run", function() {
+    expect(res.status).to.equal(200);
+    const activeAfter = res.body.reduce((total, day) => total + day.enrollments, 0);
+    expect(activeAfter).to.equal(Number(bru.getVar("activeEnrollmentsBefore")) + 1);
+  });
+}

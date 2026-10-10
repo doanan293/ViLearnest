@@ -53,6 +53,14 @@
 		}
 	},
 	"files": {
-		"includes": ["**", "!node_modules", "!.next", "!dist", "!coverage"]
+		"includes": [
+			"**",
+			"!node_modules",
+			"!.next",
+			"!dist",
+			"!coverage",
+			"!playwright-report",
+			"!test-results"
+		]
 	}
 }

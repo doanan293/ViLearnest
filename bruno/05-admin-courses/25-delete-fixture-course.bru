@@ -1,0 +1,19 @@
+meta {
+  name: ADMIN-cascade delete enrolled course
+  type: http
+  seq: 25
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/admin/courses/{{activeCourseId}}
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("deletes the owned course with learner enrollments", function() {
+    expect(res.status).to.equal(200);
+  });
+}

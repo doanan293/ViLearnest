@@ -1,0 +1,31 @@
+meta {
+  name: STORAGE-upload register image key before upload
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/storage/track
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  { "runId": "{{runId}}", "suite": "storage", "key": "{{imageKey}}" }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+}
+
+tests {
+  test("registers the image before the upload request", function() { expect(res.status).to.equal(200); });
+}

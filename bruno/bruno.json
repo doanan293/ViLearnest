@@ -4,6 +4,11 @@
   "type": "collection",
   "ignore": [
     "node_modules",
-    ".git"
+    ".git",
+    ".bruno-runs",
+    "reports",
+    "tooling",
+    "tests",
+    "coverage"
   ]
 }

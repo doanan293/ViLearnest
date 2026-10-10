@@ -1,0 +1,26 @@
+meta {
+  name: PAYMENT-invalid reject unpaid checkout confirmation
+  type: http
+  seq: 20
+}
+
+post {
+  url: {{baseUrl}}/api/v1/courses/checkout/confirm
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  { "sessionId": "{{checkoutSessionId}}" }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("refuses to activate the real Stripe session before payment", function() { expect(res.status).to.equal(400); });
+}

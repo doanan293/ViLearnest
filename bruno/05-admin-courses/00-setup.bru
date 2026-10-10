@@ -1,0 +1,62 @@
+meta {
+  name: Setup admin course fixtures
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{helperUrl}}/api/v1/bruno-desktop/runs/setup
+  body: json
+}
+
+headers {
+  content-type: application/json
+  x-bruno-helper-token: {{brunoDesktopHelperToken}}
+}
+
+body:json {
+  {
+    "runId": "{{runId}}",
+    "suite": "admin-courses"
+  }
+}
+
+vars:pre-request {
+  actor: external
+}
+
+script:pre-request {
+  bru.deleteAllVars();
+  req.setHeader("x-bruno-helper-token", bru.getEnvVar("brunoDesktopHelperToken"));
+  const provided = bru.getEnvVar("runId");
+  const generated = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(character) {
+    const random = Math.floor(Math.random() * 16);
+    return (character === "x" ? random : (random & 3) | 8).toString(16);
+  });
+  bru.setVar("runId", provided || generated);
+  bru.setVar("suite", "admin-courses");
+}
+
+script:post-response {
+  if (res.status !== 200) throw new Error("Admin course fixture setup failed");
+  bru.setVar("fixtures", res.body);
+  bru.setVar("adminId", res.body.actors.admin.id);
+  bru.setVar("adminEmail", res.body.actors.admin.email);
+  bru.setVar("adminPassword", res.body.actors.admin.password);
+  bru.setVar("learnerAId", res.body.actors.learnerA.id);
+  bru.setVar("learnerAEmail", res.body.actors.learnerA.email);
+  bru.setVar("learnerAPassword", res.body.actors.learnerA.password);
+  bru.setVar("publishedCourseId", res.body.ids.publishedCourse);
+  bru.setVar("activeCourseId", res.body.ids.activeCourse);
+  bru.setVar("activeChapterId", res.body.ids.activeChapter);
+  bru.setVar("activeLessonId", res.body.ids.activeLesson);
+  bru.setVar("activeSlug", res.body.ids.activeSlug);
+  bru.setVar("pendingCourseId", res.body.ids.pendingCourse);
+}
+
+tests {
+  test("creates isolated admin and learner fixtures", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.ref.suite).to.equal("admin-courses");
+  });
+}

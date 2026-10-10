@@ -1,0 +1,39 @@
+meta {
+  name: PROFILE-self
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{baseUrl}}/api/v1/profile/me
+  body: json
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "name": "  Bruno Profile A  ",
+    "dateOfBirth": "1990-05-21",
+    "phoneNumber": "+84 901 234 567",
+    "websiteUrl": "example.com/profile-a",
+    "bio": "  Profile persistence check  "
+  }
+}
+
+vars:pre-request {
+  actor: learnerA
+}
+
+tests {
+  test("updates learner A self profile with normalized values", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("learnerAId"));
+    expect(res.body.name).to.equal("Bruno Profile A");
+    expect(res.body.profile.phoneNumber).to.equal("+84 901 234 567");
+    expect(res.body.profile.websiteUrl).to.equal("https://example.com/profile-a");
+    expect(res.body.profile.bio).to.equal("Profile persistence check");
+  });
+}

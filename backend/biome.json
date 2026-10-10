@@ -42,6 +42,6 @@
     }
   },
   "files": {
-    "includes": ["**/*.ts", "!dist", "!coverage"]
+    "includes": ["**/*.ts", "scripts/**/*.mjs", "!dist", "!coverage"]
   }
 }

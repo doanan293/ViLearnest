@@ -1,0 +1,19 @@
+meta {
+  name: ADMIN-cascade deleted lesson is missing
+  type: http
+  seq: 24
+}
+
+get {
+  url: {{baseUrl}}/api/v1/admin/lessons/{{activeLessonId}}
+}
+
+vars:pre-request {
+  actor: admin
+}
+
+tests {
+  test("chapter deletion removes the progress-bearing lesson", function() {
+    expect(res.status).to.equal(404);
+  });
+}
