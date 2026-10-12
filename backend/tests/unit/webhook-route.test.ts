@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import { build } from "../../src/app.js";
+import { build } from "../../src/build-app.js";
 
 describe("stripe webhook route", () => {
   afterEach(() => {

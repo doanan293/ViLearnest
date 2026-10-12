@@ -24,7 +24,8 @@ async function authProxy(request: NextRequest) {
 	const locale = getLocaleFromPathname(request.nextUrl.pathname) ?? routing.defaultLocale;
 
 	try {
-		const apiUrl = process.env.PUBLIC_API_URL || "http://localhost:5000";
+		const apiUrl =
+			process.env.INTERNAL_API_URL || process.env.PUBLIC_API_URL || "http://localhost:5000";
 		const response = await fetch(`${apiUrl}/api/auth/session`, {
 			headers: {
 				cookie,

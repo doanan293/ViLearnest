@@ -1,8 +1,8 @@
 import crypto from "node:crypto";
-import type Stripe from "stripe";
 import { config } from "../config/index.js";
 import type { ActivationInput, CourseRepository, ReorderItem } from "../db/repository/courseRepository.js";
 import { BadRequestError, ForbiddenError, NotFoundError } from "../lib/errors.js";
+import type { CheckoutLineItem, CheckoutSession, StripeClient } from "../lib/stripe-client.js";
 
 interface SessionUser {
   id: string;
@@ -33,7 +33,7 @@ interface CheckoutCourse {
 export class CourseService {
   constructor(
     private readonly courses: CourseRepository,
-    private readonly stripe: Stripe
+    private readonly stripe: StripeClient
   ) {}
 
   listPublishedCourses() {
@@ -133,7 +133,7 @@ export class CourseService {
     };
   }
 
-  private buildCheckoutLineItem(course: CheckoutCourse): Stripe.Checkout.SessionCreateParams.LineItem {
+  private buildCheckoutLineItem(course: CheckoutCourse): CheckoutLineItem {
     if (course.stripePriceId.startsWith("price_")) {
       return {
         price: course.stripePriceId,
@@ -380,7 +380,7 @@ export class CourseService {
     return this.courses.listRecentCourses();
   }
 
-  async handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  async handleCheckoutCompleted(session: CheckoutSession) {
     if (session.payment_status !== "paid") return;
 
     const courseId = session.metadata?.courseId;

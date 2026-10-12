@@ -1,4 +1,4 @@
-import { build } from "../../backend/src/app.js";
+import { build } from "../../backend/src/build-app.js";
 import { buildHelperServer } from "../tooling/server.js";
 
 describe("standalone fixture helper boundary", () => {

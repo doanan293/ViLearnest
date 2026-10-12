@@ -1,0 +1,10 @@
+# The Vercel CLI uploads the repository root (npm workspaces share package-lock.json) and
+# does not read .gitignore. Secrets come from the project's environment variables.
+**/.env
+**/.env.*
+**/node_modules
+**/.next
+**/coverage
+bruno
+docs
+sample-courses

@@ -2,7 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { parseRequest } from "@usebruno/filestore";
 import type { onRouteHookHandler } from "fastify";
-import { build } from "../../backend/src/app.js";
+import { build } from "../../backend/src/build-app.js";
 import { client } from "../../backend/src/db/index.js";
 
 export type RouteEntry = { method: string; path: string };

@@ -217,7 +217,7 @@ To implement new features or modify existing API endpoints, follow this consiste
 │   │   ├── services/           # Business Logic layer
 │   │   │   ├── courseService.ts
 │   │   │   └── storageService.ts
-│   │   ├── app.ts              # Fastify application configurations
+│   │   ├── build-app.ts        # Fastify application configurations
 │   │   └── auth.ts             # Better-Auth backend adapter
 │   ├── tests/                  # Backend Jest test cases
 │   └── package.json

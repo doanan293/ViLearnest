@@ -1,9 +1,11 @@
-import { build } from "./app.js";
+import type { FastifyInstance } from "fastify";
+import { build } from "./build-app.js";
 import { config } from "./config/index.js";
 import { client } from "./db/index.js";
 
 async function main() {
-  const app = await build({ logger: true });
+  // The `fastify` import also makes this file the entrypoint Vercel detects for the function.
+  const app: FastifyInstance = await build({ logger: true });
 
   const shutdown = async (signal: string) => {
     app.log.info(`Received ${signal}, shutting down...`);

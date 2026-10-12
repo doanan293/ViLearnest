@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from "@jest/globals";
 import { eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import type Stripe from "stripe";
-import { build } from "../../src/app.js";
+import { build } from "../../src/build-app.js";
 import { config } from "../../src/config/index.js";
 import { client, db } from "../../src/db/index.js";
 import * as schema from "../../src/db/schema.js";

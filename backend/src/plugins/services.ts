@@ -6,6 +6,7 @@ import { config } from "../config/index.js";
 import { db } from "../db/index.js";
 import { CourseRepository } from "../db/repository/courseRepository.js";
 import { ProfileRepository } from "../db/repository/profileRepository.js";
+import type { StripeClient } from "../lib/stripe-client.js";
 import { CourseService } from "../services/courseService.js";
 import { ProfileService } from "../services/profileService.js";
 import { StorageService } from "../services/storageService.js";
@@ -14,7 +15,7 @@ export interface AppServices {
   courses: CourseService;
   profiles: ProfileService;
   storage: StorageService;
-  stripe: Stripe;
+  stripe: StripeClient;
 }
 
 declare module "fastify" {

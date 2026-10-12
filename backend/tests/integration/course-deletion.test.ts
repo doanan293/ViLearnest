@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "@jest/globals";
 import { eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
-import { build } from "../../src/app.js";
+import { build } from "../../src/build-app.js";
 import { client } from "../../src/db/index.js";
 import * as schema from "../../src/db/schema.js";
 import { openIntegrationDatabase } from "../support/integrationDatabase.js";
