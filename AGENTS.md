@@ -28,7 +28,7 @@ Use PascalCase for React components, `useX` for hooks, and descriptive file name
 
 Jest is used in both workspaces. Backend Jest tests use Node with `ts-jest` ESM and should be named `*.test.ts` under `backend/tests/unit` or `backend/tests/integration`. Frontend tests use jsdom and Testing Library; place `*.test.*` or `*.spec.*` files under `frontend/tests`.
 
-For targeted runs, use workspace commands such as `npm run test --workspace=@andv-lms/frontend` or `npm run test --workspace=@andv-lms/backend`. Add regression tests for behavior changes, API contracts, and UI state transitions.
+For targeted runs, use workspace commands such as `npm run test --workspace=@viedspark/frontend` or `npm run test --workspace=@viedspark/backend`. Add regression tests for behavior changes, API contracts, and UI state transitions.
 
 ## Commit & Pull Request Guidelines
 
@@ -52,6 +52,6 @@ Product code must not import tests or Bruno. Backend tests/support must not impo
 - `npm run test:e2e`: browser journeys; owns FE/BE servers on ports 3002/5002 and requires migrated test DB.
 - `npm run test:api:smoke` / `test:api:core`: Bruno against running API/helper.
 - `npm run check:all`: product checks, architecture import boundaries and Bruno tooling checks.
-- `npm run typecheck:tests --workspace=@andv-lms/backend` / `npm run typecheck:bruno:tests`: strict test type checks.
+- `npm run typecheck:tests --workspace=@viedspark/backend` / `npm run typecheck:bruno:tests`: strict test type checks.
 
 Browser E2E lives under `frontend/tests/e2e/*.e2e.ts` and is excluded from Jest. Use Jest for logic/UI/DB regression, Playwright for browser journeys and Bruno for HTTP workflows. Do not add Vitest for duplicate coverage. Use UUID-scoped fixtures; never reset a development DB. E2E reports/traces are ignored local artifacts and can contain session data.

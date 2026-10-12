@@ -27,7 +27,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
 			<div className="flex w-full max-w-sm flex-col gap-6">
 				<Link href="/" className="flex items-center gap-2 self-center font-medium">
 					<Logo className="size-8 text-foreground" />
-					{tCommon("andvLms")}
+					{tCommon("appName")}
 				</Link>
 				{children}
 				<div className="text-balance text-center text-xs text-muted-foreground">

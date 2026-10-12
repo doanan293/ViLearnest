@@ -24,7 +24,7 @@ export default function Navbar() {
 			<div className="container flex min-h-16 items-center mx-auto px-4 md:px-6 lg:px-8">
 				<Link href="/" className="flex items-center space-x-2 mr-4">
 					<Logo className="size-9 text-foreground" />
-					<span className="font-bold">AndvLMS</span>
+					<span className="font-bold">ViEdSpark</span>
 				</Link>
 				<nav className="hidden md:flex md:flex-1 md:items-center md:justify-between">
 					<div className="flex items-center space-x-2">

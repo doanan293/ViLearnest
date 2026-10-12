@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "ANDV LMS API",
+  "name": "ViEdSpark API",
   "type": "collection",
   "ignore": [
     "node_modules",

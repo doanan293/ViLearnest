@@ -1,6 +1,6 @@
 {
 	"common": {
-		"andvLms": "AndvLMS",
+		"appName": "ViEdSpark",
 		"language": "Ngôn ngữ",
 		"english": "Tiếng Anh",
 		"vietnamese": "Tiếng Việt",
@@ -31,7 +31,7 @@
 		"privacy": "Chính sách quyền riêng tư",
 		"agreement": "Bằng cách tiếp tục, bạn đồng ý với <terms>Điều khoản dịch vụ</terms> và <privacy>Chính sách quyền riêng tư</privacy> của chúng tôi.",
 		"login": {
-			"title": "Chào mừng đến với Andv LMS",
+			"title": "Chào mừng đến với ViEdSpark",
 			"description": "Nhập thông tin đăng nhập để truy cập tài khoản",
 			"signIn": "Đăng nhập",
 			"signUp": "Đăng ký",

@@ -52,7 +52,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						<SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
 							<Link href="/">
 								<Logo className="size-5 text-sidebar-foreground" />
-								<span className="text-base font-semibold">{tCommon("andvLms")}</span>
+								<span className="text-base font-semibold">{tCommon("appName")}</span>
 							</Link>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
