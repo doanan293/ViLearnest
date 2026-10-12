@@ -37,7 +37,10 @@ describe("auth configuration", () => {
           clientSecret: "mock-google-secret",
         },
       });
-      expect(auth.options.account?.accountLinking?.trustedProviders).toEqual(["google", "github"]);
+      // Linking only when the provider says the email is verified: a trusted provider would
+      // skip that check, and GitHub allows unverified addresses.
+      expect(auth.options.account?.accountLinking?.enabled).toBe(true);
+      expect(auth.options.account?.accountLinking?.trustedProviders).toBeUndefined();
     } finally {
       restoreEnv("AUTH_GITHUB_CLIENT_ID", originalGithubClientId);
       restoreEnv("AUTH_GITHUB_CLIENT_SECRET", originalGithubClientSecret);

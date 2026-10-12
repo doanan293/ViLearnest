@@ -37,8 +37,10 @@ export const auth = betterAuth({
     },
   },
   account: {
+    // Link a social account to an existing user only when the provider reports the email as
+    // verified. Trusted providers would skip that check, and GitHub accepts unverified emails.
     accountLinking: {
-      trustedProviders: ["google", "github"],
+      enabled: true,
     },
   },
   plugins: [
