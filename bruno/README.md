@@ -16,7 +16,7 @@ Install with `npm ci`, migrate an isolated test database and configure the local
 Start the backend, then start the separate helper:
 
 ```sh
-DATABASE_URL="$TEST_DATABASE_URL" NODE_ENV=test npm run dev --workspace=@viedspark/backend
+DATABASE_URL="$TEST_DATABASE_URL" NODE_ENV=test npm run dev --workspace=@vilearnest/backend
 DATABASE_URL="$TEST_DATABASE_URL" NODE_ENV=test BRUNO_DESKTOP_HELPERS_ENABLED=true BRUNO_DESKTOP_HELPER_TOKEN=bruno-desktop-local-token npm run bruno:helper
 ```
 

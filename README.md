@@ -1,4 +1,4 @@
-# ViEdSpark - Enterprise-Grade Learning Management System
+# ViLearnest - Enterprise-Grade Learning Management System
 
 [![Framework](https://img.shields.io/badge/Framework-Next.js%2016%20%7C%20Fastify%20v5-black?logo=next.js&style=flat-square)](https://nextjs.org)
 [![Runtime](https://img.shields.io/badge/Runtime-Node.js-green?logo=node.js&style=flat-square)](https://nodejs.org)
@@ -116,8 +116,8 @@ Ensure you have the following installed:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/your-username/ViEdSpark.git
-    cd ViEdSpark
+    git clone https://github.com/your-username/ViLearnest.git
+    cd ViLearnest
     ```
 
 2.  **Install Dependencies:**
@@ -265,7 +265,7 @@ Ensure your S3 bucket (or Cloudflare R2 bucket) has appropriate CORS (Cross-Orig
 
 ## 🤝 Contributing
 
-Contributions are always welcome to help improve ViEdSpark!
+Contributions are always welcome to help improve ViLearnest!
 
 1.  Fork the Project
 2.  Create your Feature Branch (`git checkout -b feature/amazing-feature`)

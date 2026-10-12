@@ -16,7 +16,7 @@ tests {
   test("returns the OpenAPI document contract", function() {
     expect(res.body).to.have.property("openapi");
     expect(res.body).to.have.property("info");
-    expect(res.body.info).to.have.property("title", "ViEdSpark API");
+    expect(res.body.info).to.have.property("title", "ViLearnest API");
     expect(res.body).to.have.property("paths");
     expect(res.body.paths).to.have.property("/health");
   });

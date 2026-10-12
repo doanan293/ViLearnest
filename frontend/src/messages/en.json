@@ -1,6 +1,6 @@
 {
 	"common": {
-		"appName": "ViEdSpark",
+		"appName": "ViLearnest",
 		"language": "Language",
 		"english": "English",
 		"vietnamese": "Vietnamese",
@@ -31,7 +31,7 @@
 		"privacy": "Privacy Policy",
 		"agreement": "By clicking continue, you agree to our <terms>Terms of service</terms> and <privacy>Privacy Policy</privacy>.",
 		"login": {
-			"title": "Welcome to ViEdSpark",
+			"title": "Welcome to ViLearnest",
 			"description": "Enter your credentials to access your account",
 			"signIn": "Sign In",
 			"signUp": "Sign Up",

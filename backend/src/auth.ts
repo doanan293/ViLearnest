@@ -46,7 +46,7 @@ export const auth = betterAuth({
     emailOTP({
       sendVerificationOTP: async ({ email, otp, type }) => {
         const isPasswordReset = type === "forget-password";
-        const subject = isPasswordReset ? "Reset your password - ViEdSpark" : "Verification Code - ViEdSpark";
+        const subject = isPasswordReset ? "Reset your password - ViLearnest" : "Verification Code - ViLearnest";
         const heading = isPasswordReset ? "Reset your password" : "Verify your email address";
         const body = isPasswordReset
           ? "Please use the following verification code to reset your password:"

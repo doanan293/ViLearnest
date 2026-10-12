@@ -39,7 +39,7 @@ export async function build(
   await app.register(swagger, {
     openapi: {
       info: {
-        title: "ViEdSpark API",
+        title: "ViLearnest API",
         version: "1.0.0",
       },
       servers: [{ url: `${config.apiBaseUrl}/api/v1` }],

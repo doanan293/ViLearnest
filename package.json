@@ -1,5 +1,5 @@
 {
-  "name": "viedspark-monorepo",
+  "name": "vilearnest-monorepo",
   "version": "1.0.0",
   "private": true,
   "workspaces": [
@@ -7,11 +7,11 @@
     "frontend"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=@viedspark/backend & npm run dev --workspace=@viedspark/frontend",
+    "dev": "npm run dev --workspace=@vilearnest/backend & npm run dev --workspace=@vilearnest/frontend",
     "build": "npm run build --workspaces --if-present",
-    "db:generate": "npm run db:generate --workspace=@viedspark/backend",
-    "db:migrate": "npm run db:migrate --workspace=@viedspark/backend",
-    "db:import-courses": "npm run db:import-courses --workspace=@viedspark/backend",
+    "db:generate": "npm run db:generate --workspace=@vilearnest/backend",
+    "db:migrate": "npm run db:migrate --workspace=@vilearnest/backend",
+    "db:import-courses": "npm run db:import-courses --workspace=@vilearnest/backend",
     "test": "npm run test:unit",
     "test:watch": "npm run test:watch --workspaces --if-present",
     "biome:ci": "npm run biome:ci --workspaces --if-present",
@@ -44,8 +44,8 @@
     "test:unit": "npm run test --workspaces --if-present && npm run test:bruno:tooling",
     "check:all": "npm run check && npm run check:bruno",
     "sample-courses:prepare": "node backend/scripts/prepare-youtube-sample-courses.mjs",
-    "test:e2e": "npm run test:e2e --workspace=@viedspark/frontend --",
-    "test:e2e:install": "npm run test:e2e:install --workspace=@viedspark/frontend",
+    "test:e2e": "npm run test:e2e --workspace=@vilearnest/frontend --",
+    "test:e2e:install": "npm run test:e2e:install --workspace=@vilearnest/frontend",
     "check:boundaries": "node backend/scripts/check-boundaries.mjs"
   },
   "devDependencies": {

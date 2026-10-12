@@ -19,9 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "ViEdSpark - Learn anything you want",
+	title: "ViLearnest - Learn anything you want",
 	description:
-		"ViEdSpark is a modern learning management system (LMS) that makes it easy to create, manage, and sell online courses",
+		"ViLearnest is a modern learning management system (LMS) that makes it easy to create, manage, and sell online courses",
 	icons: {
 		icon: "/logo.svg",
 	},
