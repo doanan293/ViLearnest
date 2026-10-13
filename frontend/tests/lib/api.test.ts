@@ -3,8 +3,16 @@ import { ApiClientError, http } from "@/lib/api-client";
 
 const originalPublicApiUrl = process.env.PUBLIC_API_URL;
 
-function mockFetch(response: Partial<Response> & { body?: unknown }) {
-	const fetchMock = jest.fn(async () => {
+type MockResponse = {
+	ok?: boolean;
+	status?: number;
+	statusText?: string;
+	headers?: HeadersInit;
+	body?: unknown;
+};
+
+function mockFetch(response: MockResponse) {
+	const fetchMock = jest.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => {
 		const headers = new Headers(response.headers);
 		return {
 			ok: response.ok ?? true,

@@ -17,7 +17,7 @@ describe("getServerApiClient", () => {
 	it("uses PUBLIC_API_URL as the backend origin when INTERNAL_API_URL is not configured", async () => {
 		delete process.env.INTERNAL_API_URL;
 		process.env.PUBLIC_API_URL = "http://localhost:5000";
-		const fetchMock = jest.fn(async () => ({
+		const fetchMock = jest.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => ({
 			status: 200,
 			text: async () => "[]",
 		}));
@@ -37,7 +37,7 @@ describe("getServerApiClient", () => {
 
 	it("calls profile and admin user endpoints", async () => {
 		process.env.INTERNAL_API_URL = "http://internal-api";
-		const fetchMock = jest.fn(async () => ({
+		const fetchMock = jest.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => ({
 			status: 200,
 			text: async () => "{}",
 		}));
@@ -67,7 +67,7 @@ describe("getServerApiClient", () => {
 
 	it("does not send a JSON content type for server GET requests without a body", async () => {
 		process.env.INTERNAL_API_URL = "http://internal-api";
-		const fetchMock = jest.fn(async () => ({
+		const fetchMock = jest.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => ({
 			status: 200,
 			text: async () => "[]",
 		}));

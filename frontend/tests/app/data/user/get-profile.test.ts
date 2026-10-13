@@ -24,7 +24,7 @@ describe("getProfile", () => {
 					body: { status: "error", message: "Unauthorized" },
 				})),
 			},
-		} as Awaited<ReturnType<typeof getServerApiClient>>);
+		} as unknown as Awaited<ReturnType<typeof getServerApiClient>>);
 
 		await getProfile();
 

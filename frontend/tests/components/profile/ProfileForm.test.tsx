@@ -53,6 +53,7 @@ const profile: ProfileResponse = {
 		dateOfBirth: "1995-04-12T00:00:00.000Z",
 		gender: "Male",
 		phoneNumber: null,
+		phoneVerified: false,
 		country: null,
 		province: null,
 		district: null,

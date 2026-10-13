@@ -1,4 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
+import type { CourseSidebarDataType, LessonContentType } from "@/features/courses";
 import {
 	courseSidebarQueryOptions,
 	enrollmentStatusQueryOptions,
@@ -10,12 +11,18 @@ import {
 import { queryKeys } from "@/lib/query-keys";
 import { queryStaleTimes } from "@/lib/query-stale-times";
 
-const sidebarData = {
+const sidebarData: CourseSidebarDataType = {
 	course: {
 		id: "course-1",
 		title: "React Course",
 		slug: "react-course",
 		category: "Development",
+		description: "Learn React",
+		smallDescription: "React basics",
+		fileKey: "courses/react.png",
+		price: 0,
+		duration: 1,
+		level: "Beginner",
 		chapter: [
 			{
 				id: "chapter-1",
@@ -35,7 +42,7 @@ const sidebarData = {
 	},
 };
 
-const lessonContent = {
+const lessonContent: LessonContentType = {
 	id: "lesson-1",
 	title: "Start",
 	description: null,
@@ -67,8 +74,12 @@ describe("course player query helpers", () => {
 		queryClient.setQueryData(queryKeys.dashboard.courseSidebar("react-course"), sidebarData);
 		queryClient.setQueryData(queryKeys.dashboard.lessonContent("lesson-1"), lessonContent);
 		const snapshot = {
-			sidebar: queryClient.getQueryData(queryKeys.dashboard.courseSidebar("react-course")),
-			lesson: queryClient.getQueryData(queryKeys.dashboard.lessonContent("lesson-1")),
+			sidebar: queryClient.getQueryData<CourseSidebarDataType>(
+				queryKeys.dashboard.courseSidebar("react-course"),
+			),
+			lesson: queryClient.getQueryData<LessonContentType>(
+				queryKeys.dashboard.lessonContent("lesson-1"),
+			),
 		};
 
 		markLessonContentCompleted(queryClient, "lesson-1");
