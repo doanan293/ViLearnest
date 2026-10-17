@@ -28,30 +28,35 @@ export const courseStatusSchema = {
   enum: ["Draft", "Published", "Archived"],
 } as const;
 
+const optionalText = { type: ["string", "null"] } as const;
+
+// At least one language must carry a non-empty value for the given field.
+export function requireOneLanguage(enField: string, viField: string) {
+  return {
+    anyOf: [
+      { required: [enField], properties: { [enField]: { type: "string", minLength: 1 } } },
+      { required: [viField], properties: { [viField]: { type: "string", minLength: 1 } } },
+    ],
+  } as const;
+}
+
 export const courseCreateBodySchema = {
   type: "object",
-  required: [
-    "title",
-    "description",
-    "fileKey",
-    "price",
-    "duration",
-    "level",
-    "category",
-    "smallDescription",
-    "slug",
-    "status",
-  ],
+  required: ["fileKey", "price", "duration", "level", "category", "slug", "status"],
   additionalProperties: false,
+  ...requireOneLanguage("titleEn", "titleVi"),
   properties: {
-    title: { type: "string", minLength: 1 },
-    description: { type: "string", minLength: 1 },
+    titleEn: optionalText,
+    titleVi: optionalText,
+    smallDescriptionEn: optionalText,
+    smallDescriptionVi: optionalText,
+    descriptionEn: optionalText,
+    descriptionVi: optionalText,
     fileKey: { type: "string", minLength: 1 },
     price: { type: "number", minimum: 0 },
     duration: { type: "number", minimum: 0 },
     level: courseLevelSchema,
     category: { type: "string", minLength: 1 },
-    smallDescription: { type: "string", minLength: 1 },
     slug: { type: "string", minLength: 1 },
     status: courseStatusSchema,
   },
@@ -62,14 +67,12 @@ export const courseSummarySchema = {
   required: [
     "id",
     "title",
-    "description",
     "fileKey",
     "price",
     "duration",
     "level",
     "stripePriceId",
     "category",
-    "smallDescription",
     "slug",
     "status",
     "createdAt",
@@ -79,14 +82,18 @@ export const courseSummarySchema = {
   properties: {
     id: { type: "string" },
     title: { type: "string" },
-    description: { type: "string" },
+    titleEn: optionalText,
+    titleVi: optionalText,
+    smallDescriptionEn: optionalText,
+    smallDescriptionVi: optionalText,
+    descriptionEn: optionalText,
+    descriptionVi: optionalText,
     fileKey: { type: "string" },
     price: { type: "number" },
     duration: { type: "number" },
     level: courseLevelSchema,
     stripePriceId: { type: "string" },
     category: { type: "string" },
-    smallDescription: { type: "string" },
     slug: { type: "string" },
     status: courseStatusSchema,
     createdAt: { type: "string", format: "date-time" },

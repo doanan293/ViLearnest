@@ -40,9 +40,9 @@ export class CourseController {
     return this.courseService.isEnrolled(request.params.courseId, session.user.id);
   }
 
-  async enroll(request: FastifyRequest<{ Body: { courseId: string } }>) {
+  async enroll(request: FastifyRequest<{ Body: { courseId: string; locale?: string } }>) {
     const session = await requireSession(request);
-    return this.courseService.enroll(request.body.courseId, session.user);
+    return this.courseService.enroll(request.body.courseId, session.user, parseLocale(request.body.locale));
   }
 
   async confirmCheckout(request: FastifyRequest<{ Body: { sessionId: string } }>) {

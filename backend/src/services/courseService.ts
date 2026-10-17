@@ -2,7 +2,14 @@ import crypto from "node:crypto";
 import { config } from "../config/index.js";
 import type { ActivationInput, CourseRepository, ReorderItem } from "../db/repository/courseRepository.js";
 import { BadRequestError, ForbiddenError, NotFoundError } from "../lib/errors.js";
-import { type Locale, localizeChapter, localizeCourse, localizeCourseTree, localizeLesson } from "../lib/localize.js";
+import {
+  type Locale,
+  localizeChapter,
+  localizeCourse,
+  localizeCourseTree,
+  localizeLesson,
+  pickText,
+} from "../lib/localize.js";
 import type { CheckoutLineItem, CheckoutSession, StripeClient } from "../lib/stripe-client.js";
 
 interface SessionUser {
@@ -13,22 +20,47 @@ interface SessionUser {
 }
 
 interface CourseInput {
-  title: string;
-  description: string;
+  titleEn: string | null;
+  titleVi: string | null;
+  smallDescriptionEn: string | null;
+  smallDescriptionVi: string | null;
+  descriptionEn: string | null;
+  descriptionVi: string | null;
   fileKey: string;
   price: number;
   duration: number;
   level: "Beginner" | "Intermediate" | "Advanced";
   category: string;
-  smallDescription: string;
   slug: string;
   status: "Draft" | "Published" | "Archived";
+}
+
+export interface BilingualName {
+  nameEn?: string | null;
+  nameVi?: string | null;
+}
+
+export interface LessonInput extends BilingualName {
+  descriptionEn?: string | null;
+  descriptionVi?: string | null;
+  thumbnailKey?: string;
+  videoKey?: string;
 }
 
 interface CheckoutCourse {
   title: string;
   price: number;
   stripePriceId: string;
+}
+
+function withTitle<T extends { titleEn: string | null; titleVi: string | null }>(row: T, locale: Locale) {
+  return { ...row, title: pickText(row, "title", locale) ?? "" };
+}
+
+function requireTitle(titleEn: string | null | undefined, titleVi: string | null | undefined) {
+  if (!titleEn && !titleVi) {
+    throw new BadRequestError("A title is required in English or Vietnamese");
+  }
 }
 
 export class CourseService {
@@ -97,7 +129,7 @@ export class CourseService {
     return { enrolled: enrollment?.status === "Active" };
   }
 
-  async enroll(courseId: string, user: SessionUser) {
+  async enroll(courseId: string, user: SessionUser, locale: Locale) {
     const course = await this.courses.findCourseById(courseId);
     if (!course) {
       return { status: "error" as const, message: "Course not found" };
@@ -127,7 +159,7 @@ export class CourseService {
 
     const checkoutSession = await this.stripe.checkout.sessions.create({
       customer: stripeCustomerId,
-      line_items: [this.buildCheckoutLineItem(course)],
+      line_items: [this.buildCheckoutLineItem({ ...course, title: pickText(course, "title", locale) ?? course.slug })],
       mode: "payment",
       success_url: `${config.frontendUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${config.frontendUrl}/payment/cancel`,
@@ -222,16 +254,24 @@ export class CourseService {
     return { status: "success" as const, message: "Progress updated" };
   }
 
-  listAdminCourses() {
-    return this.courses.listAllCourses();
+  async listAdminCourses(locale: Locale) {
+    const courses = await this.courses.listAllCourses();
+    return courses.map((course) => withTitle(course, locale));
   }
 
-  async getAdminCourse(id: string) {
+  // Admin reads keep both languages for editing and add a display title in the admin's UI language.
+  async getAdminCourse(id: string, locale: Locale) {
     const course = await this.courses.findAdminCourseById(id);
     if (!course) {
       throw new NotFoundError("Course not found");
     }
-    return course;
+    return {
+      ...withTitle(course, locale),
+      chapter: course.chapter.map((chapter) => ({
+        ...withTitle(chapter, locale),
+        lessons: chapter.lessons.map((lesson) => withTitle(lesson, locale)),
+      })),
+    };
   }
 
   async getAdminLesson(id: string) {
@@ -243,6 +283,7 @@ export class CourseService {
   }
 
   async createCourse(input: CourseInput, userId: string) {
+    requireTitle(input.titleEn, input.titleVi);
     await this.courses.createCourse({
       id: crypto.randomUUID(),
       ...input,
@@ -255,6 +296,7 @@ export class CourseService {
   }
 
   async updateCourse(id: string, input: CourseInput) {
+    requireTitle(input.titleEn, input.titleVi);
     const course = await this.courses.findCourseById(id);
     if (!course) {
       throw new NotFoundError("Course not found");
@@ -272,7 +314,8 @@ export class CourseService {
     return { status: "success" as const, message: "Course deleted successfully" };
   }
 
-  async createChapter(courseId: string, name: string) {
+  async createChapter(courseId: string, name: BilingualName) {
+    requireTitle(name.nameEn, name.nameVi);
     const course = await this.courses.findCourseById(courseId);
     if (!course) {
       throw new NotFoundError("Course not found");
@@ -280,7 +323,8 @@ export class CourseService {
     const position = await this.courses.getNextChapterPosition(courseId);
     const chapter = {
       id: crypto.randomUUID(),
-      title: name,
+      titleEn: name.nameEn || null,
+      titleVi: name.nameVi || null,
       position,
       courseId,
     };
@@ -290,7 +334,7 @@ export class CourseService {
       message: "Chapter created successfully",
       chapter: {
         id: chapter.id,
-        title: chapter.title,
+        title: pickText(chapter, "title", "en") ?? "",
         position: chapter.position,
       },
     };
@@ -306,11 +350,13 @@ export class CourseService {
     return { status: "success" as const, message: "Chapters reordered successfully" };
   }
 
-  async createLesson(chapterId: string, name: string) {
+  async createLesson(chapterId: string, name: BilingualName) {
+    requireTitle(name.nameEn, name.nameVi);
     const position = await this.courses.getNextLessonPosition(chapterId);
     const lesson = {
       id: crypto.randomUUID(),
-      title: name,
+      titleEn: name.nameEn || null,
+      titleVi: name.nameVi || null,
       position,
       chapterId,
     };
@@ -320,31 +366,34 @@ export class CourseService {
       message: "Lesson created successfully",
       lesson: {
         id: lesson.id,
-        title: lesson.title,
+        title: pickText(lesson, "title", "en") ?? "",
         position: lesson.position,
       },
     };
   }
 
-  async updateLesson(
-    lessonId: string,
-    input: {
-      name: string;
-      description?: string;
-      thumbnailKey?: string;
-      videoKey?: string;
-    }
-  ) {
+  async updateLesson(lessonId: string, input: LessonInput) {
     const lesson = await this.courses.findLessonById(lessonId);
     if (!lesson) {
       throw new NotFoundError("Lesson not found");
     }
-    await this.courses.updateLesson(lessonId, {
-      title: input.name,
-      description: input.description,
+    // Only fields the request carries are written, so editing one language keeps the other.
+    const changes = {
+      titleEn: input.nameEn === undefined ? undefined : input.nameEn || null,
+      titleVi: input.nameVi === undefined ? undefined : input.nameVi || null,
+      descriptionEn: input.descriptionEn === undefined ? undefined : input.descriptionEn || null,
+      descriptionVi: input.descriptionVi === undefined ? undefined : input.descriptionVi || null,
       thumbnailKey: input.thumbnailKey,
       videoKey: input.videoKey,
-    });
+    };
+    requireTitle(
+      changes.titleEn === undefined ? lesson.titleEn : changes.titleEn,
+      changes.titleVi === undefined ? lesson.titleVi : changes.titleVi
+    );
+    await this.courses.updateLesson(
+      lessonId,
+      Object.fromEntries(Object.entries(changes).filter(([, value]) => value !== undefined))
+    );
     return { status: "success" as const, message: "Lesson updated successfully" };
   }
 
@@ -388,8 +437,9 @@ export class CourseService {
     return last30Days;
   }
 
-  listRecentCourses() {
-    return this.courses.listRecentCourses();
+  async listRecentCourses(locale: Locale) {
+    const courses = await this.courses.listRecentCourses();
+    return courses.map((course) => withTitle(course, locale));
   }
 
   async handleCheckoutCompleted(session: CheckoutSession) {

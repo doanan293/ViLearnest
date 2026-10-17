@@ -1,29 +1,48 @@
 import type { FastifyPluginAsync } from "fastify";
 import { AdminController } from "../../../controllers/api/v1/adminController.js";
-import { courseCreateBodySchema, errorResponseSchema, idParamSchema, successMessageSchema } from "../../schemas.js";
+import type { BilingualName, LessonInput } from "../../../services/courseService.js";
+import {
+  courseCreateBodySchema,
+  errorResponseSchema,
+  idParamSchema,
+  requireOneLanguage,
+  successMessageSchema,
+} from "../../schemas.js";
 import { adminUsersRoutes } from "./admin-users.routes.js";
 
 const anySchema = {} as const;
 
+const optionalText = { type: ["string", "null"] } as const;
+
+const localeQuerySchema = {
+  type: "object",
+  properties: { locale: { type: "string" } },
+} as const;
+
+type LocaleQuery = { Querystring: { locale?: string } };
+
 const chapterBodySchema = {
   type: "object",
-  required: ["name"],
   additionalProperties: true,
+  ...requireOneLanguage("nameEn", "nameVi"),
   properties: {
-    name: { type: "string", minLength: 1 },
+    nameEn: optionalText,
+    nameVi: optionalText,
     courseId: { type: "string" },
   },
 } as const;
 
 const lessonBodySchema = {
   type: "object",
-  required: ["name"],
   additionalProperties: true,
+  ...requireOneLanguage("nameEn", "nameVi"),
   properties: {
-    name: { type: "string", minLength: 1 },
+    nameEn: optionalText,
+    nameVi: optionalText,
     courseId: { type: "string" },
     chapterId: { type: "string" },
-    description: { type: "string" },
+    descriptionEn: optionalText,
+    descriptionVi: optionalText,
     thumbnailKey: { type: "string" },
     videoKey: { type: "string" },
   },
@@ -117,10 +136,11 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
     async (request) => controller.getEnrollmentStats(request)
   );
 
-  fastify.get(
+  fastify.get<LocaleQuery>(
     "/courses/recent",
     {
       schema: {
+        querystring: localeQuerySchema,
         response: {
           200: { type: "array", items: anySchema },
           401: errorResponseSchema,
@@ -130,10 +150,11 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
     async (request) => controller.listRecentCourses(request)
   );
 
-  fastify.get(
+  fastify.get<LocaleQuery>(
     "/courses",
     {
       schema: {
+        querystring: localeQuerySchema,
         response: {
           200: { type: "array", items: anySchema },
           401: errorResponseSchema,
@@ -159,11 +180,12 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
     async (request) => controller.createCourse(request)
   );
 
-  fastify.get<{ Params: { id: string } }>(
+  fastify.get<{ Params: { id: string } } & LocaleQuery>(
     "/courses/:id",
     {
       schema: {
         params: idParamSchema,
+        querystring: localeQuerySchema,
         response: {
           200: anySchema,
           401: errorResponseSchema,
@@ -205,7 +227,7 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
     async (request) => controller.deleteCourse(request)
   );
 
-  fastify.post<{ Params: { courseId: string }; Body: { name: string } }>(
+  fastify.post<{ Params: { courseId: string }; Body: BilingualName }>(
     "/courses/:courseId/chapters",
     {
       schema: {
@@ -243,7 +265,7 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
     async (request) => controller.reorderChapters(request)
   );
 
-  fastify.post<{ Params: { chapterId: string }; Body: { name: string } }>(
+  fastify.post<{ Params: { chapterId: string }; Body: BilingualName }>(
     "/chapters/:chapterId/lessons",
     {
       schema: {
@@ -271,12 +293,7 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
 
   fastify.put<{
     Params: { lessonId: string };
-    Body: {
-      name: string;
-      description?: string;
-      thumbnailKey?: string;
-      videoKey?: string;
-    };
+    Body: LessonInput;
   }>(
     "/lessons/:lessonId",
     {

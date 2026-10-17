@@ -1,6 +1,9 @@
 import type { FastifyRequest } from "fastify";
-import type { CourseService } from "../../../services/courseService.js";
+import { parseLocale } from "../../../lib/localize.js";
+import type { BilingualName, CourseService, LessonInput } from "../../../services/courseService.js";
 import { requireAdmin } from "../../../utils/auth.js";
+
+type LocaleQuery = { Querystring: { locale?: string } };
 
 export class AdminController {
   constructor(private readonly courseService: CourseService) {}
@@ -15,14 +18,14 @@ export class AdminController {
     return this.courseService.getEnrollmentStats();
   }
 
-  async listRecentCourses(request: FastifyRequest) {
+  async listRecentCourses(request: FastifyRequest<LocaleQuery>) {
     await requireAdmin(request);
-    return this.courseService.listRecentCourses();
+    return this.courseService.listRecentCourses(parseLocale(request.query.locale));
   }
 
-  async listAdminCourses(request: FastifyRequest) {
+  async listAdminCourses(request: FastifyRequest<LocaleQuery>) {
     await requireAdmin(request);
-    return this.courseService.listAdminCourses();
+    return this.courseService.listAdminCourses(parseLocale(request.query.locale));
   }
 
   async createCourse(request: FastifyRequest<{ Body: Parameters<CourseService["createCourse"]>[0] }>) {
@@ -30,9 +33,9 @@ export class AdminController {
     return this.courseService.createCourse(request.body, session.user.id);
   }
 
-  async getAdminCourse(request: FastifyRequest<{ Params: { id: string } }>) {
+  async getAdminCourse(request: FastifyRequest<{ Params: { id: string } } & LocaleQuery>) {
     await requireAdmin(request);
-    return this.courseService.getAdminCourse(request.params.id);
+    return this.courseService.getAdminCourse(request.params.id, parseLocale(request.query.locale));
   }
 
   async updateCourse(
@@ -47,9 +50,9 @@ export class AdminController {
     return this.courseService.deleteCourse(request.params.id);
   }
 
-  async createChapter(request: FastifyRequest<{ Params: { courseId: string }; Body: { name: string } }>) {
+  async createChapter(request: FastifyRequest<{ Params: { courseId: string }; Body: BilingualName }>) {
     await requireAdmin(request);
-    return this.courseService.createChapter(request.params.courseId, request.body.name);
+    return this.courseService.createChapter(request.params.courseId, request.body);
   }
 
   async deleteChapter(request: FastifyRequest<{ Params: { chapterId: string } }>) {
@@ -62,9 +65,9 @@ export class AdminController {
     return this.courseService.reorderChapters(request.body.items);
   }
 
-  async createLesson(request: FastifyRequest<{ Params: { chapterId: string }; Body: { name: string } }>) {
+  async createLesson(request: FastifyRequest<{ Params: { chapterId: string }; Body: BilingualName }>) {
     await requireAdmin(request);
-    return this.courseService.createLesson(request.params.chapterId, request.body.name);
+    return this.courseService.createLesson(request.params.chapterId, request.body);
   }
 
   async getAdminLesson(request: FastifyRequest<{ Params: { id: string } }>) {
@@ -75,12 +78,7 @@ export class AdminController {
   async updateLesson(
     request: FastifyRequest<{
       Params: { lessonId: string };
-      Body: {
-        name: string;
-        description?: string;
-        thumbnailKey?: string;
-        videoKey?: string;
-      };
+      Body: LessonInput;
     }>
   ) {
     await requireAdmin(request);

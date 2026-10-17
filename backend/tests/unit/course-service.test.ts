@@ -152,6 +152,103 @@ describe("CourseService localized reads", () => {
   });
 });
 
+const courseInput = {
+  titleEn: "Course A" as string | null,
+  titleVi: null as string | null,
+  smallDescriptionEn: "Short" as string | null,
+  smallDescriptionVi: null as string | null,
+  descriptionEn: '{"type":"doc","content":[]}' as string | null,
+  descriptionVi: null as string | null,
+  fileKey: "uploads/cover.png",
+  price: 0,
+  duration: 45,
+  level: "Beginner" as const,
+  category: "Testing",
+  slug: "course-a",
+  status: "Published" as const,
+};
+
+describe("CourseService bilingual admin writes", () => {
+  it("stores a Vietnamese-only course with an empty English title", async () => {
+    const repository = createRepository();
+    const service = createService(repository);
+
+    await service.createCourse({ ...courseInput, titleEn: null, titleVi: "Khóa A" }, "admin-1");
+
+    expect(repository.createCourse).toHaveBeenCalledWith(expect.objectContaining({ titleEn: null, titleVi: "Khóa A" }));
+  });
+
+  it("rejects a course without a title in either language", async () => {
+    const service = createService(createRepository());
+
+    await expect(service.createCourse({ ...courseInput, titleEn: "", titleVi: null }, "admin-1")).rejects.toThrow(
+      "A title is required in English or Vietnamese"
+    );
+  });
+
+  it("writes both languages when updating a course", async () => {
+    const repository = createRepository({ updateCourse: jest.fn(async () => undefined) });
+    const service = createService(repository);
+
+    await service.updateCourse("course-1", { ...courseInput, titleVi: "Khóa A" });
+
+    expect(repository.updateCourse).toHaveBeenCalledWith(
+      "course-1",
+      expect.objectContaining({ titleEn: "Course A", titleVi: "Khóa A" })
+    );
+  });
+
+  it("stores a Vietnamese-only chapter name in titleVi", async () => {
+    const repository = createRepository();
+    const service = createService(repository);
+
+    await service.createChapter("course-1", { nameEn: null, nameVi: "Chương 1" });
+
+    expect(repository.createChapter).toHaveBeenCalledWith(
+      expect.objectContaining({ titleEn: null, titleVi: "Chương 1" })
+    );
+  });
+
+  it("does not erase the other language when a lesson update sends one language", async () => {
+    const repository = createRepository({
+      findLessonById: jest.fn(async () => ({ id: "lesson-1" })),
+      updateLesson: jest.fn(async () => undefined),
+    });
+    const service = createService(repository);
+
+    await service.updateLesson("lesson-1", { nameEn: "Hooks" });
+
+    const written = (repository.updateLesson as jest.Mock).mock.calls[0]![1] as Record<string, unknown>;
+    expect(written.titleEn).toBe("Hooks");
+    expect(written).not.toHaveProperty("titleVi");
+    expect(written).not.toHaveProperty("descriptionVi");
+  });
+
+  it("names the Stripe product in the buyer's language", async () => {
+    const repository = createRepository({
+      findCourseById: jest.fn(async () => ({
+        ...existingCourse,
+        titleEn: "AI Fast",
+        titleVi: "AI Nhanh",
+        price: 39,
+        stripePriceId: "mock-price-ai-fast",
+      })),
+    });
+    const stripe = createStripe();
+    const service = createService(repository, stripe);
+
+    await service.enroll("course-1", { id: "user-1", email: "user@example.com", name: "User" }, "vi");
+
+    expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        line_items: [
+          expect.objectContaining({ price_data: expect.objectContaining({ product_data: { name: "AI Nhanh" } }) }),
+        ],
+      })
+    );
+  });
+});
+
 describe("CourseService", () => {
   it("uses a unique mock stripe price id based on slug when creating a course", async () => {
     const repository = createRepository();
@@ -159,16 +256,9 @@ describe("CourseService", () => {
 
     await service.createCourse(
       {
-        title: "Bruno API Automation Course",
-        description: '{"type":"doc","content":[]}',
-        fileKey: "uploads/bruno-course-cover.png",
-        price: 0,
-        duration: 45,
-        level: "Beginner",
-        category: "Testing",
-        smallDescription: "Course created by Bruno API automation.",
+        ...courseInput,
+        titleEn: "Bruno API Automation Course",
         slug: "bruno-api-automation-course",
-        status: "Published",
       },
       "admin-1"
     );
@@ -186,11 +276,12 @@ describe("CourseService", () => {
     const repository = createRepository();
     const service = createService(repository);
 
-    const result = await service.createChapter("course-1", "Chapter 3");
+    const result = await service.createChapter("course-1", { nameEn: "Chapter 3", nameVi: null });
 
     expect(repository.createChapter).toHaveBeenCalledWith({
       id: expect.any(String),
-      title: "Chapter 3",
+      titleEn: "Chapter 3",
+      titleVi: null,
       position: 3,
       courseId: "course-1",
     });
@@ -209,11 +300,12 @@ describe("CourseService", () => {
     const repository = createRepository();
     const service = createService(repository);
 
-    const result = await service.createLesson("chapter-1", "Lesson 4");
+    const result = await service.createLesson("chapter-1", { nameEn: "Lesson 4", nameVi: null });
 
     expect(repository.createLesson).toHaveBeenCalledWith({
       id: expect.any(String),
-      title: "Lesson 4",
+      titleEn: "Lesson 4",
+      titleVi: null,
       position: 4,
       chapterId: "chapter-1",
     });
@@ -233,7 +325,7 @@ describe("CourseService", () => {
     const stripe = createStripe();
     const service = createService(repository, stripe);
 
-    await service.enroll("course-1", { id: "user-1", email: "user@example.com", name: "User" });
+    await service.enroll("course-1", { id: "user-1", email: "user@example.com", name: "User" }, "en");
 
     expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -252,7 +344,7 @@ describe("CourseService", () => {
     const repository = createRepository({
       findCourseById: jest.fn(async () => ({
         ...existingCourse,
-        title: "AI Fast",
+        titleEn: "AI Fast",
         price: 39,
         stripePriceId: "mock-price-ai-fast",
       })),
@@ -267,7 +359,7 @@ describe("CourseService", () => {
     const stripe = createStripe();
     const service = createService(repository, stripe);
 
-    await service.enroll("course-1", { id: "user-1", email: "user@example.com", name: "User" });
+    await service.enroll("course-1", { id: "user-1", email: "user@example.com", name: "User" }, "en");
 
     expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(
       expect.objectContaining({

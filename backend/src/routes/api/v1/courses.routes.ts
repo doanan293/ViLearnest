@@ -18,7 +18,7 @@ const enrollBodySchema = {
   type: "object",
   required: ["courseId"],
   additionalProperties: false,
-  properties: { courseId: { type: "string", minLength: 1 } },
+  properties: { courseId: { type: "string", minLength: 1 }, locale: { type: "string" } },
 } as const;
 
 const confirmCheckoutBodySchema = {
@@ -140,7 +140,7 @@ export const coursesRoutes: FastifyPluginAsync = async (fastify) => {
     async (request) => controller.isEnrolled(request)
   );
 
-  fastify.post<{ Body: { courseId: string } }>(
+  fastify.post<{ Body: { courseId: string; locale?: string } }>(
     "/enroll",
     {
       schema: {
