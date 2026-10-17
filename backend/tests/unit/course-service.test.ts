@@ -5,15 +5,18 @@ import { CourseService } from "../../src/services/courseService.js";
 
 const existingCourse = {
   id: "course-1",
-  title: "Course 1",
-  description: "Description",
+  titleEn: "Course 1",
+  titleVi: null as string | null,
+  descriptionEn: "Description",
+  descriptionVi: null as string | null,
   fileKey: "thumbnail.jpg",
   price: 100,
   duration: 10,
   level: "Beginner" as const,
   stripePriceId: "price_1",
   category: "Development",
-  smallDescription: "Small description",
+  smallDescriptionEn: "Small description",
+  smallDescriptionVi: null as string | null,
   slug: "course-1",
   status: "Draft" as const,
   createdAt: new Date("2026-01-01T00:00:00Z"),
@@ -69,6 +72,85 @@ function createService(repository: ReturnType<typeof createRepository>, stripe =
   // CourseService only uses the mocked repository methods in these tests.
   return new CourseService(repository as unknown as CourseRepository, stripe);
 }
+
+const publicCourse = {
+  id: "course-1",
+  titleEn: "AI Fast",
+  titleVi: "AI Nhanh",
+  smallDescriptionEn: "Learn fast",
+  smallDescriptionVi: "Học nhanh",
+  descriptionEn: '{"type":"doc"}',
+  descriptionVi: null,
+  fileKey: "cover.jpg",
+  price: 39,
+  duration: 33,
+  level: "Intermediate" as const,
+  category: "Development",
+  slug: "ai-fast",
+  chapter: [
+    {
+      id: "chapter-1",
+      position: 1,
+      titleEn: "Chapter 1: Basics",
+      titleVi: "Chương 1: Cơ bản",
+      lessons: [{ id: "lesson-1", position: 1, titleEn: "The CLAUDE.md file", titleVi: null }],
+    },
+  ],
+};
+
+describe("CourseService localized reads", () => {
+  it("returns the Vietnamese course text for vi", async () => {
+    const service = createService(createRepository({ findPublicCourseBySlug: jest.fn(async () => publicCourse) }));
+
+    const course = await service.getCourseBySlug("ai-fast", "vi");
+
+    expect(course).toMatchObject({ title: "AI Nhanh", smallDescription: "Học nhanh", description: '{"type":"doc"}' });
+    expect(course).not.toHaveProperty("titleEn");
+  });
+
+  it("returns the English course text for en", async () => {
+    const service = createService(createRepository({ findPublicCourseBySlug: jest.fn(async () => publicCourse) }));
+
+    const course = await service.getCourseBySlug("ai-fast", "en");
+
+    expect(course).toMatchObject({ title: "AI Fast", smallDescription: "Learn fast" });
+  });
+
+  it("falls back to Vietnamese when the course has no English title", async () => {
+    const service = createService(
+      createRepository({ findPublicCourseBySlug: jest.fn(async () => ({ ...publicCourse, titleEn: null })) })
+    );
+
+    const course = await service.getCourseBySlug("ai-fast", "en");
+
+    expect(course.title).toBe("AI Nhanh");
+  });
+
+  it("localizes chapter and lesson titles in the sidebar", async () => {
+    const sidebarCourse = {
+      ...publicCourse,
+      chapter: [
+        {
+          ...publicCourse.chapter[0],
+          lessons: [
+            { ...publicCourse.chapter[0]!.lessons[0], descriptionEn: null, descriptionVi: null, lessonProgess: [] },
+          ],
+        },
+      ],
+    };
+    const service = createService(
+      createRepository({
+        findCourseSidebarBySlug: jest.fn(async () => sidebarCourse),
+        findEnrollment: jest.fn(async () => ({ status: "Active" })),
+      })
+    );
+
+    const { course } = await service.getSidebarData("ai-fast", "user-1", "vi");
+
+    expect(course.chapter[0]).toMatchObject({ title: "Chương 1: Cơ bản" });
+    expect(course.chapter[0]!.lessons[0]).toMatchObject({ title: "The CLAUDE.md file", lessonProgess: [] });
+  });
+});
 
 describe("CourseService", () => {
   it("uses a unique mock stripe price id based on slug when creating a course", async () => {

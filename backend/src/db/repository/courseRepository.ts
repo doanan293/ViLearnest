@@ -8,11 +8,23 @@ type Database = typeof dbInstance;
 
 export type PublicCourse = Pick<
   typeof schema.course.$inferSelect,
-  "id" | "title" | "description" | "fileKey" | "price" | "duration" | "level" | "category" | "smallDescription" | "slug"
+  | "id"
+  | "titleEn"
+  | "titleVi"
+  | "descriptionEn"
+  | "descriptionVi"
+  | "fileKey"
+  | "price"
+  | "duration"
+  | "level"
+  | "category"
+  | "smallDescriptionEn"
+  | "smallDescriptionVi"
+  | "slug"
 > & {
   chapter: Array<
-    Pick<typeof schema.chapter.$inferSelect, "id" | "title" | "position"> & {
-      lessons: Array<Pick<typeof schema.lesson.$inferSelect, "id" | "title" | "position">>;
+    Pick<typeof schema.chapter.$inferSelect, "id" | "titleEn" | "titleVi" | "position"> & {
+      lessons: Array<Pick<typeof schema.lesson.$inferSelect, "id" | "titleEn" | "titleVi" | "position">>;
     }
   >;
 };
@@ -54,23 +66,26 @@ export class CourseRepository {
       where: and(eq(schema.course.slug, slug), eq(schema.course.status, "Published")),
       columns: {
         id: true,
-        title: true,
-        description: true,
+        titleEn: true,
+        titleVi: true,
+        descriptionEn: true,
+        descriptionVi: true,
         fileKey: true,
         price: true,
         duration: true,
         level: true,
         category: true,
-        smallDescription: true,
+        smallDescriptionEn: true,
+        smallDescriptionVi: true,
         slug: true,
       },
       with: {
         chapter: {
-          columns: { id: true, title: true, position: true },
+          columns: { id: true, titleEn: true, titleVi: true, position: true },
           orderBy: [asc(schema.chapter.position)],
           with: {
             lessons: {
-              columns: { id: true, title: true, position: true },
+              columns: { id: true, titleEn: true, titleVi: true, position: true },
               orderBy: [asc(schema.lesson.position)],
             },
           },

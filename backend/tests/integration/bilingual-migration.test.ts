@@ -92,8 +92,8 @@ describe("migration 0006 bilingual content", () => {
   });
 
   it("rejects a chapter without a title in either language", async () => {
-    await expect(
-      sql`insert into "Chapter" (id, position, "courseId") values ('ch2', 2, 'c1')`
-    ).rejects.toMatchObject({ code: "23514" });
+    await expect(sql`insert into "Chapter" (id, position, "courseId") values ('ch2', 2, 'c1')`).rejects.toMatchObject({
+      code: "23514",
+    });
   });
 });

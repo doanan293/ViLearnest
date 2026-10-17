@@ -40,35 +40,46 @@ const markCompleteBodySchema = {
 
 const anySchema = {} as const;
 
+// Unknown values fall back to English in the controller, so the schema only types the field.
+const localeQuerySchema = {
+  type: "object",
+  properties: { locale: { type: "string" } },
+} as const;
+
+type LocaleQuery = { Querystring: { locale?: string } };
+
 export const coursesRoutes: FastifyPluginAsync = async (fastify) => {
   const controller = new CourseController(fastify.services.courses);
 
-  fastify.get(
+  fastify.get<LocaleQuery>(
     "",
     {
       schema: {
+        querystring: localeQuerySchema,
         response: { 200: { type: "array", items: anySchema } },
       },
     },
-    async () => controller.listPublishedCourses()
+    async (request) => controller.listPublishedCourses(request)
   );
 
-  fastify.get<{ Params: { slug: string } }>(
+  fastify.get<{ Params: { slug: string } } & LocaleQuery>(
     "/by-slug/:slug",
     {
       schema: {
         params: slugParamSchema,
+        querystring: localeQuerySchema,
         response: { 200: anySchema, 404: errorResponseSchema },
       },
     },
     async (request) => controller.getCourseBySlug(request)
   );
 
-  fastify.get<{ Params: { slug: string } }>(
+  fastify.get<{ Params: { slug: string } } & LocaleQuery>(
     "/by-slug/:slug/sidebar",
     {
       schema: {
         params: slugParamSchema,
+        querystring: localeQuerySchema,
         response: {
           200: anySchema,
           401: errorResponseSchema,
@@ -80,11 +91,12 @@ export const coursesRoutes: FastifyPluginAsync = async (fastify) => {
     async (request) => controller.getSidebarData(request)
   );
 
-  fastify.get<{ Params: { lessonId: string } }>(
+  fastify.get<{ Params: { lessonId: string } } & LocaleQuery>(
     "/lessons/:lessonId",
     {
       schema: {
         params: lessonIdParamSchema,
+        querystring: localeQuerySchema,
         response: {
           200: anySchema,
           401: errorResponseSchema,
@@ -96,10 +108,11 @@ export const coursesRoutes: FastifyPluginAsync = async (fastify) => {
     async (request) => controller.getLessonContent(request)
   );
 
-  fastify.get(
+  fastify.get<LocaleQuery>(
     "/enrolled",
     {
       schema: {
+        querystring: localeQuerySchema,
         response: {
           200: { type: "array", items: anySchema },
           401: errorResponseSchema,

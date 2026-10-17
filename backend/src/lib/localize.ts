@@ -19,8 +19,9 @@ export type ChapterTextColumns = {
 export type LessonTextColumns = {
   titleEn: string | null;
   titleVi: string | null;
-  descriptionEn: string | null;
-  descriptionVi: string | null;
+  // Public course outlines select lesson titles only.
+  descriptionEn?: string | null;
+  descriptionVi?: string | null;
 };
 
 const SUFFIX: Record<Locale, "En" | "Vi"> = { en: "En", vi: "Vi" };
@@ -68,10 +69,34 @@ export function localizeChapter<T extends ChapterTextColumns>(
   return { ...rest, title: pickText(row, "title", locale) ?? "" };
 }
 
-export function localizeLesson<T extends LessonTextColumns>(
-  row: T,
+export function localizeChapterTree<L extends LessonTextColumns, C extends ChapterTextColumns & { lessons: L[] }>(
+  chapter: C,
   locale: Locale
-): Omit<T, keyof LessonTextColumns> & { title: string; description: string | null } {
+) {
+  return {
+    ...localizeChapter(chapter, locale),
+    lessons: chapter.lessons.map((lesson) => localizeLesson(lesson, locale)),
+  };
+}
+
+export function localizeCourseTree<
+  L extends LessonTextColumns,
+  H extends ChapterTextColumns & { lessons: L[] },
+  C extends CourseTextColumns & { chapter: H[] },
+>(course: C, locale: Locale) {
+  return {
+    ...localizeCourse(course, locale),
+    chapter: course.chapter.map((chapter) => localizeChapterTree<L, H>(chapter, locale)),
+  };
+}
+
+type LocalizedLesson<T> = Omit<T, keyof LessonTextColumns> & { title: string } & (T extends {
+    descriptionEn: unknown;
+  }
+    ? { description: string | null }
+    : unknown);
+
+export function localizeLesson<T extends LessonTextColumns>(row: T, locale: Locale): LocalizedLesson<T> {
   const {
     titleEn: _titleEn,
     titleVi: _titleVi,
@@ -79,9 +104,10 @@ export function localizeLesson<T extends LessonTextColumns>(
     descriptionVi: _descriptionVi,
     ...rest
   } = row;
+  const hasDescription = "descriptionEn" in row || "descriptionVi" in row;
   return {
     ...rest,
     title: pickText(row, "title", locale) ?? "",
-    description: pickText(row, "description", locale),
-  };
+    ...(hasDescription ? { description: pickText(row, "description", locale) } : {}),
+  } as LocalizedLesson<T>;
 }

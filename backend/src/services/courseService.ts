@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { config } from "../config/index.js";
 import type { ActivationInput, CourseRepository, ReorderItem } from "../db/repository/courseRepository.js";
 import { BadRequestError, ForbiddenError, NotFoundError } from "../lib/errors.js";
+import { type Locale, localizeChapter, localizeCourse, localizeCourseTree, localizeLesson } from "../lib/localize.js";
 import type { CheckoutLineItem, CheckoutSession, StripeClient } from "../lib/stripe-client.js";
 
 interface SessionUser {
@@ -36,19 +37,20 @@ export class CourseService {
     private readonly stripe: StripeClient
   ) {}
 
-  listPublishedCourses() {
-    return this.courses.listPublishedCourses();
+  async listPublishedCourses(locale: Locale) {
+    const courses = await this.courses.listPublishedCourses();
+    return courses.map((course) => localizeCourse(course, locale));
   }
 
-  async getCourseBySlug(slug: string) {
+  async getCourseBySlug(slug: string, locale: Locale) {
     const course = await this.courses.findPublicCourseBySlug(slug);
     if (!course) {
       throw new NotFoundError("Course not found");
     }
-    return course;
+    return localizeCourseTree(course, locale);
   }
 
-  async getSidebarData(slug: string, userId: string) {
+  async getSidebarData(slug: string, userId: string, locale: Locale) {
     const course = await this.courses.findCourseSidebarBySlug(slug, userId);
     if (!course) {
       throw new NotFoundError("Course not found");
@@ -59,10 +61,10 @@ export class CourseService {
       throw new ForbiddenError("Not enrolled in this course");
     }
 
-    return { course };
+    return { course: localizeCourseTree(course, locale) };
   }
 
-  async getLessonContent(lessonId: string, userId: string) {
+  async getLessonContent(lessonId: string, userId: string, locale: Locale) {
     const lesson = await this.courses.findLessonContent(lessonId, userId);
     if (!lesson) {
       throw new NotFoundError("Lesson not found");
@@ -73,11 +75,21 @@ export class CourseService {
       throw new ForbiddenError("Not enrolled in this course");
     }
 
-    return lesson;
+    return {
+      ...localizeLesson(lesson, locale),
+      Chapter: {
+        ...localizeChapter(lesson.Chapter, locale),
+        Course: localizeCourse(lesson.Chapter.Course, locale),
+      },
+    };
   }
 
-  listEnrolledCourses(userId: string) {
-    return this.courses.findActiveEnrollments(userId);
+  async listEnrolledCourses(userId: string, locale: Locale) {
+    const enrollments = await this.courses.findActiveEnrollments(userId);
+    return enrollments.map((enrollment) => ({
+      ...enrollment,
+      Course: localizeCourseTree(enrollment.Course, locale),
+    }));
   }
 
   async isEnrolled(courseId: string, userId: string) {

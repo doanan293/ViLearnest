@@ -81,4 +81,8 @@ describe("localizeLesson", () => {
       )
     ).toEqual({ id: "l1", title: "Hooks (VI)", description: null });
   });
+
+  it("leaves description out when the row has no description columns", () => {
+    expect(localizeLesson({ id: "l1", titleEn: "Hooks", titleVi: null }, "en")).toEqual({ id: "l1", title: "Hooks" });
+  });
 });
