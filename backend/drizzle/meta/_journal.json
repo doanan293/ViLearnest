@@ -43,6 +43,13 @@
       "when": 1782734564036,
       "tag": "0005_db_owned_updated_at",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792220000000,
+      "tag": "0006_bilingual_content",
+      "breakpoints": true
     }
   ]
 }

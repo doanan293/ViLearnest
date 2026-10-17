@@ -1,5 +1,5 @@
-import { relations } from "drizzle-orm";
-import { boolean, index, integer, pgEnum, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import { boolean, check, index, integer, pgEnum, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 
 // --- ENUMS ---
 export const courseLevelEnum = pgEnum("CourseLevel", ["Beginner", "Intermediate", "Advanced"]);
@@ -126,15 +126,18 @@ export const course = pgTable(
   "Course",
   {
     id: text("id").primaryKey(),
-    title: text("title").notNull(),
-    description: text("description").notNull(),
+    titleEn: text("titleEn"),
+    titleVi: text("titleVi"),
+    descriptionEn: text("descriptionEn"),
+    descriptionVi: text("descriptionVi"),
     fileKey: text("fileKey").notNull(),
     price: integer("price").notNull(),
     duration: integer("duration").notNull(),
     level: courseLevelEnum("level").default("Beginner").notNull(),
     stripePriceId: text("stripePriceId").notNull(),
     category: text("category").notNull(),
-    smallDescription: text("smallDescription").notNull(),
+    smallDescriptionEn: text("smallDescriptionEn"),
+    smallDescriptionVi: text("smallDescriptionVi"),
     slug: text("slug").notNull(),
     status: courseStatusEnum("status").default("Draft").notNull(),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
@@ -147,34 +150,46 @@ export const course = pgTable(
     return {
       slugUnique: uniqueIndex("Course_slug_key").on(table.slug),
       stripePriceIdUnique: uniqueIndex("Course_stripePriceId_key").on(table.stripePriceId),
+      titleRequired: check("Course_title_required", sql`coalesce(${table.titleEn}, ${table.titleVi}) is not null`),
     };
   }
 );
 
-export const chapter = pgTable("Chapter", {
-  id: text("id").primaryKey(),
-  title: text("title").notNull(),
-  position: integer("position").notNull(),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
-  courseId: text("courseId")
-    .notNull()
-    .references(() => course.id, { onDelete: "cascade" }),
-});
+export const chapter = pgTable(
+  "Chapter",
+  {
+    id: text("id").primaryKey(),
+    titleEn: text("titleEn"),
+    titleVi: text("titleVi"),
+    position: integer("position").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+    courseId: text("courseId")
+      .notNull()
+      .references(() => course.id, { onDelete: "cascade" }),
+  },
+  (table) => [check("Chapter_title_required", sql`coalesce(${table.titleEn}, ${table.titleVi}) is not null`)]
+);
 
-export const lesson = pgTable("Lesson", {
-  id: text("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description"),
-  thumbnailKey: text("thumbnailKey"),
-  videoKey: text("videoKey"),
-  position: integer("position").notNull(),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
-  chapterId: text("chapterId")
-    .notNull()
-    .references(() => chapter.id, { onDelete: "cascade" }),
-});
+export const lesson = pgTable(
+  "Lesson",
+  {
+    id: text("id").primaryKey(),
+    titleEn: text("titleEn"),
+    titleVi: text("titleVi"),
+    descriptionEn: text("descriptionEn"),
+    descriptionVi: text("descriptionVi"),
+    thumbnailKey: text("thumbnailKey"),
+    videoKey: text("videoKey"),
+    position: integer("position").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+    chapterId: text("chapterId")
+      .notNull()
+      .references(() => chapter.id, { onDelete: "cascade" }),
+  },
+  (table) => [check("Lesson_title_required", sql`coalesce(${table.titleEn}, ${table.titleVi}) is not null`)]
+);
 
 export const enrollment = pgTable(
   "Enrollment",
