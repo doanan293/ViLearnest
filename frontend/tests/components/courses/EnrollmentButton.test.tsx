@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { queryKeys } from "@/lib/query-keys";
 
 jest.mock("next-intl", () => ({
+	useLocale: () => "en",
 	useTranslations: () => (key: string) => key,
 }));
 
@@ -57,7 +58,7 @@ describe("EnrollmentButton", () => {
 
 		await user.click(screen.getByRole("button", { name: "enrollNow" }));
 
-		await waitFor(() => expect(api.courses.enroll).toHaveBeenCalledWith("course-1"));
+		await waitFor(() => expect(api.courses.enroll).toHaveBeenCalledWith("course-1", "en"));
 		expect(invalidateSpy).toHaveBeenCalledWith({
 			queryKey: queryKeys.courses.enrollmentStatus("course-1"),
 		});

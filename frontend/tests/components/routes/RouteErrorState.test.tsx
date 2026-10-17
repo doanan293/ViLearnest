@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { RouteErrorState } from "@/components/routes/RouteErrorState";
 
 jest.mock("next-intl", () => ({
+	useLocale: () => "en",
 	useTranslations: () => (key: string) => key,
 }));
 

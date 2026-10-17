@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { ApiClientError } from "@/lib/api-client";
 
 jest.mock("next-intl", () => ({
+	useLocale: () => "en",
 	useTranslations: () => (key: string) => key,
 }));
 

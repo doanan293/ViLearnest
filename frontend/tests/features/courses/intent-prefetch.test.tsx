@@ -9,6 +9,10 @@ import {
 } from "@/features/courses/hooks/use-intent-prefetch";
 import { queryKeys } from "@/lib/query-keys";
 
+jest.mock("next-intl", () => ({
+	useLocale: () => "en",
+}));
+
 function wrapper(client: QueryClient) {
 	return function QueryWrapper({ children }: { children: ReactNode }) {
 		return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
@@ -49,10 +53,12 @@ describe("intent prefetch hooks", () => {
 		await admin.result.current();
 
 		expect(prefetchQuery).toHaveBeenCalledWith(
-			expect.objectContaining({ queryKey: queryKeys.dashboard.courseSidebar("react-course") }),
+			expect.objectContaining({
+				queryKey: queryKeys.dashboard.courseSidebar("react-course", "en"),
+			}),
 		);
 		expect(prefetchQuery).toHaveBeenCalledWith(
-			expect.objectContaining({ queryKey: queryKeys.dashboard.lessonContent("lesson-1") }),
+			expect.objectContaining({ queryKey: queryKeys.dashboard.lessonContent("lesson-1", "en") }),
 		);
 		expect(prefetchQuery).toHaveBeenCalledWith(
 			expect.objectContaining({ queryKey: queryKeys.admin.courses.detail("course-1") }),

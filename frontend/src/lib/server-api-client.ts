@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { getLocale } from "next-intl/server";
 import type { AdminUserSummary, ProfileResponse } from "@/features/users";
 
 type ApiResult<T> = {
@@ -155,6 +156,8 @@ async function request<T = unknown>(
 export async function getServerApiClient() {
 	const reqHeaders = await headers();
 	const cookie = reqHeaders.get("cookie") || "";
+	// Course content is served in the page's language.
+	const localeQuery = `?locale=${await getLocale()}`;
 
 	const get = <T = unknown>(path: string) => request<T>(path, { cookie });
 	const post = <T = unknown>(path: string, body?: unknown) =>
@@ -177,14 +180,15 @@ export async function getServerApiClient() {
 			getMe: () => get<ProfileResponse>("/api/v1/profile/me"),
 		},
 		courses: {
-			getAllCourses: () => get<Array<PublicCourseResponse>>("/api/v1/courses"),
+			getAllCourses: () => get<Array<PublicCourseResponse>>(`/api/v1/courses${localeQuery}`),
 			getBySlug: ({ params }: ParamsArg<{ slug: string }>) =>
-				get<PublicCourseResponse>(`/api/v1/courses/by-slug/${params.slug}`),
+				get<PublicCourseResponse>(`/api/v1/courses/by-slug/${params.slug}${localeQuery}`),
 			getSidebarData: ({ params }: ParamsArg<{ slug: string }>) =>
-				get<CourseSidebarResponse>(`/api/v1/courses/by-slug/${params.slug}/sidebar`),
+				get<CourseSidebarResponse>(`/api/v1/courses/by-slug/${params.slug}/sidebar${localeQuery}`),
 			getLessonContent: ({ params }: ParamsArg<{ lessonId: string }>) =>
-				get<LessonContentResponse>(`/api/v1/courses/lessons/${params.lessonId}`),
-			getEnrolledCourses: () => get<Array<EnrolledCourseResponse>>("/api/v1/courses/enrolled"),
+				get<LessonContentResponse>(`/api/v1/courses/lessons/${params.lessonId}${localeQuery}`),
+			getEnrolledCourses: () =>
+				get<Array<EnrolledCourseResponse>>(`/api/v1/courses/enrolled${localeQuery}`),
 			isEnrolled: ({ params }: ParamsArg<{ courseId: string }>) =>
 				get<{ enrolled: boolean }>(`/api/v1/courses/${params.courseId}/is-enrolled`),
 		},

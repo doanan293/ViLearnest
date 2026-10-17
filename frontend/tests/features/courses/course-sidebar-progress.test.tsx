@@ -7,6 +7,7 @@ import { markSidebarLessonCompleted } from "@/features/courses/hooks/use-course-
 import { queryKeys } from "@/lib/query-keys";
 
 jest.mock("next-intl", () => ({
+	useLocale: () => "en",
 	useTranslations: () => (key: string) => key,
 }));
 
@@ -71,7 +72,7 @@ function CompleteLessonButton() {
 	return (
 		<button
 			type="button"
-			onClick={() => markSidebarLessonCompleted(queryClient, "ai-fast", "lesson-1")}
+			onClick={() => markSidebarLessonCompleted(queryClient, "ai-fast", "lesson-1", "en")}
 		>
 			Complete lesson one
 		</button>
@@ -92,7 +93,7 @@ function createQueryClient() {
 describe("CourseSidebar progress cache", () => {
 	it("updates progress immediately when query cache marks a lesson complete", async () => {
 		const queryClient = createQueryClient();
-		queryClient.setQueryData(queryKeys.dashboard.courseSidebar("ai-fast"), {
+		queryClient.setQueryData(queryKeys.dashboard.courseSidebar("ai-fast", "en"), {
 			course: createCourse(),
 		});
 

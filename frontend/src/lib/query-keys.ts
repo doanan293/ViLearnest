@@ -1,3 +1,11 @@
+import type { Locale } from "@/i18n/pathname";
+
+// Course content keys end with the locale. Without a locale the key is a prefix that matches
+// every language, which is what invalidation after a write needs.
+function localized<const T extends ReadonlyArray<string>>(key: T, locale?: Locale) {
+	return locale ? ([...key, locale] as const) : key;
+}
+
 export const queryKeys = {
 	auth: {
 		session: () => ["auth", "session"] as const,
@@ -7,15 +15,20 @@ export const queryKeys = {
 		adminUser: (userId: string) => ["profile", "adminUser", userId] as const,
 	},
 	courses: {
-		publicList: () => ["courses", "publicList"] as const,
-		publicDetail: (slug: string) => ["courses", "publicDetail", slug] as const,
+		publicList: (locale?: Locale) => localized(["courses", "publicList"] as const, locale),
+		publicDetail: (slug: string, locale?: Locale) =>
+			localized(["courses", "publicDetail", slug] as const, locale),
 		enrollmentStatus: (courseId: string) => ["courses", "enrollmentStatus", courseId] as const,
 	},
 	dashboard: {
-		enrolledCourses: () => ["dashboard", "enrolledCourses"] as const,
-		availableCourses: () => ["dashboard", "availableCourses"] as const,
-		courseSidebar: (slug: string) => ["dashboard", "courseSidebar", slug] as const,
-		lessonContent: (lessonId: string) => ["dashboard", "lessonContent", lessonId] as const,
+		enrolledCourses: (locale?: Locale) =>
+			localized(["dashboard", "enrolledCourses"] as const, locale),
+		availableCourses: (locale?: Locale) =>
+			localized(["dashboard", "availableCourses"] as const, locale),
+		courseSidebar: (slug: string, locale?: Locale) =>
+			localized(["dashboard", "courseSidebar", slug] as const, locale),
+		lessonContent: (lessonId: string, locale?: Locale) =>
+			localized(["dashboard", "lessonContent", lessonId] as const, locale),
 	},
 	admin: {
 		users: {

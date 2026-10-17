@@ -1,7 +1,9 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
 import { useCallback } from "react";
+import type { Locale } from "@/i18n/pathname";
 import { adminCourseDetailQueryOptions } from "./use-admin-course-queries";
 import {
 	courseSidebarQueryOptions,
@@ -19,17 +21,19 @@ export function useEnrollmentStatusIntentPrefetch(courseId: string) {
 
 export function useCourseSidebarIntentPrefetch(slug: string) {
 	const queryClient = useQueryClient();
+	const locale = useLocale() as Locale;
 	return useCallback(
-		() => queryClient.prefetchQuery(courseSidebarQueryOptions(slug)),
-		[queryClient, slug],
+		() => queryClient.prefetchQuery(courseSidebarQueryOptions(slug, locale)),
+		[locale, queryClient, slug],
 	);
 }
 
 export function useLessonContentIntentPrefetch(lessonId: string) {
 	const queryClient = useQueryClient();
+	const locale = useLocale() as Locale;
 	return useCallback(
-		() => queryClient.prefetchQuery(lessonContentQueryOptions(lessonId)),
-		[lessonId, queryClient],
+		() => queryClient.prefetchQuery(lessonContentQueryOptions(lessonId, locale)),
+		[lessonId, locale, queryClient],
 	);
 }
 

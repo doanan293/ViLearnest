@@ -1,5 +1,7 @@
 import { type QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
 import type { CourseSidebarDataType, LessonContentType } from "@/features/courses";
+import type { Locale } from "@/i18n/pathname";
 import { api } from "@/lib/api";
 import { ApiClientError } from "@/lib/api-client";
 import { queryKeys } from "@/lib/query-keys";
@@ -14,10 +16,11 @@ type ProgressSnapshot = {
 
 export function courseSidebarQueryOptions(
 	slug: string,
-	queryFn: QueryFn<CourseSidebarDataType> = () => api.courses.getSidebarData(slug),
+	locale: Locale,
+	queryFn: QueryFn<CourseSidebarDataType> = () => api.courses.getSidebarData(slug, locale),
 ) {
 	return queryOptions({
-		queryKey: queryKeys.dashboard.courseSidebar(slug),
+		queryKey: queryKeys.dashboard.courseSidebar(slug, locale),
 		queryFn,
 		staleTime: queryStaleTimes.coursePlayer,
 	});
@@ -25,21 +28,24 @@ export function courseSidebarQueryOptions(
 
 export function lessonContentQueryOptions(
 	lessonId: string,
-	queryFn: QueryFn<LessonContentType> = () => api.courses.getLessonContent(lessonId),
+	locale: Locale,
+	queryFn: QueryFn<LessonContentType> = () => api.courses.getLessonContent(lessonId, locale),
 ) {
 	return queryOptions({
-		queryKey: queryKeys.dashboard.lessonContent(lessonId),
+		queryKey: queryKeys.dashboard.lessonContent(lessonId, locale),
 		queryFn,
 		staleTime: queryStaleTimes.coursePlayer,
 	});
 }
 
 export function useCourseSidebarQuery(slug: string) {
-	return useQuery(courseSidebarQueryOptions(slug));
+	const locale = useLocale() as Locale;
+	return useQuery(courseSidebarQueryOptions(slug, locale));
 }
 
 export function useLessonContentQuery(lessonId: string) {
-	return useQuery(lessonContentQueryOptions(lessonId));
+	const locale = useLocale() as Locale;
+	return useQuery(lessonContentQueryOptions(lessonId, locale));
 }
 
 export function enrollmentStatusQueryOptions(
@@ -72,9 +78,13 @@ function completedProgress(lessonId: string) {
 	return { lessonId, completed: true };
 }
 
-export function markLessonContentCompleted(queryClient: QueryClient, lessonId: string) {
+export function markLessonContentCompleted(
+	queryClient: QueryClient,
+	lessonId: string,
+	locale: Locale,
+) {
 	queryClient.setQueryData<LessonContentType>(
-		queryKeys.dashboard.lessonContent(lessonId),
+		queryKeys.dashboard.lessonContent(lessonId, locale),
 		(previous) => {
 			if (!previous) {
 				return previous;
@@ -98,9 +108,10 @@ export function markSidebarLessonCompleted(
 	queryClient: QueryClient,
 	slug: string,
 	lessonId: string,
+	locale: Locale,
 ) {
 	queryClient.setQueryData<CourseSidebarDataType>(
-		queryKeys.dashboard.courseSidebar(slug),
+		queryKeys.dashboard.courseSidebar(slug, locale),
 		(previous) => {
 			if (!previous) {
 				return previous;
@@ -141,8 +152,9 @@ export function rollbackCoursePlayerProgress(
 	queryClient: QueryClient,
 	slug: string,
 	lessonId: string,
+	locale: Locale,
 	snapshot: ProgressSnapshot,
 ) {
-	queryClient.setQueryData(queryKeys.dashboard.courseSidebar(slug), snapshot.sidebar);
-	queryClient.setQueryData(queryKeys.dashboard.lessonContent(lessonId), snapshot.lesson);
+	queryClient.setQueryData(queryKeys.dashboard.courseSidebar(slug, locale), snapshot.sidebar);
+	queryClient.setQueryData(queryKeys.dashboard.lessonContent(lessonId, locale), snapshot.lesson);
 }

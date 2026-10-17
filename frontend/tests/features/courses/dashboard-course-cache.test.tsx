@@ -13,6 +13,7 @@ import { queryKeys } from "@/lib/query-keys";
 import { queryStaleTimes } from "@/lib/query-stale-times";
 
 jest.mock("next-intl", () => ({
+	useLocale: () => "en",
 	useTranslations: () => (key: string, values?: Record<string, number>) => {
 		if (values) return `${key}:${Object.values(values).join("/")}`;
 		return key;
@@ -59,19 +60,19 @@ describe("dashboard course cache hooks", () => {
 		);
 
 		expect(source).toContain("useEnrolledCoursesQuery");
-		expect(source).toContain("queryKeys.dashboard.enrolledCourses()");
+		expect(source).toContain("queryKeys.dashboard.enrolledCourses(locale)");
 		expect(source).toContain("useAvailableCoursesQuery");
-		expect(source).toContain("queryKeys.dashboard.availableCourses()");
+		expect(source).toContain("queryKeys.dashboard.availableCourses(locale)");
 	});
 
 	it("assigns stale-time policies to dashboard course queries", () => {
-		expect(enrolledCoursesQueryOptions().staleTime).toBe(queryStaleTimes.dashboard);
-		expect(availableCoursesQueryOptions().staleTime).toBe(queryStaleTimes.catalog);
+		expect(enrolledCoursesQueryOptions("en").staleTime).toBe(queryStaleTimes.dashboard);
+		expect(availableCoursesQueryOptions("en").staleTime).toBe(queryStaleTimes.catalog);
 	});
 
 	it("renders enrolled courses from hydrated cache without a loading-only state", () => {
 		const queryClient = createQueryClient();
-		queryClient.setQueryData(queryKeys.dashboard.enrolledCourses(), [
+		queryClient.setQueryData(queryKeys.dashboard.enrolledCourses("en"), [
 			{
 				Course: {
 					id: "course-1",
@@ -117,7 +118,7 @@ describe("dashboard course cache hooks", () => {
 
 	it("renders available courses from hydrated cache without a loading-only state", () => {
 		const queryClient = createQueryClient();
-		queryClient.setQueryData(queryKeys.dashboard.availableCourses(), [
+		queryClient.setQueryData(queryKeys.dashboard.availableCourses("en"), [
 			{
 				id: "course-2",
 				title: "Available Hydrated Course",

@@ -7,6 +7,7 @@ import type {
 	PublicCourseType,
 } from "@/features/courses";
 import type { AdminUserSummary, EnrolledCourseType, ProfileResponse } from "@/features/users";
+import type { Locale } from "@/i18n/pathname";
 import { http } from "@/lib/api-client";
 import type { ApiResponse } from "@/lib/types";
 import type {
@@ -112,20 +113,24 @@ export const api = {
 			}),
 	},
 	courses: {
-		getAllCourses: () => http.get<Array<PublicCourseType>>("/api/v1/courses"),
-		getEnrolledCourses: () => http.get<Array<EnrolledCourseType>>("/api/v1/courses/enrolled"),
-		getSidebarData: (slug: string) =>
-			http.get<CourseSidebarDataType>(`/api/v1/courses/by-slug/${slug}/sidebar`),
-		getLessonContent: (lessonId: string) =>
-			http.get<LessonContentType>(`/api/v1/courses/lessons/${lessonId}`),
+		getAllCourses: (locale: Locale) =>
+			http.get<Array<PublicCourseType>>("/api/v1/courses", { params: { locale } }),
+		getEnrolledCourses: (locale: Locale) =>
+			http.get<Array<EnrolledCourseType>>("/api/v1/courses/enrolled", { params: { locale } }),
+		getSidebarData: (slug: string, locale: Locale) =>
+			http.get<CourseSidebarDataType>(`/api/v1/courses/by-slug/${slug}/sidebar`, {
+				params: { locale },
+			}),
+		getLessonContent: (lessonId: string, locale: Locale) =>
+			http.get<LessonContentType>(`/api/v1/courses/lessons/${lessonId}`, { params: { locale } }),
 		isEnrolled: (courseId: string) =>
 			http.get<{ enrolled: boolean }>(`/api/v1/courses/${courseId}/is-enrolled`),
-		enroll: (courseId: string) =>
+		enroll: (courseId: string, locale: Locale) =>
 			http.post<
 				ApiResponse & {
 					checkoutUrl?: string;
 				}
-			>("/api/v1/courses/enroll", { courseId }),
+			>("/api/v1/courses/enroll", { courseId, locale }),
 		confirmCheckout: (sessionId: string) =>
 			http.post<ApiResponse>("/api/v1/courses/checkout/confirm", { sessionId }),
 		markComplete: (lessonId: string, slug: string) =>

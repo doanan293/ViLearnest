@@ -23,4 +23,8 @@ describe("RenderDescription", () => {
 			),
 		).not.toThrow();
 	});
+
+	it("renders nothing when the description is missing in both languages", () => {
+		expect(renderToString(<RenderDescription json={null} />)).toBe("");
+	});
 });

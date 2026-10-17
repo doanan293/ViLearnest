@@ -4,6 +4,12 @@ jest.mock("next/headers", () => ({
 	headers: jest.fn(async () => new Headers()),
 }));
 
+const mockGetLocale = jest.fn(async () => "en");
+
+jest.mock("next-intl/server", () => ({
+	getLocale: () => mockGetLocale(),
+}));
+
 const originalInternalApiUrl = process.env.INTERNAL_API_URL;
 const originalPublicApiUrl = process.env.PUBLIC_API_URL;
 
@@ -30,7 +36,28 @@ describe("getServerApiClient", () => {
 		await client.courses.getAllCourses();
 
 		expect(fetchMock).toHaveBeenCalledWith(
-			"http://localhost:5000/api/v1/courses",
+			"http://localhost:5000/api/v1/courses?locale=en",
+			expect.objectContaining({ cache: "no-store" }),
+		);
+	});
+
+	it("requests course content in the page locale", async () => {
+		process.env.INTERNAL_API_URL = "http://internal-api";
+		mockGetLocale.mockResolvedValueOnce("vi");
+		const fetchMock = jest.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => ({
+			status: 200,
+			text: async () => "{}",
+		}));
+		Object.defineProperty(global, "fetch", {
+			configurable: true,
+			value: fetchMock,
+		});
+
+		const client = await getServerApiClient();
+		await client.courses.getBySlug({ params: { slug: "ai-fast" } });
+
+		expect(fetchMock).toHaveBeenCalledWith(
+			"http://internal-api/api/v1/courses/by-slug/ai-fast?locale=vi",
 			expect.objectContaining({ cache: "no-store" }),
 		);
 	});

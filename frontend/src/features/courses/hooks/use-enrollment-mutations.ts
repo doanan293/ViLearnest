@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
 import type { CourseSidebarDataType, LessonContentType } from "@/features/courses";
+import type { Locale } from "@/i18n/pathname";
 import { api } from "@/lib/api";
 import { queryKeys } from "@/lib/query-keys";
 import {
@@ -7,6 +9,8 @@ import {
 	markSidebarLessonCompleted,
 	rollbackCoursePlayerProgress,
 } from "./use-course-player-query";
+
+// Invalidation uses locale-free key prefixes so both languages refetch after a write.
 
 export function useConfirmCheckoutMutation() {
 	const queryClient = useQueryClient();
@@ -22,9 +26,10 @@ export function useConfirmCheckoutMutation() {
 
 export function useEnrollCourseMutation() {
 	const queryClient = useQueryClient();
+	const locale = useLocale() as Locale;
 
 	return useMutation({
-		mutationFn: (courseId: string) => api.courses.enroll(courseId),
+		mutationFn: (courseId: string) => api.courses.enroll(courseId, locale),
 		onSuccess: (result, courseId) => {
 			if (result.status === "success" && !result.checkoutUrl) {
 				queryClient.setQueryData(queryKeys.courses.enrollmentStatus(courseId), true);
@@ -40,38 +45,41 @@ export function useEnrollCourseMutation() {
 
 export function useMarkLessonCompleteMutation() {
 	const queryClient = useQueryClient();
+	const locale = useLocale() as Locale;
 
 	return useMutation({
 		mutationFn: ({ lessonId, slug }: { lessonId: string; slug: string }) =>
 			api.courses.markComplete(lessonId, slug),
 		onMutate: async ({ lessonId, slug }) => {
 			await Promise.all([
-				queryClient.cancelQueries({ queryKey: queryKeys.dashboard.courseSidebar(slug) }),
-				queryClient.cancelQueries({ queryKey: queryKeys.dashboard.lessonContent(lessonId) }),
+				queryClient.cancelQueries({ queryKey: queryKeys.dashboard.courseSidebar(slug, locale) }),
+				queryClient.cancelQueries({
+					queryKey: queryKeys.dashboard.lessonContent(lessonId, locale),
+				}),
 			]);
 
 			const snapshot = {
 				sidebar: queryClient.getQueryData<CourseSidebarDataType>(
-					queryKeys.dashboard.courseSidebar(slug),
+					queryKeys.dashboard.courseSidebar(slug, locale),
 				),
 				lesson: queryClient.getQueryData<LessonContentType>(
-					queryKeys.dashboard.lessonContent(lessonId),
+					queryKeys.dashboard.lessonContent(lessonId, locale),
 				),
 			};
 
-			markLessonContentCompleted(queryClient, lessonId);
-			markSidebarLessonCompleted(queryClient, slug, lessonId);
+			markLessonContentCompleted(queryClient, lessonId, locale);
+			markSidebarLessonCompleted(queryClient, slug, lessonId, locale);
 
 			return snapshot;
 		},
 		onError: (_error, { lessonId, slug }, snapshot) => {
 			if (snapshot) {
-				rollbackCoursePlayerProgress(queryClient, slug, lessonId, snapshot);
+				rollbackCoursePlayerProgress(queryClient, slug, lessonId, locale, snapshot);
 			}
 		},
 		onSuccess: (_result, { lessonId, slug }) => {
-			markLessonContentCompleted(queryClient, lessonId);
-			markSidebarLessonCompleted(queryClient, slug, lessonId);
+			markLessonContentCompleted(queryClient, lessonId, locale);
+			markSidebarLessonCompleted(queryClient, slug, lessonId, locale);
 		},
 		onSettled: (_result, _error, { lessonId, slug }) => {
 			void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.courseSidebar(slug) });

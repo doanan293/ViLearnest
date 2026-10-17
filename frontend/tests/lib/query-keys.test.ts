@@ -1,6 +1,38 @@
 import { queryKeys } from "@/lib/query-keys";
 
 describe("queryKeys", () => {
+	it("ends course content keys with the locale", () => {
+		expect(queryKeys.dashboard.courseSidebar("ai-fast", "vi")).toEqual([
+			"dashboard",
+			"courseSidebar",
+			"ai-fast",
+			"vi",
+		]);
+		expect(queryKeys.dashboard.lessonContent("lesson-1", "en")).toEqual([
+			"dashboard",
+			"lessonContent",
+			"lesson-1",
+			"en",
+		]);
+		expect(queryKeys.courses.publicList("vi")).toEqual(["courses", "publicList", "vi"]);
+		expect(queryKeys.courses.publicDetail("ai-fast", "vi")).toEqual([
+			"courses",
+			"publicDetail",
+			"ai-fast",
+			"vi",
+		]);
+		expect(queryKeys.dashboard.enrolledCourses("vi")).toEqual([
+			"dashboard",
+			"enrolledCourses",
+			"vi",
+		]);
+		expect(queryKeys.dashboard.availableCourses("en")).toEqual([
+			"dashboard",
+			"availableCourses",
+			"en",
+		]);
+	});
+
 	it("returns stable profile keys", () => {
 		expect(queryKeys.profile.me()).toEqual(["profile", "me"]);
 		expect(queryKeys.profile.adminUser("user-1")).toEqual(["profile", "adminUser", "user-1"]);
