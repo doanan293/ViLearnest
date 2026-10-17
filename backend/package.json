@@ -13,6 +13,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:import-courses": "tsx --env-file=.env src/scripts/import-courses.ts",
+    "db:apply-translations": "tsx --env-file=.env src/scripts/apply-course-translations.ts",
     "biome:ci": "biome ci --no-errors-on-unmatched --files-ignore-unknown=true .",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write --unsafe .",

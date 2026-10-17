@@ -1,0 +1,316 @@
+{
+  "ai-fast": {
+    "course": {
+      "titleEn": "AI Fast",
+      "titleVi": "AI Fast",
+      "smallDescriptionEn": "Short videos on Claude Code, Git and AI agents, from the basics to hands-on practice.",
+      "smallDescriptionVi": "Các video ngắn về Claude Code, Git và AI agent, từ kiến thức nền tảng đến thực hành.",
+      "descriptionEn": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"A sequence of short videos on Claude Code, Git, DevOps and AI agents. You start with the basics: CLAUDE.md, MCP, hooks and skills. Then you move on to Git, CI/CD and the way agents are used in real products.\"}]}]}",
+      "descriptionVi": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Chuỗi video ngắn về Claude Code, Git, DevOps và AI agent. Bạn bắt đầu từ những phần cơ bản: CLAUDE.md, MCP, hooks và skills. Sau đó bạn chuyển sang Git, CI/CD và cách agent được dùng trong sản phẩm thực tế.\"}]}]}"
+    },
+    "chapters": {
+      "1": {
+        "titleEn": "Chapter 1: Claude Code Basics & How It Works",
+        "titleVi": "Chương 1: Claude Code cơ bản & Hoạt động"
+      },
+      "2": {
+        "titleEn": "Chapter 2: Supporting Git & DevOps Knowledge",
+        "titleVi": "Chương 2: Kiến thức Git & DevOps bổ trợ"
+      },
+      "3": {
+        "titleEn": "Chapter 3: Advanced Agents & Applications",
+        "titleVi": "Chương 3: Agent nâng cao & Ứng dụng"
+      }
+    },
+    "lessons": {
+      "1.1": {
+        "titleEn": "Lesson 1: The CLAUDE.md file",
+        "titleVi": "Bài 1: Tệp CLAUDE.md"
+      },
+      "1.2": {
+        "titleEn": "Lesson 2: MCP in Claude Code",
+        "titleVi": "Bài 2: MCP trong Claude Code"
+      },
+      "1.3": {
+        "titleEn": "Lesson 3: Hooks in Claude Code",
+        "titleVi": "Bài 3: Hooks trong Claude Code"
+      },
+      "1.4": {
+        "titleEn": "Lesson 4: What are skills?",
+        "titleVi": "Bài 4: Skills là gì?"
+      },
+      "1.5": {
+        "titleEn": "Lesson 5: How Claude Code Works",
+        "titleVi": "Bài 5: Claude Code hoạt động như thế nào"
+      },
+      "2.1": {
+        "titleEn": "Lesson 6: Git Explained in 100 Seconds",
+        "titleVi": "Bài 6: Git trong 100 giây"
+      },
+      "2.2": {
+        "titleEn": "Lesson 7: GitHub Pull Request in 100 Seconds - Git a FREE sticker 🔥",
+        "titleVi": "Bài 7: Pull Request trên GitHub trong 100 giây - nhận sticker MIỄN PHÍ 🔥"
+      },
+      "2.3": {
+        "titleEn": "Lesson 8: DevOps CI/CD Explained in 100 Seconds",
+        "titleVi": "Bài 8: DevOps CI/CD trong 100 giây"
+      },
+      "2.4": {
+        "titleEn": "Lesson 9: Context Management in Claude Code",
+        "titleVi": "Bài 9: Quản lý ngữ cảnh trong Claude Code"
+      },
+      "3.1": {
+        "titleEn": "Lesson 10: What is Claude Managed Agents?",
+        "titleVi": "Bài 10: Claude Managed Agents là gì?"
+      },
+      "3.2": {
+        "titleEn": "Lesson 11: How Anthropic uses Claude in Product Management",
+        "titleVi": "Bài 11: Anthropic dùng Claude trong quản lý sản phẩm như thế nào"
+      },
+      "3.3": {
+        "titleEn": "Lesson 12: Introducing agent view in Claude Code",
+        "titleVi": "Bài 12: Giới thiệu agent view trong Claude Code"
+      }
+    }
+  },
+  "100-seconds-of-artificial-intelligence": {
+    "course": {
+      "titleEn": "100 seconds of Artificial Intelligence",
+      "titleVi": "Trí tuệ nhân tạo trong 100 giây",
+      "smallDescriptionEn": "Easy tutorials for Beginners in Artificial Intelligence",
+      "smallDescriptionVi": "Các bài hướng dẫn dễ hiểu về trí tuệ nhân tạo cho người mới bắt đầu",
+      "descriptionEn": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Easy tutorials for Beginners in Artificial Intelligence\"}]}]}",
+      "descriptionVi": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Các bài hướng dẫn dễ hiểu về trí tuệ nhân tạo cho người mới bắt đầu.\"}]}]}"
+    },
+    "chapters": {
+      "1": {
+        "titleEn": "Chapter 1: Neural Network & AI Basics",
+        "titleVi": "Chương 1: Khái niệm cơ bản về Neural Network & AI"
+      },
+      "2": {
+        "titleEn": "Chapter 2: Python Basics",
+        "titleVi": "Chương 2: Lập trình Python cơ bản"
+      },
+      "3": {
+        "titleEn": "Chapter 3: Quantum Computing & Advanced Technology",
+        "titleVi": "Chương 3: Tính toán lượng tử & Công nghệ nâng cao"
+      }
+    },
+    "lessons": {
+      "1.1": {
+        "titleEn": "Lesson 1: What is a perceptron ? ( single layer)",
+        "titleVi": "Bài 1: Perceptron là gì? (một lớp)"
+      },
+      "1.2": {
+        "titleEn": "Lesson 2: What is a Convolutional Layer? (secret behind how computers recognize images.)",
+        "titleVi": "Bài 2: Lớp tích chập là gì? (bí mật giúp máy tính nhận diện hình ảnh)"
+      },
+      "1.3": {
+        "titleEn": "Lesson 3: Machine Learning vs Deep Learning — Visual Explanation (1 Minute)",
+        "titleVi": "Bài 3: Machine Learning và Deep Learning: giải thích trực quan (1 phút)"
+      },
+      "1.4": {
+        "titleEn": "Lesson 4: What is a Qubit? (Compared to a Neuron)",
+        "titleVi": "Bài 4: Qubit là gì? (so sánh với một neuron)"
+      },
+      "1.5": {
+        "titleEn": "Lesson 5: Can Quantum comp run Neural networks ?",
+        "titleVi": "Bài 5: Máy tính lượng tử có chạy được mạng nơ-ron không?"
+      },
+      "2.1": {
+        "titleEn": "Lesson 6: Python basics in just 2 minutes",
+        "titleVi": "Bài 6: Python cơ bản trong 2 phút"
+      },
+      "2.2": {
+        "titleEn": "Lesson 7: Learn python write first program !",
+        "titleVi": "Bài 7: Học Python: viết chương trình đầu tiên!"
+      },
+      "3.1": {
+        "titleEn": "Lesson 8: What is a Neural network ? Explained under 1 minute.",
+        "titleVi": "Bài 8: Mạng nơ-ron là gì? Giải thích trong 1 phút"
+      },
+      "3.2": {
+        "titleEn": "Lesson 9: Build an AI Assistant - Gemini API in 5 Minutes",
+        "titleVi": "Bài 9: Xây dựng trợ lý AI với Gemini API trong 5 phút"
+      },
+      "3.3": {
+        "titleEn": "Lesson 10: Master NER in 100 Seconds: Quick NLP Guide",
+        "titleVi": "Bài 10: Nắm vững NER trong 100 giây: hướng dẫn NLP nhanh"
+      },
+      "3.4": {
+        "titleEn": "Lesson 11: CUDA for Beginners | GPU Programming in 100 Seconds",
+        "titleVi": "Bài 11: CUDA cho người mới | Lập trình GPU trong 100 giây"
+      }
+    }
+  },
+  "github-copilot-cli-for-beginners": {
+    "course": {
+      "titleEn": "GitHub Copilot CLI for Beginners",
+      "titleVi": "GitHub Copilot CLI cho người mới bắt đầu",
+      "smallDescriptionEn": "Master the terminal with the GitHub Copilot CLI.",
+      "smallDescriptionVi": "Làm chủ terminal với GitHub Copilot CLI.",
+      "descriptionEn": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Master the terminal with the GitHub Copilot CLI. This beginner-friendly playlist takes you from installation to execution, showing you how to translate natural language into terminal commands instantly.\"}]}]}",
+      "descriptionVi": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Làm chủ terminal với GitHub Copilot CLI. Chuỗi video dành cho người mới này đi từ cài đặt đến sử dụng, hướng dẫn bạn chuyển câu lệnh bằng ngôn ngữ tự nhiên thành lệnh terminal ngay lập tức.\"}]}]}"
+    },
+    "chapters": {
+      "1": {
+        "titleEn": "Chapter 1: Getting Started with Copilot CLI",
+        "titleVi": "Chương 1: Làm quen với Copilot CLI"
+      },
+      "2": {
+        "titleEn": "Chapter 2: Advanced Usage & MCP Servers",
+        "titleVi": "Chương 2: Sử dụng nâng cao & MCP Servers"
+      }
+    },
+    "lessons": {
+      "1.1": {
+        "titleEn": "Lesson 1: Getting started with GitHub Copilot CLI | Tutorial for beginners",
+        "titleVi": "Bài 1: Bắt đầu với GitHub Copilot CLI | Hướng dẫn cho người mới"
+      },
+      "1.2": {
+        "titleEn": "Lesson 2: Interactive vs non-interactive modes | Copilot CLI for beginners",
+        "titleVi": "Bài 2: Chế độ tương tác và không tương tác | Copilot CLI cho người mới"
+      },
+      "1.3": {
+        "titleEn": "Lesson 3: A beginner's guide to Copilot CLI slash commands",
+        "titleVi": "Bài 3: Hướng dẫn slash command trong Copilot CLI cho người mới"
+      },
+      "2.1": {
+        "titleEn": "Lesson 4: Copilot CLI for beginners: Plan, delegate, and review",
+        "titleVi": "Bài 4: Copilot CLI cho người mới: lập kế hoạch, giao việc và review"
+      },
+      "2.2": {
+        "titleEn": "Lesson 5: How to use MCP servers with GitHub Copilot CLI | Tutorial for beginners",
+        "titleVi": "Bài 5: Cách dùng MCP server với GitHub Copilot CLI | Hướng dẫn cho người mới"
+      },
+      "2.3": {
+        "titleEn": "Lesson 6: How to use agents, skills, and instructions in Copilot CLI | Tutorial for beginners",
+        "titleVi": "Bài 6: Cách dùng agent, skill và instruction trong Copilot CLI | Hướng dẫn cho người mới"
+      }
+    }
+  },
+  "openai-codex-tutorial": {
+    "course": {
+      "titleEn": "OpenAI Codex Tutorial",
+      "titleVi": "Hướng dẫn OpenAI Codex",
+      "smallDescriptionEn": "Learn Codex Cloud, the Codex CLI and the Codex IDE extension step by step.",
+      "smallDescriptionVi": "Học Codex Cloud, Codex CLI và tiện ích Codex cho IDE theo từng bước.",
+      "descriptionEn": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"In this series you learn to use Codex Cloud to run remote tasks, the Codex CLI to work on projects locally, and the Codex IDE extension to use Codex inside VS Code.\"}]}]}",
+      "descriptionVi": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Trong chuỗi bài này, bạn học cách dùng Codex Cloud để chạy tác vụ từ xa, Codex CLI để làm việc với dự án trên máy, và tiện ích Codex cho IDE để dùng Codex ngay trong VS Code.\"}]}]}"
+    },
+    "chapters": {
+      "1": {
+        "titleEn": "Chapter 1: Introduction & Setup",
+        "titleVi": "Chương 1: Giới thiệu & Cài đặt"
+      },
+      "2": {
+        "titleEn": "Chapter 2: Codex CLI & Configuration Files",
+        "titleVi": "Chương 2: Codex CLI & Sử dụng file cấu hình"
+      },
+      "3": {
+        "titleEn": "Chapter 3: Advanced Features & Work Environments",
+        "titleVi": "Chương 3: Tính năng nâng cao & Môi trường làm việc"
+      }
+    },
+    "lessons": {
+      "1.1": {
+        "titleEn": "Lesson 1: Introduction & Setup",
+        "titleVi": "Bài 1: Giới thiệu & Cài đặt"
+      },
+      "1.2": {
+        "titleEn": "Lesson 2: Running Cloud Tasks",
+        "titleVi": "Bài 2: Chạy tác vụ trên Cloud"
+      },
+      "2.1": {
+        "titleEn": "Lesson 3: Code Code Review",
+        "titleVi": "Bài 3: Review code"
+      },
+      "2.2": {
+        "titleEn": "Lesson 4: Using the Codex CLI",
+        "titleVi": "Bài 4: Sử dụng Codex CLI"
+      },
+      "2.3": {
+        "titleEn": "Lesson 5: CLI Commands & Resuming Sessions",
+        "titleVi": "Bài 5: Lệnh CLI & tiếp tục phiên làm việc"
+      },
+      "2.4": {
+        "titleEn": "Lesson 6: Using the AGENTS.md file",
+        "titleVi": "Bài 6: Sử dụng tệp AGENTS.md"
+      },
+      "3.1": {
+        "titleEn": "Lesson 7: Codex IDE Extension",
+        "titleVi": "Bài 7: Tiện ích Codex cho IDE"
+      },
+      "3.2": {
+        "titleEn": "Lesson 8: Context, Reasoning & TODO's",
+        "titleVi": "Bài 8: Ngữ cảnh, suy luận & danh sách TODO"
+      },
+      "3.3": {
+        "titleEn": "Lesson 9: MCP Servers",
+        "titleVi": "Bài 9: MCP Server"
+      },
+      "3.4": {
+        "titleEn": "Lesson 10: Delegating Tasks to the Cloud",
+        "titleVi": "Bài 10: Giao tác vụ lên Cloud"
+      },
+      "3.5": {
+        "titleEn": "Lesson 11: Running Tasks in Parallel",
+        "titleVi": "Bài 11: Chạy nhiều tác vụ song song"
+      }
+    }
+  },
+  "vibe-coding-in-ai-studio": {
+    "course": {
+      "titleEn": "Vibe Coding in AI Studio",
+      "titleVi": "Vibe Coding trong AI Studio",
+      "smallDescriptionEn": "Build with AI Studio's new vibe coding features.",
+      "smallDescriptionVi": "Xây dựng ứng dụng với các tính năng vibe coding mới của AI Studio.",
+      "descriptionEn": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Build with AI Studio's new vibe coding features. From editing with your voice to integrating Google-grade products like Maps, we have everything you need to get started integrating AI into your apps. Start building AI apps → https://goo.gle/4oARdmR\"}]}]}",
+      "descriptionVi": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Xây dựng ứng dụng với các tính năng vibe coding mới của AI Studio. Từ chỉnh sửa bằng giọng nói đến tích hợp các sản phẩm của Google như Maps, khóa học có mọi thứ bạn cần để bắt đầu đưa AI vào ứng dụng. Bắt đầu xây dựng ứng dụng AI → https://goo.gle/4oARdmR\"}]}]}"
+    },
+    "chapters": {
+      "1": {
+        "titleEn": "Chapter 1: Vibe Coding Concepts & First Look",
+        "titleVi": "Chương 1: Khái niệm & Trải nghiệm Vibe Coding"
+      },
+      "2": {
+        "titleEn": "Chapter 2: Hands-on Practice & Real-world Apps",
+        "titleVi": "Chương 2: Thực hành & Ứng dụng thực tế"
+      }
+    },
+    "lessons": {
+      "1.1": {
+        "titleEn": "Lesson 1: Introducing the new vibe coding in AI Studio",
+        "titleVi": "Bài 1: Giới thiệu vibe coding mới trong AI Studio"
+      },
+      "1.2": {
+        "titleEn": "Lesson 2: Overview of the new vibe coding experience in AI Studio",
+        "titleVi": "Bài 2: Tổng quan trải nghiệm vibe coding mới trong AI Studio"
+      },
+      "1.3": {
+        "titleEn": "Lesson 3: Introducing Annotation Mode in AI Studio",
+        "titleVi": "Bài 3: Giới thiệu Annotation Mode trong AI Studio"
+      },
+      "1.4": {
+        "titleEn": "Lesson 4: Vibe Code with Your Voice in Google AI Studio",
+        "titleVi": "Bài 4: Vibe code bằng giọng nói trong Google AI Studio"
+      },
+      "2.1": {
+        "titleEn": "Lesson 5: Build an AI Restaurant Finder in 60 Seconds with Gemini & Google Maps Grounding in AI Studio",
+        "titleVi": "Bài 5: Xây dựng ứng dụng tìm nhà hàng bằng AI trong 60 giây với Gemini & Google Maps Grounding trong AI Studio"
+      },
+      "2.2": {
+        "titleEn": "Lesson 6: Explore the new App Gallery in AI Studio",
+        "titleVi": "Bài 6: Khám phá App Gallery mới trong AI Studio"
+      },
+      "2.3": {
+        "titleEn": "Lesson 7: Introducing Google Maps Grounding in the Gemini API",
+        "titleVi": "Bài 7: Giới thiệu Google Maps Grounding trong Gemini API"
+      },
+      "2.4": {
+        "titleEn": "Lesson 8: New & Improved API Key and Project Management in Google AI Studio",
+        "titleVi": "Bài 8: Quản lý API key và dự án mới, cải tiến trong Google AI Studio"
+      }
+    }
+  }
+}
