@@ -8,11 +8,12 @@ import { eq } from "drizzle-orm";
 import { config } from "../config/index.js";
 import { db } from "../db/index.js";
 import * as schema from "../db/schema.js";
+import { chapterTitleValues, courseTextValues, lessonTitleValues, type ManifestText } from "./import-course-text.js";
 
 const ADMIN_EMAIL = "andoan020903@gmail.com";
 
 interface ManifestLesson {
-  title: string;
+  title: ManifestText;
   position: number;
   videoFile: string;
   thumbnailFile?: string;
@@ -20,15 +21,17 @@ interface ManifestLesson {
 }
 
 interface ManifestChapter {
-  title: string;
+  title: ManifestText;
   position: number;
   lessons: ManifestLesson[];
 }
 
 interface PreparedLesson {
   id: string;
-  title: string;
-  description: string;
+  titleEn: string | null;
+  titleVi: string | null;
+  // YouTube descriptions are English.
+  descriptionEn: string | null;
   thumbnailKey: string | null;
   videoKey: string;
   position: number;
@@ -37,7 +40,8 @@ interface PreparedLesson {
 
 interface PreparedChapter {
   id: string;
-  title: string;
+  titleEn: string | null;
+  titleVi: string | null;
   position: number;
   courseId: string;
   lessons: PreparedLesson[];
@@ -47,29 +51,71 @@ const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(CURRENT_DIR, "../..");
 const SAMPLE_COURSES_DIR = path.join(ROOT_DIR, "sample-courses");
 
-const CHAPTERS_MAPPING: Record<string, { title: string; startPosition: number }[]> = {
+const CHAPTERS_MAPPING: Record<string, { title: { en: string; vi: string }; startPosition: number }[]> = {
   "openai-codex-tutorial": [
-    { title: "Chương 1: Giới thiệu & Cài đặt", startPosition: 1 },
-    { title: "Chương 2: Codex CLI & Sử dụng file cấu hình", startPosition: 3 },
-    { title: "Chương 3: Tính năng nâng cao & Môi trường làm việc", startPosition: 7 },
+    { title: { en: "Chapter 1: Introduction & Setup", vi: "Chương 1: Giới thiệu & Cài đặt" }, startPosition: 1 },
+    {
+      title: { en: "Chapter 2: Codex CLI & Configuration Files", vi: "Chương 2: Codex CLI & Sử dụng file cấu hình" },
+      startPosition: 3,
+    },
+    {
+      title: {
+        en: "Chapter 3: Advanced Features & Work Environments",
+        vi: "Chương 3: Tính năng nâng cao & Môi trường làm việc",
+      },
+      startPosition: 7,
+    },
   ],
   "vibe-coding-ai-studio": [
-    { title: "Chương 1: Khái niệm & Trải nghiệm Vibe Coding", startPosition: 1 },
-    { title: "Chương 2: Thực hành & Ứng dụng thực tế", startPosition: 5 },
+    {
+      title: {
+        en: "Chapter 1: Vibe Coding Concepts & First Look",
+        vi: "Chương 1: Khái niệm & Trải nghiệm Vibe Coding",
+      },
+      startPosition: 1,
+    },
+    {
+      title: { en: "Chapter 2: Hands-on Practice & Real-world Apps", vi: "Chương 2: Thực hành & Ứng dụng thực tế" },
+      startPosition: 5,
+    },
   ],
   "ai-in-100-seconds": [
-    { title: "Chương 1: Khái niệm cơ bản về Neural Network & AI", startPosition: 1 },
-    { title: "Chương 2: Lập trình Python cơ bản", startPosition: 6 },
-    { title: "Chương 3: Tính toán lượng tử & Công nghệ nâng cao", startPosition: 8 },
+    {
+      title: { en: "Chapter 1: Neural Network & AI Basics", vi: "Chương 1: Khái niệm cơ bản về Neural Network & AI" },
+      startPosition: 1,
+    },
+    { title: { en: "Chapter 2: Python Basics", vi: "Chương 2: Lập trình Python cơ bản" }, startPosition: 6 },
+    {
+      title: {
+        en: "Chapter 3: Quantum Computing & Advanced Technology",
+        vi: "Chương 3: Tính toán lượng tử & Công nghệ nâng cao",
+      },
+      startPosition: 8,
+    },
   ],
   "github-copilot-cli": [
-    { title: "Chương 1: Làm quen với Copilot CLI", startPosition: 1 },
-    { title: "Chương 2: Sử dụng nâng cao & MCP Servers", startPosition: 4 },
+    {
+      title: { en: "Chapter 1: Getting Started with Copilot CLI", vi: "Chương 1: Làm quen với Copilot CLI" },
+      startPosition: 1,
+    },
+    {
+      title: { en: "Chapter 2: Advanced Usage & MCP Servers", vi: "Chương 2: Sử dụng nâng cao & MCP Servers" },
+      startPosition: 4,
+    },
   ],
   "ai-fast": [
-    { title: "Chương 1: Claude Code cơ bản & Hoạt động", startPosition: 1 },
-    { title: "Chương 2: Kiến thức Git & DevOps bổ trợ", startPosition: 6 },
-    { title: "Chương 3: Agent nâng cao & Ứng dụng", startPosition: 10 },
+    {
+      title: { en: "Chapter 1: Claude Code Basics & How It Works", vi: "Chương 1: Claude Code cơ bản & Hoạt động" },
+      startPosition: 1,
+    },
+    {
+      title: { en: "Chapter 2: Supporting Git & DevOps Knowledge", vi: "Chương 2: Kiến thức Git & DevOps bổ trợ" },
+      startPosition: 6,
+    },
+    {
+      title: { en: "Chapter 3: Advanced Agents & Applications", vi: "Chương 3: Agent nâng cao & Ứng dụng" },
+      startPosition: 10,
+    },
   ],
 };
 
@@ -241,25 +287,14 @@ function markdownToTipTapJson(markdownText: string): string {
   });
 }
 
-async function cleanDescription(markdownPath: string): Promise<string> {
+async function cleanDescription(markdownPath: string): Promise<string | null> {
   if (!(await fileExists(markdownPath))) {
-    return markdownToTipTapJson("Nội dung bài học sẽ được cập nhật.");
+    return null;
   }
   const content = await readFile(markdownPath, "utf8");
   // Strip the first markdown heading if present
   const cleaned = content.replace(/^#\s+.+$/m, "").trim();
   return markdownToTipTapJson(cleaned);
-}
-
-function formatLessonTitle(originalTitle: string, globalPosition: number): string {
-  let clean = originalTitle.trim();
-  // Strip common redundant prefixes
-  clean = clean.replace(/^OpenAI\s+Codex\s+Tutorial\s+#\d+\s*-\s*/i, "");
-  // Capitalize first letter
-  if (clean.length > 0) {
-    clean = clean.charAt(0).toUpperCase() + clean.slice(1);
-  }
-  return `Bài ${globalPosition}: ${clean}`;
 }
 
 async function importCourse(courseSlug: string, adminUserId: string) {
@@ -303,13 +338,20 @@ async function importCourse(courseSlug: string, adminUserId: string) {
   // Pre-generate IDs and S3 keys for insertion later
   const courseId = crypto.randomUUID();
   const courseDescPath = path.join(courseDir, manifestCourse.descriptionMarkdownPath || "course.md");
-  const courseDescription = await cleanDescription(courseDescPath);
+  const courseDescription = {
+    en: await cleanDescription(courseDescPath),
+    vi: manifestCourse.descriptionMarkdownPathVi
+      ? await cleanDescription(path.join(courseDir, manifestCourse.descriptionMarkdownPathVi))
+      : null,
+  };
 
   // Extract all lessons from manifest chapters
   const allLessons = (chapters as ManifestChapter[]).flatMap((ch) => ch.lessons || []);
 
   // Get chapters configuration for this course
-  const configChapters = CHAPTERS_MAPPING[courseSlug] || [{ title: "Nội dung khóa học", startPosition: 1 }];
+  const configChapters = CHAPTERS_MAPPING[courseSlug] || [
+    { title: { en: "Course content", vi: "Nội dung khóa học" }, startPosition: 1 },
+  ];
 
   // Sort configChapters by startPosition ascending
   const sortedConfigChapters = [...configChapters].sort((a, b) => a.startPosition - b.startPosition);
@@ -353,13 +395,10 @@ async function importCourse(courseSlug: string, adminUserId: string) {
       const lessonDescPath = path.join(courseDir, manifestLesson.descriptionMarkdownPath);
       const lessonDesc = await cleanDescription(lessonDescPath);
 
-      // Number and clean the title
-      const prefixedTitle = formatLessonTitle(manifestLesson.title, globalPos);
-
       preparedLessons.push({
         id: lessonId,
-        title: prefixedTitle,
-        description: lessonDesc,
+        ...lessonTitleValues(manifestLesson.title, globalPos),
+        descriptionEn: lessonDesc,
         thumbnailKey: thumbnailKey || null,
         videoKey: videoKey,
         position: localPos++, // Scoped per-chapter
@@ -369,7 +408,7 @@ async function importCourse(courseSlug: string, adminUserId: string) {
 
     preparedChapters.push({
       id: chapterId,
-      title: configChapter.title,
+      ...chapterTitleValues(configChapter.title),
       position: i + 1, // Chapter index starts at 1
       courseId: courseId,
       lessons: preparedLessons,
@@ -394,39 +433,39 @@ async function importCourse(courseSlug: string, adminUserId: string) {
     price: Number(manifestCourse.price) || 0,
   };
 
-  console.log(`[DB] Starting transaction to insert course: ${manifestCourse.title}`);
+  console.log(`[DB] Starting transaction to insert course: ${manifestCourse.slug}`);
   await db.transaction(async (tx) => {
     await tx.insert(schema.course).values({
       id: courseId,
-      title: manifestCourse.title,
-      description: courseDescription,
+      ...courseTextValues(manifestCourse, courseDescription),
       fileKey: s3CoverKey,
       price: meta.price,
       duration: Number(manifestCourse.duration) || 0,
       level: meta.level,
       stripePriceId: `mock-price-${manifestCourse.slug}`,
       category: meta.category,
-      smallDescription: manifestCourse.smallDescription || "",
       slug: manifestCourse.slug,
       status: "Published",
       userId: adminUserId,
     });
 
     for (const preparedChapter of preparedChapters) {
-      console.log(`[DB] Inserting Chapter: ${preparedChapter.title}`);
+      console.log(`[DB] Inserting Chapter: ${preparedChapter.titleEn ?? preparedChapter.titleVi}`);
       await tx.insert(schema.chapter).values({
         id: preparedChapter.id,
-        title: preparedChapter.title,
+        titleEn: preparedChapter.titleEn,
+        titleVi: preparedChapter.titleVi,
         position: preparedChapter.position,
         courseId: preparedChapter.courseId,
       });
 
       for (const preparedLesson of preparedChapter.lessons) {
-        console.log(`[DB] Inserting Lesson: ${preparedLesson.title}`);
+        console.log(`[DB] Inserting Lesson: ${preparedLesson.titleEn ?? preparedLesson.titleVi}`);
         await tx.insert(schema.lesson).values({
           id: preparedLesson.id,
-          title: preparedLesson.title,
-          description: preparedLesson.description,
+          titleEn: preparedLesson.titleEn,
+          titleVi: preparedLesson.titleVi,
+          descriptionEn: preparedLesson.descriptionEn,
           thumbnailKey: preparedLesson.thumbnailKey,
           videoKey: preparedLesson.videoKey,
           position: preparedLesson.position,
