@@ -2,7 +2,7 @@
 
 import { ArrowRight, Eye, MoreVertical, Pencil, School, TimerIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,6 +17,9 @@ import type { AdminCourseType } from "@/features/courses";
 import { useAdminCourseIntentPrefetch } from "@/features/courses/hooks/use-intent-prefetch";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/pathname";
+import { levelLabel } from "@/lib/course-labels";
+import { pickLocalized } from "@/lib/localized-text";
 
 interface iAppProps {
 	data: AdminCourseType;
@@ -25,6 +28,8 @@ interface iAppProps {
 export function AdminCourseCard({ data }: iAppProps) {
 	const thumbnailUrl = useConstructUrl(data.fileKey);
 	const t = useTranslations("admin");
+	const tCourses = useTranslations("courses");
+	const locale = useLocale() as Locale;
 	const prefetchAdminCourse = useAdminCourseIntentPrefetch(data.id);
 
 	return (
@@ -80,10 +85,10 @@ export function AdminCourseCard({ data }: iAppProps) {
 					onPointerEnter={prefetchAdminCourse}
 					onTouchStart={prefetchAdminCourse}
 				>
-					{data.title}
+					{pickLocalized(data, "title", locale) ?? data.title}
 				</Link>
 				<p className="line-clamp-2 text-sm text-muted-foreground leading-tight mt-2">
-					{data.smallDescription}
+					{pickLocalized(data, "smallDescription", locale)}
 				</p>
 				<div className="mt-4 flex items-center gap-x-5">
 					<div className="flex items-center gap-x-2">
@@ -92,7 +97,7 @@ export function AdminCourseCard({ data }: iAppProps) {
 					</div>
 					<div className="flex items-center gap-x-2">
 						<School className="size-6 p-1 rounded-md text-primary bg-primary/10" />
-						<p className="text-sm text-muted-foreground">{data.level}</p>
+						<p className="text-sm text-muted-foreground">{levelLabel(tCourses, data.level)}</p>
 					</div>
 				</div>
 

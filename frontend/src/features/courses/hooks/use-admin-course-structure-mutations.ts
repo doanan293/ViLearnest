@@ -1,7 +1,7 @@
 import { type QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { queryKeys } from "@/lib/query-keys";
-import type { LessonSchemaType } from "@/lib/zodSchemas";
+import type { LessonBody } from "@/lib/zodSchemas";
 
 type OrderedItem = { id: string; position: number };
 type StructureChapterInput = { id: string; title: string; position: number };
@@ -268,7 +268,7 @@ export function useUpdateLessonMutation(courseId: string, lessonId: string) {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (values: LessonSchemaType) => api.admin.updateLesson(lessonId, values),
+		mutationFn: (values: LessonBody) => api.admin.updateLesson(lessonId, values),
 		onSuccess: () => {
 			void queryClient.invalidateQueries({ queryKey: queryKeys.admin.lesson(lessonId) });
 			void queryClient.invalidateQueries({ queryKey: queryKeys.admin.courseStructure(courseId) });

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { BilingualNameFields } from "@/components/admin/BilingualNameFields";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -14,18 +15,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { useCreateChapterMutation } from "@/features/courses/hooks/use-admin-course-structure-mutations";
 import type { CreatedChapter } from "@/lib/api";
-import { type ChapterSchemaType, chapterSchema } from "@/lib/zodSchemas";
+import { type ChapterSchemaType, chapterSchema, emptyToNull } from "@/lib/zodSchemas";
 
 export function NewChapterModal({
 	courseId,
@@ -42,13 +35,19 @@ export function NewChapterModal({
 	const form = useForm<ChapterSchemaType>({
 		resolver: zodResolver(chapterSchema) as Resolver<ChapterSchemaType>,
 		defaultValues: {
-			name: "",
+			nameEn: "",
+			nameVi: "",
 			courseId: courseId,
 		},
 	});
 
 	async function onSubmit(values: ChapterSchemaType) {
-		createChapter.mutate(values, {
+		const body = {
+			...values,
+			nameEn: emptyToNull(values.nameEn),
+			nameVi: emptyToNull(values.nameVi),
+		};
+		createChapter.mutate(body, {
 			onSuccess: (result) => {
 				if (result.status === "success") {
 					toast.success(result.message);
@@ -87,19 +86,7 @@ export function NewChapterModal({
 				</DialogHeader>
 				<Form {...form}>
 					<form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>{t("name")}</FormLabel>
-									<FormControl>
-										<Input placeholder={t("chapterName")} {...field}></Input>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						<BilingualNameFields control={form.control} placeholder={t("chapterName")} />
 						<DialogFooter>
 							<Button disabled={createChapter.isPending} type="submit">
 								{createChapter.isPending ? t("saving") : t("saveChapter")}

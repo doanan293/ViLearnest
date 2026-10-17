@@ -15,6 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { getIndividualCourse } from "@/features/courses";
+import { categoryLabel, levelLabel } from "@/lib/course-labels";
 import { env } from "@/lib/env";
 import { EnrollmentCta } from "./_components/EnrollmentCta";
 
@@ -48,11 +49,11 @@ export default async function SlugPage({ params }: { params: Params }) {
 					<div className="flex flex-wrap gap-3">
 						<Badge className="flex items-center gap-1 px-3 py-1">
 							<IconChartBar className="size-4" />
-							<span>{course.level}</span>
+							<span>{levelLabel(t, course.level)}</span>
 						</Badge>
 						<Badge className="flex items-center gap-1 px-3 py-1">
 							<IconCategory className="size-4" />
-							<span>{course.category}</span>
+							<span>{categoryLabel(t, course.category)}</span>
 						</Badge>
 						<Badge className="flex items-center gap-1 px-3 py-1">
 							<IconClock className="size-4" />
@@ -64,7 +65,7 @@ export default async function SlugPage({ params }: { params: Params }) {
 					<Separator className="my-8" />
 					<div className="space-y-6">
 						<h2 className="text-3xl font-semibold tracking-tight">{t("descriptionTitle")}</h2>
-						<RenderDescription json={JSON.parse(course.description)} />
+						<RenderDescription json={course.description ? JSON.parse(course.description) : null} />
 					</div>
 				</div>
 				<div className="mt-12 space-y-6">
@@ -168,7 +169,7 @@ export default async function SlugPage({ params }: { params: Params }) {
 										</div>
 										<div>
 											<p>{t("difficultyLevel")}</p>
-											<p className="text-sm text-muted-foreground">{course.level}</p>
+											<p className="text-sm text-muted-foreground">{levelLabel(t, course.level)}</p>
 										</div>
 									</div>
 									<div className="flex items-center gap-3">
@@ -177,7 +178,9 @@ export default async function SlugPage({ params }: { params: Params }) {
 										</div>
 										<div>
 											<p>{t("category")}</p>
-											<p className="text-sm text-muted-foreground">{course.category}</p>
+											<p className="text-sm text-muted-foreground">
+												{categoryLabel(t, course.category)}
+											</p>
 										</div>
 									</div>
 									<div className="flex items-center gap-3">

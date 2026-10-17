@@ -17,10 +17,12 @@ export async function adminGetLesson(id: string) {
 		console.warn("Failed to fetch admin lesson, returning fallback:", error);
 		return {
 			id: "mock-lesson-id",
-			title: "Fallback Lesson Title",
+			titleEn: "Fallback Lesson Title",
+			titleVi: null,
 			videoKey: "fallback-video-key",
 			thumbnailKey: "fallback-thumbnail-key",
-			description: "Fallback description",
+			descriptionEn: null,
+			descriptionVi: null,
 			position: 1,
 		};
 	}

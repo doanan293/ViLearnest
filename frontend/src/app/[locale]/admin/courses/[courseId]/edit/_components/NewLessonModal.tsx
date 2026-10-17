@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { BilingualNameFields } from "@/components/admin/BilingualNameFields";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -14,18 +15,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { useCreateLessonMutation } from "@/features/courses/hooks/use-admin-course-structure-mutations";
 import type { CreatedLesson } from "@/lib/api";
-import { type LessonSchemaType, lessonSchema } from "@/lib/zodSchemas";
+import { emptyToNull, type LessonSchemaType, lessonSchema } from "@/lib/zodSchemas";
 
 export function NewLessonModal({
 	courseId,
@@ -43,14 +36,20 @@ export function NewLessonModal({
 	const form = useForm<LessonSchemaType>({
 		resolver: zodResolver(lessonSchema) as Resolver<LessonSchemaType>,
 		defaultValues: {
-			name: "",
+			nameEn: "",
+			nameVi: "",
 			courseId: courseId,
 			chapterId: chapterId,
 		},
 	});
 
 	async function onSubmit(values: LessonSchemaType) {
-		createLesson.mutate(values, {
+		const body = {
+			...values,
+			nameEn: emptyToNull(values.nameEn),
+			nameVi: emptyToNull(values.nameVi),
+		};
+		createLesson.mutate(body, {
 			onSuccess: (result) => {
 				if (result.status === "success") {
 					toast.success(result.message);
@@ -86,19 +85,7 @@ export function NewLessonModal({
 				</DialogHeader>
 				<Form {...form}>
 					<form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>{t("name")}</FormLabel>
-									<FormControl>
-										<Input placeholder={t("lessonName")} {...field}></Input>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						<BilingualNameFields control={form.control} placeholder={t("lessonName")} />
 						<DialogFooter>
 							<Button disabled={createLesson.isPending} type="submit">
 								{createLesson.isPending ? t("saving") : t("saveChange")}

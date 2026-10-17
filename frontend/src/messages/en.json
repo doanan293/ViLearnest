@@ -119,7 +119,26 @@
 		"certificate": "Certificate of completion",
 		"watchCourse": "Watch Course",
 		"moneyBackGuarantee": "30-day money-back guarantee",
-		"enrollNow": "Enroll Now!"
+		"enrollNow": "Enroll Now!",
+		"levels": {
+			"Beginner": "Beginner",
+			"Intermediate": "Intermediate",
+			"Advanced": "Advanced"
+		},
+		"categories": {
+			"development": "Development",
+			"business": "Business",
+			"financeAccounting": "Finance & Accounting",
+			"itSoftware": "IT & Software",
+			"officeProductivity": "Office Productivity",
+			"personalDevelopment": "Personal Development",
+			"design": "Design",
+			"marketing": "Marketing",
+			"healthFitness": "Health & Fitness",
+			"lifestyle": "Lifestyle",
+			"music": "Music",
+			"teachingAcademics": "Teaching & Academics"
+		}
 	},
 	"dashboard": {
 		"enrolledCourses": "Enrolled Courses",

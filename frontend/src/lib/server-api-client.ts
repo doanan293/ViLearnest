@@ -31,18 +31,21 @@ type LessonProgressResponse = {
 type CourseLevel = "Beginner" | "Intermediate" | "Advanced";
 type CourseStatus = "Draft" | "Published" | "Archived";
 
+// Public reads are resolved to the page locale; a text field is null when neither language has it.
 type BaseCourseResponse = {
 	id: string;
 	title: string;
-	description: string;
+	description: string | null;
 	fileKey: string;
 	price: number;
 	duration: number;
 	level: CourseLevel;
 	category: string;
-	smallDescription: string;
+	smallDescription: string | null;
 	slug: string;
 };
+
+type BilingualText = { titleEn: string | null; titleVi: string | null };
 
 type PublicCourseResponse = BaseCourseResponse & {
 	chapter: Array<{
@@ -87,27 +90,38 @@ type LessonContentResponse = {
 	};
 };
 
-type AdminCourseResponse = BaseCourseResponse & {
-	status: CourseStatus;
-	chapter: Array<{
-		id: string;
-		title: string;
-		position: number;
-		lessons: Array<{
-			id: string;
-			title: string;
-			description: string | null;
-			thumbnailKey: string | null;
-			position: number;
-			videoKey: string | null;
-		}>;
-	}>;
-};
+// Admin reads carry both languages for editing plus a display title in the admin's language.
+export type AdminCourseResponse = Omit<BaseCourseResponse, "description" | "smallDescription"> &
+	BilingualText & {
+		smallDescriptionEn: string | null;
+		smallDescriptionVi: string | null;
+		descriptionEn: string | null;
+		descriptionVi: string | null;
+		status: CourseStatus;
+		chapter: Array<
+			BilingualText & {
+				id: string;
+				title: string;
+				position: number;
+				lessons: Array<
+					BilingualText & {
+						id: string;
+						title: string;
+						descriptionEn: string | null;
+						descriptionVi: string | null;
+						thumbnailKey: string | null;
+						position: number;
+						videoKey: string | null;
+					}
+				>;
+			}
+		>;
+	};
 
-type AdminLessonResponse = {
+type AdminLessonResponse = BilingualText & {
 	id: string;
-	title: string;
-	description: string | null;
+	descriptionEn: string | null;
+	descriptionVi: string | null;
 	thumbnailKey: string | null;
 	videoKey: string | null;
 	position: number;

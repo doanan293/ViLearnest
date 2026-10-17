@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { EnrolledCourseType } from "@/features/users";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { Link } from "@/i18n/navigation";
+import { levelLabel } from "@/lib/course-labels";
 import { useCourseProgress } from "../hooks/use-course-progress";
 import { useCourseSidebarIntentPrefetch } from "../hooks/use-intent-prefetch";
 
@@ -26,7 +27,9 @@ export function CourseProgressCard({ data }: iAppProps) {
 	});
 	return (
 		<Card className="group relative py-0 gap-0">
-			<Badge className="absolute top-2 right-2 z-10">{data.Course.level}</Badge>
+			<Badge className="absolute top-2 right-2 z-10">
+				{levelLabel(tCourses, data.Course.level)}
+			</Badge>
 			<Image
 				width={600}
 				height={400}

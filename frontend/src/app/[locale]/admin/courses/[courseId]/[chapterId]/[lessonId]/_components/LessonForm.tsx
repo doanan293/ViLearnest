@@ -3,8 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { Uploader } from "@/components/file-uploader/Uploader";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -22,7 +24,8 @@ import type { AdminLessonType } from "@/features/courses";
 import { adminLessonQueryOptions } from "@/features/courses/hooks/use-admin-course-queries";
 import { useUpdateLessonMutation } from "@/features/courses/hooks/use-admin-course-structure-mutations";
 import { Link } from "@/i18n/navigation";
-import { type LessonSchemaType, lessonSchema } from "@/lib/zodSchemas";
+import type { Locale } from "@/i18n/pathname";
+import { emptyToNull, type LessonSchemaType, lessonSchema } from "@/lib/zodSchemas";
 
 interface iAppProps {
 	data: AdminLessonType;
@@ -36,20 +39,34 @@ export function LessonForm({ data, chapterId, courseId }: iAppProps) {
 	const t = useTranslations("admin");
 	const tErrors = useTranslations("errors");
 
+	const [locale, setLocale] = useState<Locale>("en");
+	const suffix = locale === "en" ? "En" : "Vi";
+
 	const form = useForm<LessonSchemaType>({
 		resolver: zodResolver(lessonSchema) as Resolver<LessonSchemaType>,
 		defaultValues: {
-			name: lesson.title,
+			nameEn: lesson.titleEn ?? "",
+			nameVi: lesson.titleVi ?? "",
 			chapterId: chapterId,
 			courseId: courseId,
-			description: lesson.description ?? undefined,
+			descriptionEn: lesson.descriptionEn ?? "",
+			descriptionVi: lesson.descriptionVi ?? "",
 			videoKey: lesson.videoKey ?? undefined,
 			thumbnailKey: lesson.thumbnailKey ?? undefined,
 		},
 	});
+	const [nameEn, nameVi] = form.watch(["nameEn", "nameVi"]);
 
 	function onSubmit(values: LessonSchemaType) {
-		updateLesson.mutate(values, {
+		// Both languages are always sent, so editing one tab keeps the other one's text.
+		const body = {
+			...values,
+			nameEn: emptyToNull(values.nameEn),
+			nameVi: emptyToNull(values.nameVi),
+			descriptionEn: emptyToNull(values.descriptionEn),
+			descriptionVi: emptyToNull(values.descriptionVi),
+		};
+		updateLesson.mutate(body, {
 			onSuccess: (result) => {
 				if (result.status === "success") {
 					toast.success(result.message);
@@ -80,9 +97,15 @@ export function LessonForm({ data, chapterId, courseId }: iAppProps) {
 				<CardContent>
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+							<LocaleTabs
+								value={locale}
+								onChange={setLocale}
+								hasContent={{ en: Boolean(nameEn?.trim()), vi: Boolean(nameVi?.trim()) }}
+							/>
 							<FormField
+								key={`name${suffix}`}
 								control={form.control}
-								name="name"
+								name={`name${suffix}`}
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{t("lessonNameLabel")}</FormLabel>
@@ -94,8 +117,9 @@ export function LessonForm({ data, chapterId, courseId }: iAppProps) {
 								)}
 							/>
 							<FormField
+								key={`description${suffix}`}
 								control={form.control}
-								name="description"
+								name={`description${suffix}`}
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{t("description")}</FormLabel>

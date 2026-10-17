@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
 import { usePathname } from "@/i18n/navigation";
+import { categoryLabel } from "@/lib/course-labels";
 import { useCourseSidebarQuery } from "../hooks/use-course-player-query";
 import { useCourseProgress } from "../hooks/use-course-progress";
 import { LessonItem } from "./LessonItem";
@@ -12,6 +13,7 @@ import { LessonItem } from "./LessonItem";
 export function CourseSidebar({ slug }: { slug: string }) {
 	const pathname = usePathname();
 	const t = useTranslations("dashboard");
+	const tCourses = useTranslations("courses");
 	const currentLessonId = pathname.split("/").pop();
 	const { data } = useCourseSidebarQuery(slug);
 	const course = data?.course;
@@ -33,7 +35,9 @@ export function CourseSidebar({ slug }: { slug: string }) {
 					</div>
 					<div className="flex-1 min-w-0">
 						<h1 className="font-semibold text-base leading-tight truncate">{course.title}</h1>
-						<p className="text-xs text-muted-foreground mt-1 truncate">{course.category}</p>
+						<p className="text-xs text-muted-foreground mt-1 truncate">
+							{categoryLabel(tCourses, course.category)}
+						</p>
 					</div>
 				</div>
 				<div className="space-y-2">

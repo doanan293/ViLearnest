@@ -11,9 +11,9 @@ import type { Locale } from "@/i18n/pathname";
 import { http } from "@/lib/api-client";
 import type { ApiResponse } from "@/lib/types";
 import type {
-	ChapterSchemaType,
+	ChapterBody,
 	CourseSchemaType,
-	LessonSchemaType,
+	LessonBody,
 	ProfileSchemaType,
 } from "@/lib/zodSchemas";
 
@@ -79,7 +79,7 @@ export const api = {
 			http.delete<ApiResponse>(`/api/v1/admin/courses/${courseId}`),
 
 		// Chapters
-		createChapter: (data: ChapterSchemaType) =>
+		createChapter: (data: ChapterBody) =>
 			http.post<CreateChapterResponse>(`/api/v1/admin/courses/${data.courseId}/chapters`, data),
 		deleteChapter: (courseId: string, chapterId: string) =>
 			http.delete<ApiResponse>(`/api/v1/admin/chapters/${chapterId}`, { body: { courseId } }),
@@ -90,9 +90,9 @@ export const api = {
 			}),
 
 		// Lessons
-		createLesson: (data: LessonSchemaType) =>
+		createLesson: (data: LessonBody) =>
 			http.post<CreateLessonResponse>(`/api/v1/admin/chapters/${data.chapterId}/lessons`, data),
-		updateLesson: (lessonId: string, data: LessonSchemaType) =>
+		updateLesson: (lessonId: string, data: LessonBody) =>
 			http.put<ApiResponse>(`/api/v1/admin/lessons/${lessonId}`, data),
 		deleteLesson: (courseId: string, chapterId: string, lessonId: string) =>
 			http.delete<ApiResponse>(`/api/v1/admin/lessons/${lessonId}`, {

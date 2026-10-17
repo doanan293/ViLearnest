@@ -11,6 +11,7 @@ import type { PublicCourseType } from "@/features/courses";
 import { useEnrollmentStatusIntentPrefetch } from "@/features/courses/hooks/use-intent-prefetch";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { Link } from "@/i18n/navigation";
+import { categoryLabel, levelLabel } from "@/lib/course-labels";
 
 interface iAppProps {
 	data: PublicCourseType;
@@ -23,7 +24,7 @@ export function PublicCourseCard({ data }: iAppProps) {
 
 	return (
 		<Card className="group relative py-0 gap-0">
-			<Badge className="absolute top-2 right-2 z-10">{data.level}</Badge>
+			<Badge className="absolute top-2 right-2 z-10">{levelLabel(t, data.level)}</Badge>
 			<Image
 				width={600}
 				height={400}
@@ -52,7 +53,7 @@ export function PublicCourseCard({ data }: iAppProps) {
 					</div>
 					<div className="flex items-center gap-x-2">
 						<School className="size-6 p-1 rounded-md text-primary bg-primary/10" />
-						<p className="text-sm text-muted-foreground">{data.category}</p>
+						<p className="text-sm text-muted-foreground">{categoryLabel(t, data.category)}</p>
 					</div>
 				</div>
 				<Link

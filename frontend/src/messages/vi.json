@@ -119,7 +119,26 @@
 		"certificate": "Chứng nhận hoàn thành",
 		"watchCourse": "Xem khóa học",
 		"moneyBackGuarantee": "Đảm bảo hoàn tiền trong 30 ngày",
-		"enrollNow": "Ghi danh ngay!"
+		"enrollNow": "Ghi danh ngay!",
+		"levels": {
+			"Beginner": "Cơ bản",
+			"Intermediate": "Trung cấp",
+			"Advanced": "Nâng cao"
+		},
+		"categories": {
+			"development": "Lập trình",
+			"business": "Kinh doanh",
+			"financeAccounting": "Tài chính & Kế toán",
+			"itSoftware": "CNTT & Phần mềm",
+			"officeProductivity": "Tin học văn phòng",
+			"personalDevelopment": "Phát triển bản thân",
+			"design": "Thiết kế",
+			"marketing": "Marketing",
+			"healthFitness": "Sức khỏe & Thể hình",
+			"lifestyle": "Phong cách sống",
+			"music": "Âm nhạc",
+			"teachingAcademics": "Giảng dạy & Học thuật"
+		}
 	},
 	"dashboard": {
 		"enrolledCourses": "Khóa học đã ghi danh",

@@ -1,19 +1,17 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectValue } from "@radix-ui/react-select";
-import { Loader2, PlusIcon, SparkleIcon } from "lucide-react";
+import { Loader2, PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { type Resolver, useForm } from "react-hook-form";
-import slugify from "slugify";
 // import { CreateCourse } from "./action";
 import { toast } from "sonner";
+import { CourseTextFields } from "@/components/admin/CourseTextFields";
 import { Uploader } from "@/components/file-uploader/Uploader";
-import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import type { AdminCourseSingularType } from "@/features/courses";
 import { useEditAdminCourseMutation } from "@/features/courses/hooks/use-admin-course-mutations";
 import { useRouter } from "@/i18n/navigation";
@@ -38,8 +36,12 @@ export function EditCourseForm({ data }: iAppProps) {
 	const form = useForm<CourseSchemaType>({
 		resolver: zodResolver(courseSchema) as Resolver<CourseSchemaType>,
 		defaultValues: {
-			title: data.title,
-			description: data.description,
+			titleEn: data.titleEn ?? "",
+			titleVi: data.titleVi ?? "",
+			smallDescriptionEn: data.smallDescriptionEn ?? "",
+			smallDescriptionVi: data.smallDescriptionVi ?? "",
+			descriptionEn: data.descriptionEn ?? "",
+			descriptionVi: data.descriptionVi ?? "",
 			fileKey: data.fileKey,
 			price: data.price,
 			duration: data.duration,
@@ -47,7 +49,6 @@ export function EditCourseForm({ data }: iAppProps) {
 			category: data.category as CourseSchemaType["category"],
 			status: data.status,
 			slug: data.slug,
-			smallDescription: data.smallDescription,
 		},
 	});
 
@@ -71,71 +72,7 @@ export function EditCourseForm({ data }: iAppProps) {
 	return (
 		<Form {...form}>
 			<form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-				<FormField
-					control={form.control}
-					name="title"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>{t("title")}</FormLabel>
-							<FormControl>
-								<Input placeholder={t("courseTitle")} {...field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-				<div className="flex gap-4 items-end">
-					<FormField
-						control={form.control}
-						name="slug"
-						render={({ field }) => (
-							<FormItem className="w-full">
-								<FormLabel>{t("slug")}</FormLabel>
-								<FormControl>
-									<Input placeholder={t("slug")} {...field} />
-								</FormControl>
-							</FormItem>
-						)}
-					/>
-					<Button
-						type="button"
-						className="w-fit"
-						onClick={() => {
-							const titleValue = form.getValues("title");
-							const slug = slugify(titleValue);
-							form.setValue("slug", slug, { shouldValidate: true });
-						}}
-					>
-						{t("generateSlug")} <SparkleIcon className="ml-1" size={16} />
-					</Button>
-				</div>
-				<FormField
-					control={form.control}
-					name="smallDescription"
-					render={({ field }) => (
-						<FormItem className="w-full">
-							<FormLabel>{t("smallDescription")}</FormLabel>
-							<FormControl>
-								<Textarea
-									placeholder={t("smallDescription")}
-									className="min-h-[120px]"
-									{...field}
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="description"
-					render={({ field }) => (
-						<FormItem className="w-full">
-							<FormLabel>{t("description")}</FormLabel>
-							<FormControl>
-								<RichTextEditor field={field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
+				<CourseTextFields form={form} />
 				<FormField
 					control={form.control}
 					name="fileKey"
