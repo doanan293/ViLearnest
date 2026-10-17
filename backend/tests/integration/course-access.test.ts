@@ -68,6 +68,18 @@ describe("public course visibility and learner access", () => {
     expect(archived.statusCode).toBe(404);
   });
 
+  it("returns lesson content in Vietnamese for locale=vi", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: `/api/v1/courses/lessons/${fixtures.ids.activeLesson}?locale=vi`,
+      headers: { cookie: learnerACookie },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({ title: "Active Lesson (vi)" });
+    expect(response.json()).not.toHaveProperty("titleEn");
+  });
+
   it("returns public curriculum titles and positions without protected lesson content", async () => {
     const response = await app.inject({ method: "GET", url: `/api/v1/courses/by-slug/${fixtures.ids.publishedSlug}` });
     const course = response.json();

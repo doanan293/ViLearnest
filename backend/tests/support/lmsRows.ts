@@ -24,6 +24,11 @@ const actorOrder = ["admin", "learnerA", "learnerB"] as const;
 export function tipTapDocument(text: string) {
   return JSON.stringify({ type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text }] }] });
 }
+
+// Fixture Vietnamese text: the English title with a "(vi)" suffix, so tests can tell the languages apart.
+export function vietnamese(text: string) {
+  return `${text} (vi)`;
+}
 export function buildLmsRows(input: LmsRowsInput): FixtureRows {
   const { ids, actors, passwordHash, now, assetPrefix, omitLearnerA, includeArchivedEnrollments } = input;
   const users: Array<typeof schema.user.$inferInsert> = actorOrder
@@ -64,15 +69,18 @@ export function buildLmsRows(input: LmsRowsInput): FixtureRows {
   const courses: Array<typeof schema.course.$inferInsert> = courseSpecs.map(
     ([idKey, slugKey, title, status, price]) => ({
       id: ids[idKey],
-      title,
-      description: tipTapDocument(title),
+      titleEn: title,
+      titleVi: vietnamese(title),
+      descriptionEn: tipTapDocument(title),
+      descriptionVi: null,
       fileKey: `${assetPrefix}/${idKey}.png`,
       price,
       duration: 30,
       level: "Beginner",
       stripePriceId: `mock-price-${ids[idKey]}`,
       category: "Testing",
-      smallDescription: title,
+      smallDescriptionEn: title,
+      smallDescriptionVi: vietnamese(title),
       slug: ids[slugKey],
       status,
       userId: actors.admin.id,
@@ -90,7 +98,8 @@ export function buildLmsRows(input: LmsRowsInput): FixtureRows {
   ] as const;
   const chapters: Array<typeof schema.chapter.$inferInsert> = chapterSpecs.map(([id, title, courseId], index) => ({
     id,
-    title,
+    titleEn: title,
+    titleVi: vietnamese(title),
     courseId,
     position: index + 1,
     createdAt: now,
@@ -105,9 +114,11 @@ export function buildLmsRows(input: LmsRowsInput): FixtureRows {
   ] as const;
   const lessons: Array<typeof schema.lesson.$inferInsert> = lessonSpecs.map(([id, title, chapterId], index) => ({
     id,
-    title,
+    titleEn: title,
+    titleVi: vietnamese(title),
     chapterId,
-    description: tipTapDocument(title),
+    descriptionEn: tipTapDocument(title),
+    descriptionVi: null,
     thumbnailKey: `${assetPrefix}/${id}.png`,
     videoKey: `${assetPrefix}/${id}.mp4`,
     position: index + 1,

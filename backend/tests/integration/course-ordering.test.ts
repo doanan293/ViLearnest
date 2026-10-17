@@ -114,7 +114,7 @@ describe("atomic course ordering", () => {
     try {
       await integration.db.insert(schema.lesson).values({
         id: siblingId,
-        title: "Lesson A sibling",
+        titleEn: "Lesson A sibling",
         position: 2,
         chapterId: fixtures.ids.chapterA,
       });

@@ -1,10 +1,12 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "@jest/globals";
 import postgres from "postgres";
 import { requireTestDatabaseUrl } from "../support/integrationDatabase.js";
 
-const drizzleDir = join(process.cwd(), "drizzle");
+// Resolve from this file so the suite runs from the repo root and from backend/.
+const drizzleDir = fileURLToPath(new URL("../../drizzle/", import.meta.url));
 const migrationFiles = readdirSync(drizzleDir)
   .filter((fileName) => fileName.endsWith(".sql"))
   .sort();

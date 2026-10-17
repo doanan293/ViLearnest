@@ -1,0 +1,27 @@
+meta {
+  name: PUBLIC-detail-vi
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/api/v1/courses/by-slug/{{publishedSlug}}?locale=vi
+}
+
+params:query {
+  locale: vi
+}
+
+vars:pre-request {
+  actor: anonymous
+}
+
+tests {
+  test("returns Vietnamese course and curriculum titles for locale=vi", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.title).to.equal("Bruno Published Fixture (vi)");
+    expect(res.body.chapter[0].title).to.match(/\(vi\)$/);
+    expect(res.body).not.to.have.property("titleEn");
+    expect(res.body).not.to.have.property("titleVi");
+  });
+}
