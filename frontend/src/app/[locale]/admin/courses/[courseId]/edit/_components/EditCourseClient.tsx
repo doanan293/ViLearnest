@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,11 +9,14 @@ import {
 	adminCourseDetailQueryOptions,
 	adminCourseStructureQueryOptions,
 } from "@/features/courses/hooks/use-admin-course-queries";
+import type { Locale } from "@/i18n/pathname";
+import { displayTitle } from "@/lib/localized-text";
 import { CourseStructure } from "./CourseStructure";
 import { EditCourseForm } from "./EditCourseForm";
 
 export function EditCourseClient({ courseId }: { courseId: string }) {
 	const t = useTranslations("admin");
+	const locale = useLocale() as Locale;
 	const { data: course, isLoading } = useQuery(adminCourseDetailQueryOptions(courseId));
 	const { data: structure } = useQuery(adminCourseStructureQueryOptions(courseId));
 
@@ -22,7 +25,8 @@ export function EditCourseClient({ courseId }: { courseId: string }) {
 	return (
 		<>
 			<h1 className="mb-8 text-3xl font-bold">
-				{t("editCourse")} <span className="text-primary underline">{course.title}</span>
+				{t("editCourse")}{" "}
+				<span className="text-primary underline">{displayTitle(course, locale)}</span>
 			</h1>
 			<Tabs defaultValue="basic-info" className="w-full">
 				<TabsList className="grid w-full grid-cols-2">

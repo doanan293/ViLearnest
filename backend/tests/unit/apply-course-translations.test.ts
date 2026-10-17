@@ -29,6 +29,7 @@ function fakeDb(courses: Record<string, CourseSnapshot>) {
     loadCourse: async (slug) => courses[slug] ?? null,
     applyChanges: async (changes) => {
       applied.push(changes);
+      return [];
     },
   };
   return { db, applied };

@@ -79,7 +79,7 @@ const publicCourse = {
   titleVi: "AI Nhanh",
   smallDescriptionEn: "Learn fast",
   smallDescriptionVi: "Học nhanh",
-  descriptionEn: '{"type":"doc"}',
+  descriptionEn: '{"type":"doc","content":[{"type":"text","text":"About"}]}',
   descriptionVi: null,
   fileKey: "cover.jpg",
   price: 39,
@@ -104,7 +104,11 @@ describe("CourseService localized reads", () => {
 
     const course = await service.getCourseBySlug("ai-fast", "vi");
 
-    expect(course).toMatchObject({ title: "AI Nhanh", smallDescription: "Học nhanh", description: '{"type":"doc"}' });
+    expect(course).toMatchObject({
+      title: "AI Nhanh",
+      smallDescription: "Học nhanh",
+      description: '{"type":"doc","content":[{"type":"text","text":"About"}]}',
+    });
     expect(course).not.toHaveProperty("titleEn");
   });
 
@@ -291,6 +295,8 @@ describe("CourseService", () => {
       chapter: {
         id: expect.any(String),
         title: "Chapter 3",
+        titleEn: "Chapter 3",
+        titleVi: null,
         position: 3,
       },
     });

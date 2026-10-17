@@ -20,11 +20,12 @@ export function RichTextEditor({
 			},
 		},
 
+		// An empty editor saves "" so the page falls back to the other language.
 		onUpdate: ({ editor }) => {
-			field.onChange(JSON.stringify(editor.getJSON()));
+			field.onChange(editor.isEmpty ? "" : JSON.stringify(editor.getJSON()));
 		},
 
-		content: field.value ? JSON.parse(field.value) : "<p>Hello World</p>",
+		content: field.value ? JSON.parse(field.value) : "",
 	});
 
 	return (

@@ -12,3 +12,11 @@ export function pickLocalized(
 	const other: Locale = locale === "en" ? "vi" : "en";
 	return row[`${field}${SUFFIX[locale]}`] || row[`${field}${SUFFIX[other]}`] || null;
 }
+
+// Admin rows carry both languages; show the title in the page language, else the server's display title.
+export function displayTitle(
+	row: { title?: string; titleEn?: string | null; titleVi?: string | null },
+	locale: Locale,
+): string {
+	return pickLocalized(row, "title", locale) ?? row.title ?? "";
+}

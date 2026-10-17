@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { Locale } from "@/i18n/pathname";
 import { type CourseSchemaType, slugSource } from "@/lib/zodSchemas";
-import { LocaleTabs } from "./LocaleTabs";
+import { LocaleTabs, useShowErroredLocale } from "./LocaleTabs";
 
 const SUFFIX = { en: "En", vi: "Vi" } as const;
 
@@ -21,6 +21,16 @@ export function CourseTextFields({ form }: { form: UseFormReturn<CourseSchemaTyp
 	const [locale, setLocale] = useState<Locale>("en");
 	const suffix = SUFFIX[locale];
 	const [titleEn, titleVi] = form.watch(["titleEn", "titleVi"]);
+	const { errors, submitCount } = form.formState;
+	useShowErroredLocale(
+		locale,
+		setLocale,
+		{
+			en: Boolean(errors.titleEn || errors.smallDescriptionEn),
+			vi: Boolean(errors.titleVi || errors.smallDescriptionVi),
+		},
+		submitCount,
+	);
 
 	return (
 		<div className="space-y-6">
@@ -61,7 +71,9 @@ export function CourseTextFields({ form }: { form: UseFormReturn<CourseSchemaTyp
 					className="w-fit"
 					onClick={() => {
 						const source = slugSource(form.getValues("titleEn"), form.getValues("titleVi"));
-						form.setValue("slug", slugify(source), { shouldValidate: true });
+						form.setValue("slug", slugify(source, { lower: true, strict: true, locale: "vi" }), {
+							shouldValidate: true,
+						});
 					}}
 				>
 					{t("generateSlug")} <SparkleIcon className="ml-1" size={16} />

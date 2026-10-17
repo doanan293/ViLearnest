@@ -1,9 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useForm } from "react-hook-form";
 import { CourseTextFields } from "@/components/admin/CourseTextFields";
 import { Form } from "@/components/ui/form";
-import type { CourseSchemaType } from "@/lib/zodSchemas";
+import { type CourseSchemaType, courseSchema } from "@/lib/zodSchemas";
 
 jest.mock("next-intl", () => ({
 	useLocale: () => "en",
@@ -20,8 +21,15 @@ jest.mock("@/components/rich-text-editor/Editor", () => ({
 	),
 }));
 
-function Harness({ onSubmit }: { onSubmit: (values: Partial<CourseSchemaType>) => void }) {
+function Harness({
+	onSubmit,
+	validate = false,
+}: {
+	onSubmit: (values: Partial<CourseSchemaType>) => void;
+	validate?: boolean;
+}) {
 	const form = useForm<Partial<CourseSchemaType>>({
+		resolver: validate ? (zodResolver(courseSchema) as never) : undefined,
 		defaultValues: {
 			titleEn: "AI Fast",
 			titleVi: "",
@@ -29,7 +37,13 @@ function Harness({ onSubmit }: { onSubmit: (values: Partial<CourseSchemaType>) =
 			smallDescriptionVi: "",
 			descriptionEn: "",
 			descriptionVi: "",
-			slug: "",
+			slug: "ai-fast",
+			fileKey: "cover.jpg",
+			price: 39,
+			duration: 33,
+			level: "Beginner",
+			category: "Development",
+			status: "Draft",
 		},
 	});
 	return (
@@ -68,9 +82,21 @@ describe("CourseTextFields", () => {
 
 		await user.clear(screen.getByPlaceholderText("courseTitle"));
 		await user.click(screen.getByRole("tab", { name: /VI/ }));
-		await user.type(screen.getByPlaceholderText("courseTitle"), "Khoa hoc AI");
+		await user.type(screen.getByPlaceholderText("courseTitle"), "Đường đi: ưu tiên AI");
 		await user.click(screen.getByRole("button", { name: /generateSlug/ }));
 
-		expect(screen.getByPlaceholderText("slug")).toHaveValue("Khoa-hoc-AI");
+		expect(screen.getByPlaceholderText("slug")).toHaveValue("duong-di-uu-tien-ai");
+	});
+
+	it("shows the tab that holds a title error after a failed save", async () => {
+		const user = userEvent.setup();
+		render(<Harness onSubmit={jest.fn()} validate />);
+
+		await user.clear(screen.getByPlaceholderText("courseTitle"));
+		await user.click(screen.getByRole("tab", { name: /VI/ }));
+		await user.click(screen.getByRole("button", { name: "save" }));
+
+		expect(await screen.findByText("Enter a title in English or Vietnamese")).toBeInTheDocument();
+		expect(screen.getByRole("tab", { name: /EN/ })).toHaveAttribute("aria-selected", "true");
 	});
 });

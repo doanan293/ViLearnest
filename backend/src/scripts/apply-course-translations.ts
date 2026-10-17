@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { asc, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray, isNull } from "drizzle-orm";
 import { client, db } from "../db/index.js";
 import * as schema from "../db/schema.js";
 import {
@@ -67,15 +67,22 @@ const drizzleStore: TranslationDb = {
     };
   },
 
+  // Each UPDATE only applies while the cell still holds the planned "from" value,
+  // so an admin edit made after the plan is kept and reported as skipped.
   async applyChanges(changes) {
-    await db.transaction(async (tx) => {
+    return db.transaction(async (tx) => {
+      const skipped: Change[] = [];
       for (const change of changes) {
         const table = TABLES[change.table];
-        await tx
+        const column = (table as unknown as Record<string, Parameters<typeof eq>[0]>)[change.column];
+        const updated = await tx
           .update(table)
           .set({ [change.column]: change.to })
-          .where(eq(table.id, change.id));
+          .where(and(eq(table.id, change.id), change.from === null ? isNull(column) : eq(column, change.from)))
+          .returning({ id: table.id });
+        if (updated.length === 0) skipped.push(change);
       }
+      return skipped;
     });
   },
 };
@@ -95,8 +102,9 @@ async function main() {
   console.log(`${changes.length} change(s)${dryRun ? " planned (dry run, nothing written)" : ""}.`);
 
   if (!dryRun) {
-    await applyTranslations(drizzleStore, changes);
-    console.log("Applied.");
+    const skipped = await applyTranslations(drizzleStore, changes);
+    for (const change of skipped) console.log(`Skipped (changed since planning): ${describe(change)}`);
+    console.log(`Applied ${changes.length - skipped.length} change(s).`);
   }
 }
 

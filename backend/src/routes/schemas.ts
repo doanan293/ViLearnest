@@ -30,12 +30,15 @@ export const courseStatusSchema = {
 
 const optionalText = { type: ["string", "null"] } as const;
 
-// At least one language must carry a non-empty value for the given field.
+// At least one language must carry a value with a non-space character for the given field.
+// The branches avoid `type` so Ajv's type coercion cannot turn a null into "" while trying them.
+const hasText = { not: { type: "null" }, pattern: "\\S" } as const;
+
 export function requireOneLanguage(enField: string, viField: string) {
   return {
     anyOf: [
-      { required: [enField], properties: { [enField]: { type: "string", minLength: 1 } } },
-      { required: [viField], properties: { [viField]: { type: "string", minLength: 1 } } },
+      { required: [enField], properties: { [enField]: hasText } },
+      { required: [viField], properties: { [viField]: hasText } },
     ],
   } as const;
 }

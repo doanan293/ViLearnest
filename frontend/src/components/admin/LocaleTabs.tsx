@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import type { Locale } from "@/i18n/pathname";
 import { cn } from "@/lib/utils";
 
@@ -35,4 +36,19 @@ export function LocaleTabs({
 			))}
 		</div>
 	);
+}
+
+// After a failed save, show the other tab when only it holds a validation error.
+export function useShowErroredLocale(
+	locale: Locale,
+	setLocale: (locale: Locale) => void,
+	hasError: Record<Locale, boolean>,
+	submitCount: number,
+) {
+	const other: Locale = locale === "en" ? "vi" : "en";
+	const switchTo = !hasError[locale] && hasError[other] ? other : null;
+	// biome-ignore lint/correctness/useExhaustiveDependencies: only react to a new submit attempt
+	useEffect(() => {
+		if (switchTo) setLocale(switchTo);
+	}, [submitCount]);
 }

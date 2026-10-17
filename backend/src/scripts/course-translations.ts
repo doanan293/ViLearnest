@@ -39,8 +39,8 @@ export type Change = {
 
 export interface TranslationDb {
   loadCourse(slug: string): Promise<CourseSnapshot | null>;
-  // Must write all changes in one transaction.
-  applyChanges(changes: Change[]): Promise<void>;
+  // Must write all changes in one transaction and return the ones it did not apply.
+  applyChanges(changes: Change[]): Promise<Change[]>;
 }
 
 function diff(
@@ -91,8 +91,6 @@ export async function planTranslations(
   return changes;
 }
 
-export async function applyTranslations(db: TranslationDb, changes: Change[]): Promise<void> {
-  if (changes.length > 0) {
-    await db.applyChanges(changes);
-  }
+export async function applyTranslations(db: TranslationDb, changes: Change[]): Promise<Change[]> {
+  return changes.length > 0 ? db.applyChanges(changes) : [];
 }

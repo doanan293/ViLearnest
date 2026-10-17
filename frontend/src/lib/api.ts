@@ -20,12 +20,16 @@ import type {
 export type CreatedChapter = {
 	id: string;
 	title: string;
+	titleEn?: string | null;
+	titleVi?: string | null;
 	position: number;
 };
 
 export type CreatedLesson = {
 	id: string;
 	title: string;
+	titleEn?: string | null;
+	titleVi?: string | null;
 	position: number;
 };
 

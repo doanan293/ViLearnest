@@ -58,7 +58,7 @@ function withTitle<T extends { titleEn: string | null; titleVi: string | null }>
 }
 
 function requireTitle(titleEn: string | null | undefined, titleVi: string | null | undefined) {
-  if (!titleEn && !titleVi) {
+  if (!titleEn?.trim() && !titleVi?.trim()) {
     throw new BadRequestError("A title is required in English or Vietnamese");
   }
 }
@@ -335,6 +335,8 @@ export class CourseService {
       chapter: {
         id: chapter.id,
         title: pickText(chapter, "title", "en") ?? "",
+        titleEn: chapter.titleEn,
+        titleVi: chapter.titleVi,
         position: chapter.position,
       },
     };
@@ -367,6 +369,8 @@ export class CourseService {
       lesson: {
         id: lesson.id,
         title: pickText(lesson, "title", "en") ?? "",
+        titleEn: lesson.titleEn,
+        titleVi: lesson.titleVi,
         position: lesson.position,
       },
     };

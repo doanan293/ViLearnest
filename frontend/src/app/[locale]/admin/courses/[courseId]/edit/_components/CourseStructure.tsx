@@ -18,7 +18,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ChevronDown, ChevronRight, FileText, GripVertical } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,8 @@ import {
 	useReorderLessonsMutation,
 } from "@/features/courses/hooks/use-admin-course-structure-mutations";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/pathname";
+import { displayTitle } from "@/lib/localized-text";
 import { cn } from "@/lib/utils";
 import { DeleteChapter } from "./DeleteChapter";
 import { DeleteLesson } from "./DeleteLesson";
@@ -67,17 +69,18 @@ type DragOver = NonNullable<DragEndEvent["over"]>;
 
 export function CourseStructure({ data }: iAppProps) {
 	const t = useTranslations("admin");
+	const locale = useLocale() as Locale;
 	const reorderChaptersMutation = useReorderChaptersMutation(data.id);
 	const reorderLessonsMutation = useReorderLessonsMutation(data.id);
 	const initialItems =
 		data.chapter.map((chapter) => ({
 			id: chapter.id,
-			title: chapter.title,
+			title: displayTitle(chapter, locale),
 			order: chapter.position,
 			isOpen: true, //default chapters to open
 			lessons: chapter.lessons.map((lesson) => ({
 				id: lesson.id,
-				title: lesson.title,
+				title: displayTitle(lesson, locale),
 				order: lesson.position,
 			})),
 		})) || [];
@@ -89,18 +92,18 @@ export function CourseStructure({ data }: iAppProps) {
 			const updatedItems =
 				data.chapter.map((chapter) => ({
 					id: chapter.id,
-					title: chapter.title,
+					title: displayTitle(chapter, locale),
 					order: chapter.position,
 					isOpen: prevIems.find((item) => item.id === chapter.id)?.isOpen ?? true,
 					lessons: chapter.lessons.map((lesson) => ({
 						id: lesson.id,
-						title: lesson.title,
+						title: displayTitle(lesson, locale),
 						order: lesson.position,
 					})),
 				})) || [];
 			return updatedItems;
 		});
-	}, [data]);
+	}, [data, locale]);
 
 	function SortableItem({ children, id, className, data }: SortableItemProps) {
 		const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({

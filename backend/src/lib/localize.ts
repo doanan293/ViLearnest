@@ -31,8 +31,18 @@ export function parseLocale(value: unknown): Locale {
   return value === "vi" ? "vi" : "en";
 }
 
+// A cleared rich-text editor saves a TipTap document without any text; that counts as empty.
+function isEmptyTipTapDoc(value: string): boolean {
+  if (!value.startsWith('{"type":"doc"')) return false;
+  try {
+    return !JSON.stringify(JSON.parse(value)).includes('"text":"');
+  } catch {
+    return false;
+  }
+}
+
 function nonEmpty(value: unknown): string | null {
-  return typeof value === "string" && value !== "" ? value : null;
+  return typeof value === "string" && value.trim() !== "" && !isEmptyTipTapDoc(value) ? value : null;
 }
 
 // Requested language first, then the other one, so a page never shows an empty field.

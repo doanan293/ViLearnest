@@ -9,7 +9,7 @@ const course = {
   titleVi: "AI Nhanh",
   smallDescriptionEn: "Short",
   smallDescriptionVi: "Ngắn",
-  descriptionEn: '{"type":"doc"}',
+  descriptionEn: '{"type":"doc","content":[{"type":"text","text":"About"}]}',
   descriptionVi: null,
 };
 
@@ -45,6 +45,19 @@ describe("pickText", () => {
   });
 });
 
+describe("pickText with TipTap documents", () => {
+  const emptyDoc = '{"type":"doc","content":[{"type":"paragraph"}]}';
+  const viDoc = '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Mô tả"}]}]}';
+
+  it("falls back when the requested description is an empty editor document", () => {
+    expect(pickText({ descriptionEn: emptyDoc, descriptionVi: viDoc }, "description", "en")).toBe(viDoc);
+  });
+
+  it("returns null when both descriptions are empty documents", () => {
+    expect(pickText({ descriptionEn: emptyDoc, descriptionVi: emptyDoc }, "description", "en")).toBeNull();
+  });
+});
+
 describe("localizeCourse", () => {
   it("maps per-language columns to the public shape and keeps other fields", () => {
     const result = localizeCourse(course, "vi");
@@ -55,7 +68,7 @@ describe("localizeCourse", () => {
       price: 39,
       title: "AI Nhanh",
       smallDescription: "Ngắn",
-      description: '{"type":"doc"}',
+      description: '{"type":"doc","content":[{"type":"text","text":"About"}]}',
     });
     expect(result).not.toHaveProperty("titleEn");
     expect(result).not.toHaveProperty("titleVi");

@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { LocaleTabs } from "@/components/admin/LocaleTabs";
+import { LocaleTabs, useShowErroredLocale } from "@/components/admin/LocaleTabs";
 import { Uploader } from "@/components/file-uploader/Uploader";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -56,6 +56,13 @@ export function LessonForm({ data, chapterId, courseId }: iAppProps) {
 		},
 	});
 	const [nameEn, nameVi] = form.watch(["nameEn", "nameVi"]);
+	const { errors, submitCount } = form.formState;
+	useShowErroredLocale(
+		locale,
+		setLocale,
+		{ en: Boolean(errors.nameEn), vi: Boolean(errors.nameVi) },
+		submitCount,
+	);
 
 	function onSubmit(values: LessonSchemaType) {
 		// Both languages are always sent, so editing one tab keeps the other one's text.
