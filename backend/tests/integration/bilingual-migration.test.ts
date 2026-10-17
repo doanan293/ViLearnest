@@ -39,9 +39,10 @@ describe("migration 0006 bilingual content", () => {
     await sql`insert into "user" (id, name, email) values ('u1', 'Admin', 'admin@example.test')`;
     await sql`
       insert into "Course" (id, title, description, "fileKey", price, duration, level, "stripePriceId",
-        category, "smallDescription", slug, status, "userId")
+        category, "smallDescription", slug, status, "userId", "updatedAt")
       values ('c1', 'AI Fast', '{"type":"doc","content":[{"type":"text","text":"Khóa học"}]}', 'cover.jpg', 39, 33,
-        'Intermediate', 'price_1', 'Development', 'Khóa học gồm các bài học', 'ai-fast', 'Published', 'u1')`;
+        'Intermediate', 'price_1', 'Development', 'Khóa học gồm các bài học', 'ai-fast', 'Published', 'u1',
+        '2026-01-01 00:00:00')`;
     await sql`insert into "Chapter" (id, title, position, "courseId") values ('ch1', 'Chương 1: Claude Code cơ bản', 1, 'c1')`;
     await sql`insert into "Lesson" (id, title, description, position, "chapterId") values ('l1', 'The CLAUDE.md file', null, 1, 'ch1')`;
 
@@ -85,17 +86,30 @@ describe("migration 0006 bilingual content", () => {
     });
   });
 
-  it("drops the single-language columns", async () => {
+  it("keeps the single-language columns, now nullable, for the previous deploy", async () => {
     const columns = await sql`
-      select table_name, column_name from information_schema.columns
+      select table_name, column_name, is_nullable from information_schema.columns
       where table_name in ('Course', 'Chapter', 'Lesson')
-        and column_name in ('title', 'smallDescription', 'description')`;
-    expect(columns).toHaveLength(0);
+        and column_name in ('title', 'smallDescription', 'description')
+      order by table_name, column_name`;
+    expect(columns.map((column) => `${column.table_name}.${column.column_name}:${column.is_nullable}`)).toEqual([
+      "Chapter.title:YES",
+      "Course.description:YES",
+      "Course.smallDescription:YES",
+      "Course.title:YES",
+      "Lesson.description:YES",
+      "Lesson.title:YES",
+    ]);
   });
 
-  it("rejects a chapter without a title in either language", async () => {
-    await expect(sql`insert into "Chapter" (id, position, "courseId") values ('ch2', 2, 'c1')`).rejects.toMatchObject({
-      code: "23514",
-    });
+  it("does not bump updatedAt while copying text", async () => {
+    const [course] = await sql`select "updatedAt" = '2026-01-01 00:00:00' as unchanged from "Course" where id = 'c1'`;
+    expect(course.unchanged).toBe(true);
+  });
+
+  it("lets the new code insert rows without the old columns", async () => {
+    await expect(
+      sql`insert into "Chapter" (id, "titleVi", position, "courseId") values ('ch2', 'Chương 2', 2, 'c1')`
+    ).resolves.toBeDefined();
   });
 });
