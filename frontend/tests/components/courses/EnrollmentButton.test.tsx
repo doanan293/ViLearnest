@@ -10,6 +10,10 @@ jest.mock("next-intl", () => ({
 	useTranslations: () => (key: string) => key,
 }));
 
+jest.mock("@/i18n/navigation", () => ({
+	useRouter: () => ({ push: jest.fn() }),
+}));
+
 jest.mock("sonner", () => ({
 	toast: {
 		error: jest.fn(),

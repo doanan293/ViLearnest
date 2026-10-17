@@ -1,6 +1,7 @@
 import { type QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
 import type { CourseSidebarDataType, LessonContentType } from "@/features/courses";
 import { api } from "@/lib/api";
+import { ApiClientError } from "@/lib/api-client";
 import { queryKeys } from "@/lib/query-keys";
 import { queryStaleTimes } from "@/lib/query-stale-times";
 
@@ -44,8 +45,16 @@ export function useLessonContentQuery(lessonId: string) {
 export function enrollmentStatusQueryOptions(
 	courseId: string,
 	queryFn: QueryFn<boolean> = async () => {
-		const response = await api.courses.isEnrolled(courseId);
-		return response.enrolled;
+		try {
+			const response = await api.courses.isEnrolled(courseId);
+			return response.enrolled;
+		} catch (error) {
+			// Signed-out visitors are simply not enrolled; retrying a 401 only keeps the button loading.
+			if (error instanceof ApiClientError && error.statusCode === 401) {
+				return false;
+			}
+			throw error;
+		}
 	},
 ) {
 	return queryOptions({

@@ -3,12 +3,16 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnrollmentCta } from "@/app/[locale]/(public)/courses/[slug]/_components/EnrollmentCta";
 import { api } from "@/lib/api";
+import { ApiClientError } from "@/lib/api-client";
 
 jest.mock("next-intl", () => ({
 	useTranslations: () => (key: string) => key,
 }));
 
+const mockPush = jest.fn();
+
 jest.mock("@/i18n/navigation", () => ({
+	useRouter: () => ({ push: mockPush }),
 	Link: ({
 		children,
 		className,
@@ -70,6 +74,23 @@ describe("EnrollmentCta", () => {
 		renderWithClient();
 
 		expect(await screen.findByRole("button", { name: "enrollNow" })).toBeInTheDocument();
+	});
+
+	it("shows the enroll button right away for signed-out visitors", async () => {
+		jest
+			.mocked(api.courses.isEnrolled)
+			.mockRejectedValue(new ApiClientError("Unauthorized", 401, "UNAUTHORIZED"));
+		jest
+			.mocked(api.courses.enroll)
+			.mockRejectedValue(new ApiClientError("Unauthorized", 401, "UNAUTHORIZED"));
+		const user = userEvent.setup();
+
+		renderWithClient();
+
+		await user.click(await screen.findByRole("button", { name: "enrollNow" }));
+
+		expect(api.courses.isEnrolled).toHaveBeenCalledTimes(1);
+		await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/login"));
 	});
 
 	it("allows retrying when enrollment status fails", async () => {
