@@ -50,6 +50,13 @@
       "when": 1792220000000,
       "tag": "0006_bilingual_content",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792240000000,
+      "tag": "0007_drop_legacy_course_text",
+      "breakpoints": true
     }
   ]
 }

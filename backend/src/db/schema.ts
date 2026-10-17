@@ -150,7 +150,10 @@ export const course = pgTable(
     return {
       slugUnique: uniqueIndex("Course_slug_key").on(table.slug),
       stripePriceIdUnique: uniqueIndex("Course_stripePriceId_key").on(table.stripePriceId),
-      titleRequired: check("Course_title_required", sql`coalesce(${table.titleEn}, ${table.titleVi}) is not null`),
+      titleRequired: check(
+        "Course_title_required",
+        sql`coalesce(nullif(trim(${table.titleEn}), ''), nullif(trim(${table.titleVi}), '')) is not null`
+      ),
     };
   }
 );
@@ -168,7 +171,12 @@ export const chapter = pgTable(
       .notNull()
       .references(() => course.id, { onDelete: "cascade" }),
   },
-  (table) => [check("Chapter_title_required", sql`coalesce(${table.titleEn}, ${table.titleVi}) is not null`)]
+  (table) => [
+    check(
+      "Chapter_title_required",
+      sql`coalesce(nullif(trim(${table.titleEn}), ''), nullif(trim(${table.titleVi}), '')) is not null`
+    ),
+  ]
 );
 
 export const lesson = pgTable(
@@ -188,7 +196,12 @@ export const lesson = pgTable(
       .notNull()
       .references(() => chapter.id, { onDelete: "cascade" }),
   },
-  (table) => [check("Lesson_title_required", sql`coalesce(${table.titleEn}, ${table.titleVi}) is not null`)]
+  (table) => [
+    check(
+      "Lesson_title_required",
+      sql`coalesce(nullif(trim(${table.titleEn}), ''), nullif(trim(${table.titleVi}), '')) is not null`
+    ),
+  ]
 );
 
 export const enrollment = pgTable(
